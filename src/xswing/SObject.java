@@ -10,13 +10,17 @@ import org.newdawn.slick.Image;
 public class SObject implements Drawable{
 	protected int x;
 	protected int y;
-	protected Image pic;
+	protected Image pic=null;
 	
 	public SObject() {
 	}
 	
 	public SObject(Image pic) {
 		this.pic=pic;
+	}
+	
+	public void setPic(Image pic) {
+		this.pic = pic;
 	}
 	
 	public SObject(int x, int y) {
@@ -48,17 +52,13 @@ public class SObject implements Drawable{
 	
 	@Override
 	public void draw(Graphics g) {
-		g.drawImage(pic,x,y);
+		if(pic!=null)
+			g.drawImage(pic,x,y);
 	}
 
 	@Override
 	public void draw(float x, float y) {
 		
-	}
-
-	@Override
-	public int getX() {
-		return x;
 	}
 
 	@Override
@@ -69,6 +69,11 @@ public class SObject implements Drawable{
 	@Override
 	public void update() {
 		
+	}
+
+	@Override
+	public int getX() {
+		return x;
 	}
 
 }

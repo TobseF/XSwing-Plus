@@ -6,7 +6,6 @@ package xswing;
 
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.TrueTypeFont;
 
 public class Ball extends SObject{
 	Font font;
@@ -14,49 +13,44 @@ public class Ball extends SObject{
 	/** The number of the ball (0-49)*/
 	private int nr=0;
 	/** The weight of the ball*/
-	private int weight=0; 
+	protected int weight=0; 
 	/** The effect number of the ball (1=hidden)*/
 	private int effect=0;
 	/** Pixels to move in one update step*/
-	private int speed=8;
+	private int speed=16;
 	/*/** The ball side lenght
 	private final int a;*/
 	/** If the balls has to to be moved in update*/
 	private boolean moving=false;
+	private int movingType=0;
 	
-	private boolean readyToKill=false;
+	private int readyToKill=-1;
 	
-	public boolean isReadyToKill() {
-		return readyToKill;
-	}
+	protected BallTable ballTable=null;
 
-	BallTable ballTable=null;
-
-	XSwing swing;
+	protected XSwing swing;
 	
 	public void setSwing(XSwing swing) {
 		this.swing = swing;
 	}
 	
-
-	
-
-	
-	public Ball(int nr, int x, int y,XSwing swing){
-		super(swing.ballImages.getSprite(nr), x, y);
-		this.nr=nr;
-		weight=nr;
-//		super(swing.ball, x, y);
-//		swing.ballImages.gets
+	public Ball(int level, int x, int y,XSwing swing){
+		super(x,y);
+		nr=(int)(Math.random()*level+1);
+		weight=1+(int)(Math.random()*(level+1));
+		setPic(swing.ballImages.getSprite(nr));
 		this.swing=swing;
 		font=swing.ballFont;
-
 	}
 	
-	public void kill(){
-		nr=99;
-		weight=99;
-		readyToKill=true;
+	public int getReadyToKill() {
+		return readyToKill;
+	}
+
+	public void kill(int effectNr){
+		nr=999;
+		weight=0;
+		readyToKill=effectNr;
 	}
 	
 	public void setGrid(BallTable ballTable) {
@@ -80,10 +74,10 @@ public class Ball extends SObject{
 	}
 	
 	private void drawNumber(Graphics g){
-		if(weight<9)
-			font.drawString(x+18, y+18, weight+1+"");
+		if(weight<=9)
+			font.drawString(x+18, y+18, weight+"");
 		else
-			font.drawString(x+13, y+18, weight+1+"");
+			font.drawString(x+13, y+18, weight+"");
 	}
 	
 	/**	Returns the weight of the ball */
@@ -107,17 +101,28 @@ public class Ball extends SObject{
 	public void toggleMoving() {
 		moving=!moving;
 		if(moving&&ballTable.isOverGrid(x, y)){ //when starting moving remomes von the BallTable
-			int[] tabelPos=swing.ballTable.getField(x, y);
-			swing.ballTable.setBall(tabelPos[0],tabelPos[1], null);
+			ballTable.removeBall(this);
 		}
+		if(movingType==0)
+			movingType++;
+		
 	}
 	
 	public void setSpeed(int speed) {
 		this.speed = speed;
 	}
 	
+	public void setNr(int nr) {
+		this.nr = nr;
+		pic=swing.ballImages.getSprite(nr);
+	}
+	
 	public int getSpeed() {
 		return speed;
+	}
+	
+	public void setWeight(int weight) {
+		this.weight = weight;
 	}
 	
 	@Override
@@ -125,17 +130,24 @@ public class Ball extends SObject{
 		if(moving){
 			y+=speed;
 			if(checkCollison())
-				collide();
+					collide();
 		}
 		else
-			if(!checkCollison())
-				if(ballTable.isOverGrid(x,y))
-						toggleMoving();
+			if(movingType>0)
+				if(!checkCollison())
+					if(ballTable.isOverGrid(x,y))
+							toggleMoving();
 	}
+	
+	int waitBeforeColCheck=300;
 	
 	/** Checks wether ther's a ball or soil below
 	 * @return ture wenn collides*/
 	private boolean checkCollison(){
+		
+		if(waitBeforeColCheck>0)
+			waitBeforeColCheck--;
+		
 		boolean collision=false;
 		if(ballTable.isOverGrid(x, y)){
 			int[] pos=ballTable.getField(x,y);
@@ -155,9 +167,9 @@ public class Ball extends SObject{
 		toggleMoving();
 		swing.effects.addEffect(this,Effects.effectBouncing);
 		pos=ballTable.getField(x,y);
-		ballTable.printBallTable();
-		System.out.println("");
+//		ballTable.printBallTable();
+//		System.out.println("");
+		swing.mechanics.checkOfFive();
 	}
-
 
 }

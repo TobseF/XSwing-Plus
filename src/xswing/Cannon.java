@@ -9,25 +9,30 @@ import org.newdawn.slick.Image;
 
 public class Cannon extends SObject{
 	/**Gap between balls*/
-	int gap=16; //
+	private int gap=16; //
 	/**Ball lenght*/
-	int ba=48;
+	private int ba=48;
 	/**The current column*/
 	private int pos=0;
-	Ball ball=null;
-	
-	Image image2;
+	private Ball ball=null;
+	private BallTable ballTable;
 	
 	public Cannon(Image pic, int x, int y) {
 		super(pic, x, y);
 	}	
 	
+	public void setBallTable(BallTable ballTable) {
+		this.ballTable = ballTable;
+	}
+	
+	/**Moves the canon one step left*/
 	public void moveLeft() {
 		if(pos>=1)pos--;
 		if(ball!=null)
 			ball.setPos(getX(),y);
 	}
 	
+	/**Moves the canon one step right*/
 	public void moveRight() {
 		if(pos<7)pos++;
 		if(ball!=null)
@@ -44,17 +49,28 @@ public class Cannon extends SObject{
 		g.drawImage(pic,getX()-12,y-3);
 	}
 	
-	public void releaseBall(){
+	/**Lets the ball start moving and loads the next Ball out of the BallTable*/
+	public void releaseBall(Ball nextBall){
 		if(ball!=null){
 			ball.toggleMoving();
 			ball.setY(y+ba/2);
 		}
+		setBall(ballTable.getBall(pos,11));
+		ballTable.setBall(pos,11,ballTable.getBall(pos,12));
+		ballTable.setBall(pos,12,nextBall);
 	}
 	
+	/**Returns the current column*/
 	public int getPos(){
 		return pos;
 	}
 	
+	/**Returns the current Ball in the Cannon*/
+	public Ball getBall() {
+		return ball;
+	}
+	
+	/**Sets a current Ball to the Cannon*/
 	public void setBall(Ball ball){
 		this.ball=ball;
 		this.ball.setPos(getX(),y+8);

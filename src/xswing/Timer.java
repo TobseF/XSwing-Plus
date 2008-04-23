@@ -35,7 +35,7 @@ public class Timer extends SObject{
 	
 	@Override
 	public void draw(Graphics g) {
-		super.draw(g);
+		renderTimer();
 	}
 	
 	public void renderTimer(){

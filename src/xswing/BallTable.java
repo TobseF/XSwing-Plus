@@ -9,16 +9,15 @@ import java.util.Arrays;
 
 public class BallTable extends SObject{
 	/** Ball side lenght	 */
-	private int ballA=48;
+	public static final int ballA=48;
 	/** gab between the balls*/
-	private int gap=16;
+	public static final int gap=16;
 	/** Hight and Weight of the Ball Table in pixels*/
 	private int h; //w: 512 h: 432
-	private Ball[][] balls=new Ball[8][10];
+	private Ball[][] balls=new Ball[8][13];
 	
 	public BallTable(int x, int y){
 		super(x,y);
-		//w=(ballA+gap)*8;
 		h=ballA*8;
 	}
 	
@@ -26,12 +25,31 @@ public class BallTable extends SObject{
 		return balls;
 	}
 	
+	/** Sets a ball to the TabllTable*/
 	public void setBall(int x, int y,Ball ball){
+		if(ball!=null)
+			ball.setPos(getFieldPosOnScreen(x,y));
 		balls[x][y]=ball;
 	}
 	
+	/**Returns a ball out of the BallTable or null if
+	 * the Position is outside the PlayField (0x0)-(7x7)
+	 * @param x Position in the Grid
+	 * @param y Position in the Grid
+	 */
+	public Ball getPlayFieldBall(int x, int y){
+		if(x>=0&&x<8&&y>=0&&y<8)
+			return balls[x][y];
+		else
+			return null;
+	}
+	
+	/**Returns a ball out of the BallTable
+	 * @param x Position in the Grid
+	 * @param y Position in the Grid
+	 */
 	public Ball getBall(int x, int y){
-		return balls[x][y];
+			return balls[x][y];
 	}
 	
 	/** Returns the field in which the ball resides. <br> E.g.: (3/2)*/
@@ -39,7 +57,7 @@ public class BallTable extends SObject{
 		int posX=(int)((x-this.x+gap)/(double)(ballA+gap));
 		double posYTemp=((this.y+h-y)/(double)ballA);
 		int posY=(int)posYTemp;
-		if(posYTemp%1==0)//if its exavly on the grid
+		if(posYTemp%1==0)//if its exacly on the grid
 			posY-=1;
 		return new int[]{posX,posY};
 	}
@@ -67,10 +85,15 @@ public class BallTable extends SObject{
 		return isEmpty(pos[0],pos[1]);
 	}
 	
-	/** Returns the Grid in the console*/
+	/** Returns the BallTable in the console*/
 	public void printBallTable(){
-		for(int i=8;i>0;i--){
-			for(int ii=0;ii<8;ii++){
+		BallTable.printBallTable(balls);
+	}
+	
+	/** Returns the given BallTable in the console*/
+	public static void printBallTable(Ball[][] balls){
+		for(int i=balls[0].length;i>0;i--){
+			for(int ii=0;ii<balls.length;ii++){
 				if(balls[ii][i-1]!=null)
 					System.out.print(" "+String.format("%02d",balls[ii][i-1].getNr()));
 				else
@@ -83,7 +106,7 @@ public class BallTable extends SObject{
 	/**
 	 * @param x Position on Screen
 	 * @param y Position on Screen
-	 * @return Wether the Posiotion is over the Ball table
+	 * @return Wether the Posiotion is over the BallTable
 	 */
 	public boolean isOverGrid(int x, int y){
 		if(y>this.y)
@@ -107,11 +130,27 @@ public class BallTable extends SObject{
 		return new int[]{gap+posX*(ballA+gap),h-posY*ballA};
 	}
 	
-	/**Kleares all balls from the BallTable*/
+	/**Cleares all balls from the BallTable*/
 	public void clear(){
 		for(Ball[] b:balls){
 			Arrays.fill(b,null);
 		}
+	}
+	
+	/**Removes the given balls from the BallTable*/
+	public void removeBall(Ball ball){
+		int[] tabelPos=getField(ball.getX(), ball.getY());
+		setBall(tabelPos[0],tabelPos[1],null);
+	}
+	
+	/**Returns the sum of all ball weight on the given column*/
+	public int getColumnWeight(int column){
+		int i=0;
+		for(int row=0;row<8;row++){
+			if(balls[column][row]!=null)
+				i+=balls[column][row].getWeight();
+		}
+		return i;
 	}
 	
 }
