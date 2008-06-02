@@ -1,173 +1,185 @@
-/*
- * @version 0.0 15.04.2008
- * @author 	Tobse F
- */
 package xswing;
 
+import lib.SObject;
+import lib.SpriteSheet;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Sound;
+import xswing.BallTable;
+import xswing.Effects;
 
-public class Ball extends SObject{
-	Font font;
-	
-	/** The number of the ball (0-49)*/
-	private int nr=0;
-	/** The weight of the ball*/
-	protected int weight=0; 
-	/** The effect number of the ball (1=hidden)*/
-	private int effect=0;
-	/** Pixels to move in one update step*/
-	private int speed=16;
-	/*/** The ball side lenght
-	private final int a;*/
-	/** If the balls has to to be moved in update*/
-	private boolean moving=false;
-	private int movingType=0;
-	
-	private int readyToKill=-1;
-	
-	protected BallTable ballTable=null;
+public class Ball
+extends SObject {
+    Font font;
+    protected int nr = 0;
+    protected int weight = 0;
+    private int effect = 0;
+    private int speed = 20;
+    private boolean moving = false;
+    private int movingType = 0;
+    private int readyToKill = -1;
+    protected BallTable ballTable = null;
+    private Sound collsionSound = null;
+    private Effects effects = null;
+    private SpriteSheet ballsSpriteSheet = null;
+    public static final int ALIVE = 0;
+    public static final int WAITING_FOR_KILL = 1;
+    public static final int KILL_IMMEDIATELY = 2;
+    public static final int KILLING_STARTED = 3;
+    public static final int WAITING_FOR_SHRINK = 4;
+    public static final int A = 48;
+    int waitBeforeColCheck = 300;
 
-	protected XSwing swing;
-	
-	public void setSwing(XSwing swing) {
-		this.swing = swing;
-	}
-	
-	public Ball(int level, int x, int y,XSwing swing){
-		super(x,y);
-		nr=(int)(Math.random()*level+1);
-		weight=1+(int)(Math.random()*(level+1));
-		setPic(swing.ballImages.getSprite(nr));
-		this.swing=swing;
-		font=swing.ballFont;
-	}
-	
-	public int getReadyToKill() {
-		return readyToKill;
-	}
+    public Ball() {
+    }
 
-	public void kill(int effectNr){
-		nr=999; //no sense
-		readyToKill=effectNr;
-	}
-	
-	public void setGrid(BallTable ballTable) {
-		this.ballTable = ballTable;
-	}
-	
-	/**	Returns the effect number of the ball */
-	public int getEffect() {
-		return effect;
-	}
-	
-	/**	Returns the number of the ball */
-	public int getNr() {
-		return nr;
-	}
-	
-	@Override
-	public void draw(Graphics g) {
-		super.draw(g);
-		drawNumber(g);
-	}
-	
-	private void drawNumber(Graphics g){
-		if(weight<=9)
-			font.drawString(x+18, y+18, weight+"");
-		else
-			font.drawString(x+13, y+18, weight+"");
-	}
-	
-	/**	Returns the weight of the ball */
-	public int getWeight() {
-		return weight;
-	}
-	
-	/**	Returns wether the Ball is moving */
-	public boolean isMoving() {
-		return moving;
-	}
-	
-	/** Returns the side lenght. -1 when a!=b (no square)*/
-	public int getA(){
-		if(pic.getWidth()!=pic.getHeight())
-			return -1;
-		return pic.getWidth();
-	} 
-	
-	/** Changes the moving state and (if necessary) removes the ball from the BallTable*/
-	public void toggleMoving() {
-		moving=!moving;
-		if(moving&&ballTable.isOverGrid(x, y)){ //when starting moving remomes von the BallTable
-			ballTable.removeBall(this);
-		}
-		if(movingType==0)
-			movingType++;
-		
-	}
-	
-	public void setSpeed(int speed) {
-		this.speed = speed;
-	}
-	
-	public void setNr(int nr) {
-		this.nr = nr;
-		pic=swing.ballImages.getSprite(nr);
-	}
-	
-	public int getSpeed() {
-		return speed;
-	}
-	
-	public void setWeight(int weight) {
-		this.weight = weight;
-	}
-	
-	@Override
-	public void update() {
-		if(moving){
-			y+=speed;
-			if(checkCollison())
-					collide();
-		}
-		else
-			if(movingType>0)
-				if(!checkCollison())
-					//if(ballTable.isOverGrid(x,y))
-							toggleMoving();
-	}
-	
-	int waitBeforeColCheck=300;
-	
-	/** Checks wether ther's a ball or soil below
-	 * @return ture wenn collides*/
-	private boolean checkCollison(){
-		
-		if(waitBeforeColCheck>0)
-			waitBeforeColCheck--;
-		
-		boolean collision=false;
-		if(ballTable.isOverGrid(x, y)){
-			int[] pos=ballTable.getField(x,y);
-			if(pos[1]==0||!ballTable.isEmpty(pos[0],pos[1]-1)){
-				collision=true;
-			}
-		}
-		return collision;
-	}
-	
-	/**Performs a collsion with a ball below*/
-	private void collide(){
-		int[] pos=ballTable.getField(x,y);
-		swing.klack1.play(); //Plays the Sound
-		ballTable.setBall(pos[0],pos[1],this);
-		setPos(ballTable.getFieldPosOnScreen(pos));
-		toggleMoving();
-		swing.effects.addEffect(this,Effects.effectBouncing);
-		pos=ballTable.getField(x,y);
-//		ballTable.printBallTable();
-//		System.out.println("");
-	}
+    public Ball(int level, int x, int y, SpriteSheet balls) {
+        super(x, y);
+        this.nr = (int)(Math.random() * (double)level + 1.0);
+        this.weight = 1 + (int)(Math.random() * (double)(level + 1));
+        this.ballsSpriteSheet = balls;
+        if (balls != null) {
+            this.setPic(this.ballsSpriteSheet.getSprite(this.nr));
+        }
+    }
 
+    public Ball(int level, int x, int y) {
+        this(level, x, y, null);
+    }
+
+    public void setFont(Font font) {
+        this.font = font;
+    }
+
+    public void setCollsionSound(Sound collsionSound) {
+        this.collsionSound = collsionSound;
+    }
+
+    public void setEffects(Effects effects) {
+        this.effects = effects;
+    }
+
+    public void setBallsSpriteSheet(SpriteSheet ballsSpriteSheet) {
+        this.ballsSpriteSheet = ballsSpriteSheet;
+        this.setNr(this.nr);
+    }
+
+    public boolean isReadyToKill() {
+        return this.readyToKill > 0;
+    }
+
+    public int getReadyToKill() {
+        return this.readyToKill;
+    }
+
+    public void kill(int effectNr) {
+        this.readyToKill = effectNr;
+    }
+
+    public void setGrid(BallTable ballTable) {
+        this.ballTable = ballTable;
+    }
+
+    public int getEffect() {
+        return this.effect;
+    }
+
+    public int getNr() {
+        return this.nr;
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        super.draw(g);
+        this.drawNumber(g);
+    }
+
+    protected void drawNumber(Graphics g) {
+        if (this.font != null) {
+            if (this.weight <= 9) {
+                this.font.drawString(this.x + 18, this.y + 21, String.valueOf(this.weight));
+            } else {
+                this.font.drawString(this.x + 13, this.y + 21, String.valueOf(this.weight));
+            }
+        }
+    }
+
+    public int getWeight() {
+        return this.weight;
+    }
+
+    public boolean isMoving() {
+        return this.moving;
+    }
+
+    public void toggleMoving() {
+        boolean bl = this.moving = !this.moving;
+        if (this.moving && this.ballTable.isOverGrid(this.x, this.y)) {
+            this.ballTable.removeBall(this);
+        }
+        if (this.movingType == 0) {
+            ++this.movingType;
+        }
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public boolean compare(Ball ball) {
+        return this.getNr() == ball.getNr() || ball.getNr() == 99;
+    }
+
+    public void setNr(int nr) {
+        this.nr = nr;
+        if (this.ballsSpriteSheet != null) {
+            this.pic = this.ballsSpriteSheet.getSprite(nr);
+        }
+    }
+
+    public int getSpeed() {
+        return this.speed;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    @Override
+    public void update() {
+        if (this.moving) {
+            this.y += this.speed;
+            if (this.checkCollison()) {
+                this.collide();
+            }
+        } else if (this.movingType > 0 && !this.checkCollison()) {
+            this.toggleMoving();
+        }
+    }
+
+    private boolean checkCollison() {
+        int[] pos;
+        if (this.waitBeforeColCheck > 0) {
+            --this.waitBeforeColCheck;
+        }
+        boolean collision = false;
+        if (this.ballTable.isOverGrid(this.x, this.y) && ((pos = this.ballTable.getField(this.x, this.y))[1] == 0 || !this.ballTable.isEmpty(pos[0], pos[1] - 1))) {
+            collision = true;
+        }
+        return collision;
+    }
+
+    private void collide() {
+        int[] pos = this.ballTable.getField(this.x, this.y);
+        if (this.collsionSound != null) {
+            this.collsionSound.play();
+        }
+        this.ballTable.setBall(pos[0], pos[1], this);
+        this.setPos(this.ballTable.getFieldPosOnScreen(pos));
+        this.toggleMoving();
+        if (this.effects != null) {
+            this.effects.addEffect(this, 1);
+        }
+        pos = this.ballTable.getField(this.x, this.y);
+    }
 }

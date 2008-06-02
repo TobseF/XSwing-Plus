@@ -1,28 +1,38 @@
-/*
- * @version 0.0 25.04.2008
- * @author 	Tobse F
- */
 package xswing;
 
-public class Level extends Ball{
+import lib.SpriteSheet;
+import xswing.Ball;
+import xswing.Resetable;
 
-	public Level(int nr, int x, int y, XSwing swing) {
-		super(nr, x, y, swing);
-		weight=nr+1;
-		setNr(nr);
-	}
+public class Level
+extends Ball
+implements Resetable {
+    public Level(int nr, int x, int y, SpriteSheet ballsSpriteSheet) {
+        super(nr, x, y, ballsSpriteSheet);
+        this.weight = nr + 1;
+        this.setNr(nr);
+    }
 
-	@Override
-	public void update() {
-		//do nothing
-	}
-	
-	public int getLevel(){
-		return	getNr();
-	}
-	
-	public void nextLevel(){
-		setNr(getNr()+1);
-		weight=getNr()+1;
-	}
+    @Override
+    public void reset() {
+        this.setLevel(3);
+    }
+
+    public void setLevel(int level) {
+        this.setNr(level + 1);
+        this.weight = level + 1;
+    }
+
+    @Override
+    public void update() {
+    }
+
+    public int getLevel() {
+        return this.getNr();
+    }
+
+    public void nextLevel() {
+        this.setNr(this.getNr() + 1);
+        this.weight = this.getNr() + 1;
+    }
 }

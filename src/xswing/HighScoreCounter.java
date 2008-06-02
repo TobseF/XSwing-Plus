@@ -1,47 +1,45 @@
-/*
- * @version 0.0 27.04.2008
- * @author 	Tobse F
- */
 package xswing;
 
 import java.text.NumberFormat;
-
+import lib.SObject;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
+import xswing.HighScoreMultiplicator;
+import xswing.Resetable;
 
-/**
- * @author Tobse
- *
- *Draws the HighScore and Bonus Number
- */
-public class HighScoreCounter extends SObject{
-	private int score=0;
-	private Font font;
-	private int bonus=0;
-	private Multiplicator multiplicator;
-	
-	public HighScoreCounter(Font font,int x, int y,Multiplicator multiplicator) {
-		super(x,y);
-		this.font=font;
-		this.multiplicator=multiplicator;
-	}
+public class HighScoreCounter
+extends SObject
+implements Resetable {
+    private int score = 0;
+    private Font font;
+    private int bonus = 0;
+    private HighScoreMultiplicator multiplicator;
+    private int letterLenght;
 
-	/** Resets the score */
-	public void clear() {
-		score=0;
-	}
-	
-	/**Adds score to the HogScoreCounter*/
-	public void score(int score){
-		bonus=score*multiplicator.getMulti();
-		this.score=this.score+bonus;
-		multiplicator.score();
-	}
-	
-	@Override
-	public void draw(Graphics g) {
-		font.drawString(x-((score+"").length()-1)*11, y,NumberFormat.getInstance().format(score));
-		if(bonus>0)
-			font.drawString(x-((bonus+"").length()-1)*11, y+55,NumberFormat.getInstance().format(bonus));
-	}
+    public HighScoreCounter(Font font, int x, int y, HighScoreMultiplicator multiplicator) {
+        super(x, y);
+        this.font = font;
+        this.multiplicator = multiplicator;
+        this.letterLenght = font.getWidth("0");
+    }
+
+    public void score(int score) {
+        this.bonus = score * this.multiplicator.getMulti();
+        this.score += this.bonus;
+        this.multiplicator.score();
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        String scoreS = NumberFormat.getInstance().format(this.score);
+        this.font.drawString(this.x - (scoreS.length() - 1) * this.letterLenght, this.y, scoreS);
+        String bonusS = NumberFormat.getInstance().format(this.bonus);
+        this.font.drawString(this.x - (bonusS.length() - 1) * this.letterLenght, this.y + 55, bonusS);
+    }
+
+    @Override
+    public void reset() {
+        this.score = 0;
+        this.bonus = 0;
+    }
 }
