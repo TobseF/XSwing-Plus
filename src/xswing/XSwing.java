@@ -1,10 +1,16 @@
+/*
+ * @version 0.0 14.04.2008
+ * @author 	Tobse F
+ */
 package xswing;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import lib.SObject;
 import lib.Sound;
 import lib.SpriteSheet;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -15,291 +21,263 @@ import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheetFont;
 import org.newdawn.slick.loading.LoadingList;
-import xswing.Ball;
-import xswing.BallCounter;
-import xswing.BallKiller;
-import xswing.BallTable;
-import xswing.Cannon;
-import xswing.Clock;
-import xswing.Effects;
-import xswing.ExtraJoker;
-import xswing.HighScoreCounter;
-import xswing.HighScoreMultiplicator;
-import xswing.Level;
-import xswing.LoadingScreen;
-import xswing.Mechanics;
-import xswing.Reset;
-import xswing.WeightTable;
 
-public class XSwing
-extends BasicGame {
-    private static AppGameContainer game = null;
-    String res = "res/";
-    Image background;
-    Image ball;
-    SpriteSheet balls1;
-    Cannon canon;
-    List<Ball> ballsToMove = new ArrayList<Ball>();
-    List<SObject> gui = new ArrayList<SObject>();
-    LoadingScreen loading;
-    Clock timer;
-    BallTable ballTable;
-    Mechanics mechanics;
-    WeightTable weightTable;
-    BallCounter ballCounter;
-    HighScoreCounter scoreCounter;
-    HighScoreMultiplicator multiplicator;
-    BallKiller ballKiller;
-    Level levelBall;
-    Reset reset;
-    Effects effects;
-    public Sound klack1;
-    public Sound kran1;
-    public Sound wup;
-    public Sound shrinc;
-    public Sound warning;
-    private Music music;
-    private boolean pause;
-    SpriteSheet ballImages;
-    SpriteSheet multipl;
-    SpriteSheet cannons;
-    public SpriteSheetFont font;
-    public SpriteSheetFont ballFont;
-    int rasterX = 248;
-    int rasterY = 289;
-    int canonX = 248;
-    int canonY = 166;
-    boolean particles = true;
-    int u;
+/** The main game class, which combines all game elements */
+public class XSwing extends BasicGame{ 
+	private static AppGameContainer game=null;
+	
+	String res="res/";
+	Image background,ball;
+	SpriteSheet balls1;
+	Cannon canon;
+	List<Ball> ballsToMove=new ArrayList<Ball>();
+	List<SObject>gui=new ArrayList<SObject>();
+	LoadingScreen loading;
+	Clock timer;
+	BallTable ballTable;
+	Mechanics mechanics;
+	WeightTable weightTable;
+	BallCounter ballCounter;
+	HighScoreCounter scoreCounter;
+	HighScoreMultiplicator multiplicator;
+	BallKiller ballKiller;
+	Level levelBall;
+	Reset reset;
+	
+	Effects effects;
+	public Sound klack1,kran1,wup,shrinc,warning;
+	private Music music;
+	SpriteSheet ballImages,multipl,cannons;
+	public SpriteSheetFont font,ballFont;
+	
+	
+	int rasterX=248,rasterY=289;
+	int canonX=248,canonY=166;
+	
+	boolean particles=true;
 
-    public XSwing() {
-        super("XSwing");
-    }
+	public XSwing() {
+		super("XSwing");
+	}
+	
+	public static void main(String[] args) {
+		boolean fullsceen=true;
+		//Log.setVerbose(false); //no debug infos
+		try {
+			game = new AppGameContainer(new XSwing());
+			game.setMinimumLogicUpdateInterval(20);
+			game.setMaximumLogicUpdateInterval(20);
+			game.setDisplayMode(1024,768,fullsceen);
+			game.setClearEachFrame(false);			
+			game.setIcons(new String[]{"res/16.png","res/32.png"});
+			game.start();
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+	}
 
-    public static void main(String[] args) {
-        boolean fullsceen = true;
-        try {
-            game = new AppGameContainer(new XSwing());
-            game.setMinimumLogicUpdateInterval(20);
-            game.setDisplayMode(1024, 768, fullsceen);
-            game.setClearEachFrame(false);
-            game.setIcons(new String[]{"res/16.png", "res/32.png"});
-            game.start();
-        }
-        catch (SlickException e) {
-            e.printStackTrace();
-        }
-    }
+	@Override
+	public void init(GameContainer container) throws SlickException {
+		loading=new LoadingScreen();
+		LoadingList.setDeferredLoading(true);
+		//Images
+		background=new Image(res+"swing_background_b.jpg");
+		multipl=new SpriteSheet(new Image(res+"multiplicator_sp.jpg"),189,72);
+		cannons=new SpriteSheet(new Image(res+"cannons.png"),72,110);
+		balls1=new SpriteSheet(new Image(res+"Balls1.png"),Ball.A,Ball.A);
+		ball=new Image(res+"ball.png");
+		font=new SpriteSheetFont(new SpriteSheet(new Image("res/NumerFont_s19.png"),15,19),'.');
+		ballFont=new SpriteSheetFont(new SpriteSheet(new Image("res/spriteFontBalls2.png"),11,16),'.');
+		ballImages=new SpriteSheet(balls1,Ball.A,Ball.A);
+		//XML
+		effects=new Effects();
+		//Sound
+		klack1=new Sound(res+"klack4.wav");
+		kran1=new Sound(res+"kran1.wav");
+		wup=new Sound(res+"dreier.wav");
+		wup.setMaxPlyingTime(1000);
+		shrinc=new Sound(res+"spratz2.wav");
+		warning=new Sound(res+"ALARM1.wav");
+		music=new Music("res/MOD.X-OCEANS GO EDITION.mod");
+		
+		//Objects
+		reset =new Reset();
+		ballTable=new BallTable(rasterX,rasterY);
+		mechanics=new Mechanics(ballTable);
+		timer=new Clock(font,85,718);
+		canon=new Cannon(cannons,canonX,canonY,new Sound[]{kran1,warning});
+		canon.setBallTable(ballTable);
+		multiplicator=new HighScoreMultiplicator(59,93,multipl);
+		scoreCounter=new HighScoreCounter(font,970,106,multiplicator);
+		weightTable=new WeightTable(font,ballTable);
+		weightTable.setPos(285, 723);
+		levelBall=new Level(3,25,15,balls1);
+		levelBall.setFont(ballFont);
+		ballCounter=new BallCounter(ballFont,160,22);
+		ballCounter.setLevel(levelBall);
+		ballKiller=new BallKiller(mechanics,scoreCounter);
+		effects.setSound(wup,Effects.effectDisappearing);
+		
+		reset.add(timer);
+		reset.add(ballCounter);
+		reset.add(levelBall);
+		reset.add(scoreCounter);
+		reset.add(ballTable);
+		reset.add(effects);
+		reset.add(multiplicator);
+		
+		gui.add(canon);
+		gui.add(timer);
+		gui.add(weightTable);
+		gui.add(levelBall);
+		gui.add(ballCounter);
+		gui.add(scoreCounter);
+		gui.add(multiplicator);
+		
+		newGame();
+	}
+	
+	@Override
+	public void update(GameContainer container, int delta)throws SlickException {
+		if(!loading.isFinish())
+			loading.update();
+		else{
+			Input in=container.getInput();
+			checkKeys(in);
+			if(delta>0){
+				if(!music.playing())
+				music.loop();
+				timer.tick();
+				canon.update(delta);
+				
+				weightTable.update();
+				if(particles)
+					effects.update(delta);
+				mechanics.checkOfFive();
+				mechanics.checkOfThree();
+				ballKiller.update(delta);
+				updateBalls();
+				multiplicator.update(delta);
+			}
+		}
+	}
+	
+	public void addNewBall() {
+		Ball ball=getNewBall(canon.getX(),canon.getY());
+		canon.releaseBall(ball);
+		effects.addEffect(canon.getBall(),Effects.efectFlash);
+		ballCounter.count();
+	}
+	
+	public Ball getNewBall(int x, int y){
+		Ball ball=new Ball(levelBall.getLevel(),x,y,balls1);
+		ball.setGrid(ballTable);
+		ball.setFont(ballFont);
+		ball.setCollsionSound(klack1);
+		ball.setEffects(effects);
+		ballsToMove.add(ball);
+		return ball;
+	}
+	
+	public void addNewJoker() {
+		ExtraJoker ball=new ExtraJoker(33,canon.getX(),canon.getY());
+		ball.setGrid(ballTable);
+		ball.setCollsionSound(klack1);
+		ballsToMove.remove(canon.getBall());
+		ballsToMove.add(ball);
+		canon.setBall(ball);
+		effects.addEffect(canon.getBall(),Effects.efectFlash);
+		ballCounter.count();
+	}
+	
+	public void addTopBalls(){
+		for(int row=12;row>10;row--){
+			for(int column=0;column<8;column++){
+				int[]pos=ballTable.getFieldPosOnScreen(column,row);
+				Ball newBall=getNewBall(pos[0],pos[1]);		
+				ballTable.setBall(column,row, newBall);
+			}
+		}
+	}
+	
+	@Override
+	public void render(GameContainer container, Graphics g)throws SlickException {
+		if(!loading.isFinish())
+			loading.draw(g);
+		else{
+			g.drawImage(background,0,0);
+			for(int i=0;i<gui.size();i++){
+				gui.get(i).draw(g);
+			}
+			for(int i=0;i<ballsToMove.size();i++){
+				ballsToMove.get(i).draw(g);
+			}
+			if(particles)
+				effects.draw(g);
+		}
+	}
+	
+	private void checkKeys(Input in){
+		
+		if(in.isKeyDown(Input.KEY_ESCAPE)){
+			game.exit();
+		}
+		if(in.isKeyPressed(Input.KEY_P)){
+			game.setPaused(!game.isPaused());
+		}
+		if(in.isKeyPressed(Input.KEY_N)){
+			newGame();
+		}
+		if(!game.isPaused()){
+			if(in.isKeyPressed(Input.KEY_LEFT)){
+				canon.moveLeft();
+			}
+			if(in.isKeyPressed(Input.KEY_RIGHT)){
+				canon.moveRight();
+			}
+			if(in.isKeyPressed(Input.KEY_DOWN)){
+				addNewBall();
+			}
+			if(in.isKeyPressed(Input.KEY_J)){
+				addNewJoker();
+			}
+			if(in.isKeyPressed(Input.KEY_E)){
+				particles=!particles;
+			}
+		}
+	}
+	
+	public void newGame(){
+		reset.reset();
+		ballsToMove.clear();
+		addTopBalls();
+		game.setPaused(false);
+	}
 
-    public void init(GameContainer container) throws SlickException {
-        this.loading = new LoadingScreen();
-        LoadingList.setDeferredLoading(true);
-        this.background = new Image(String.valueOf(this.res) + "swing_background_b.jpg");
-        this.multipl = new SpriteSheet(new Image(String.valueOf(this.res) + "multiplicator_sp.jpg"), 189, 72);
-        this.cannons = new SpriteSheet(new Image(String.valueOf(this.res) + "cannons.png"), 72, 110);
-        this.balls1 = new SpriteSheet(new Image(String.valueOf(this.res) + "Balls1.png"), 48, 48);
-        this.ball = new Image(String.valueOf(this.res) + "ball.png");
-        this.font = new SpriteSheetFont(new SpriteSheet(new Image("res/NumerFont_s19.png"), 15, 19), '.');
-        this.ballFont = new SpriteSheetFont(new SpriteSheet(new Image("res/spriteFontBalls2.png"), 11, 16), '.');
-        this.ballImages = new SpriteSheet(this.balls1, 48, 48);
-        this.effects = new Effects();
-        this.klack1 = new Sound(String.valueOf(this.res) + "klack4.wav");
-        this.kran1 = new Sound(String.valueOf(this.res) + "kran1.wav");
-        this.wup = new Sound(String.valueOf(this.res) + "dreier.wav");
-        this.wup.setMaxPlyingTime(1000L);
-        this.shrinc = new Sound(String.valueOf(this.res) + "spratz2.wav");
-        this.warning = new Sound(String.valueOf(this.res) + "ALARM1.wav");
-        this.music = new Music("res/MOD.X-OCEANS GO EDITION.mod");
-        this.reset = new Reset();
-        this.ballTable = new BallTable(this.rasterX, this.rasterY);
-        this.mechanics = new Mechanics(this.ballTable);
-        this.timer = new Clock(this.font, 85, 718);
-        this.canon = new Cannon(this.cannons, this.canonX, this.canonY, new Sound[]{this.kran1, this.warning});
-        this.canon.setBallTable(this.ballTable);
-        this.multiplicator = new HighScoreMultiplicator(59, 93, this.multipl);
-        this.scoreCounter = new HighScoreCounter(this.font, 970, 106, this.multiplicator);
-        this.weightTable = new WeightTable(this.font, this.ballTable);
-        this.weightTable.setPos(285, 723);
-        this.levelBall = new Level(3, 25, 15, this.balls1);
-        this.levelBall.setFont(this.ballFont);
-        this.ballCounter = new BallCounter(this.ballFont, 160, 22);
-        this.ballCounter.setLevel(this.levelBall);
-        this.ballKiller = new BallKiller(this.mechanics, this.scoreCounter);
-        this.effects.setSound(this.wup, 2);
-        this.reset.add(this.timer);
-        this.reset.add(this.ballCounter);
-        this.reset.add(this.levelBall);
-        this.reset.add(this.scoreCounter);
-        this.reset.add(this.ballTable);
-        this.reset.add(this.effects);
-        this.reset.add(this.multiplicator);
-        this.gui.add(this.canon);
-        this.gui.add(this.timer);
-        this.gui.add(this.weightTable);
-        this.gui.add(this.levelBall);
-        this.gui.add(this.ballCounter);
-        this.gui.add(this.scoreCounter);
-        this.gui.add(this.multiplicator);
-        this.newGame();
-    }
+	private void updateBalls(){
+		for(int i=0;i<ballsToMove.size();i++){
+			Ball b=ballsToMove.get(i);
+			if(b.isReadyToKill()){
+				
+				if(b.getReadyToKill()==Ball.WAITING_FOR_KILL){;
+					ballKiller.addBall(b);
+					effects.addEffect(b,Effects.effectDisappearing);
+					b.kill(Ball.KILLING_STARTED);
+				}
+				if(b.getReadyToKill()==Ball.WAITING_FOR_SHRINK){
+					shrinc.play();
+					b.kill(Ball.KILL_IMMEDIATELY);
+				}
+				if(b.getReadyToKill()==Ball.KILL_IMMEDIATELY){
+					effects.addEffect(b,Effects.effectDisappearing);
+					int[] field=ballTable.getField(b);;
+					ballTable.setBall(field[0],field[1],null);
+					ballsToMove.remove(i);
+				}
+			}
+			else
+				b.update();
+		}
+	}
 
-    public void update(GameContainer container, int delta) throws SlickException {
-        System.out.println("up" + this.u++);
-        if (!this.loading.isFinish()) {
-            this.loading.update();
-        } else {
-            Input in = container.getInput();
-            this.checkKeys(in);
-            if (delta > 0) {
-                if (!this.music.playing()) {
-                    this.music.loop();
-                }
-                this.timer.tick();
-                this.canon.update(delta);
-                this.weightTable.update();
-                if (this.particles) {
-                    this.effects.update(delta);
-                }
-                this.mechanics.checkOfFive();
-                this.mechanics.checkOfThree();
-                this.ballKiller.update(delta);
-                this.updateBalls();
-                this.multiplicator.update(delta);
-            }
-        }
-    }
-
-    public void addNewBall() {
-        Ball ball = this.getNewBall(this.canon.getX(), this.canon.getY());
-        this.canon.releaseBall(ball);
-        this.effects.addEffect(this.canon.getBall(), 3);
-        this.ballCounter.count();
-    }
-
-    public Ball getNewBall(int x, int y) {
-        Ball ball = new Ball(this.levelBall.getLevel(), x, y, this.balls1);
-        ball.setGrid(this.ballTable);
-        ball.setFont(this.ballFont);
-        ball.setCollsionSound(this.klack1);
-        this.ballsToMove.add(ball);
-        return ball;
-    }
-
-    public void addNewJoker() {
-        ExtraJoker ball = new ExtraJoker(33, this.canon.getX(), this.canon.getY());
-        ball.setGrid(this.ballTable);
-        ball.setCollsionSound(this.klack1);
-        this.ballsToMove.remove(this.canon.getBall());
-        this.ballsToMove.add(ball);
-        this.canon.setBall(ball);
-        this.effects.addEffect(this.canon.getBall(), 3);
-        this.ballCounter.count();
-    }
-
-    public void addTopBalls() {
-        int row = 12;
-        while (row > 10) {
-            int column = 0;
-            while (column < 8) {
-                int[] pos = this.ballTable.getFieldPosOnScreen(column, row);
-                Ball newBall = this.getNewBall(pos[0], pos[1]);
-                this.ballTable.setBall(column, row, newBall);
-                ++column;
-            }
-            --row;
-        }
-    }
-
-    public void render(GameContainer container, Graphics g) throws SlickException {
-        if (!this.loading.isFinish()) {
-            this.loading.draw(g);
-        } else {
-            g.drawImage(this.background, 0.0f, 0.0f);
-            int i = 0;
-            while (i < this.gui.size()) {
-                this.gui.get(i).draw(g);
-                ++i;
-            }
-            i = 0;
-            while (i < this.ballsToMove.size()) {
-                this.ballsToMove.get(i).draw(g);
-                ++i;
-            }
-            if (this.particles) {
-                this.effects.draw(g);
-            }
-        }
-    }
-
-    private void checkKeys(Input in) {
-        if (in.isKeyDown(1)) {
-            game.exit();
-        }
-        if (in.isKeyPressed(25)) {
-            game.setPaused(!game.isPaused());
-        }
-        if (in.isKeyPressed(49)) {
-            this.newGame();
-        }
-        if (!game.isPaused()) {
-            if (in.isKeyPressed(203)) {
-                this.canon.moveLeft();
-            }
-            if (in.isKeyPressed(205)) {
-                this.canon.moveRight();
-            }
-            if (in.isKeyPressed(208)) {
-                this.addNewBall();
-            }
-            if (in.isKeyPressed(36)) {
-                this.addNewJoker();
-            }
-            if (in.isKeyPressed(18)) {
-                this.particles = !this.particles;
-            }
-        }
-    }
-
-    public void pause() {
-        if (!this.pause) {
-            game.pause();
-        } else {
-            game.resume();
-        }
-        this.pause = !this.pause;
-    }
-
-    public void newGame() {
-        this.reset.reset();
-        this.ballsToMove.clear();
-        this.addTopBalls();
-        game.setPaused(false);
-    }
-
-    private void updateBalls() {
-        int i = 0;
-        while (i < this.ballsToMove.size()) {
-            Ball b = this.ballsToMove.get(i);
-            if (b.isReadyToKill()) {
-                if (b.getReadyToKill() == 1) {
-                    this.ballKiller.addBall(b);
-                    this.effects.addEffect(b, 2);
-                    b.kill(3);
-                }
-                if (b.getReadyToKill() == 4) {
-                    this.shrinc.play();
-                    b.kill(2);
-                }
-                if (b.getReadyToKill() == 2) {
-                    this.effects.addEffect(b, 2);
-                    int[] field = this.ballTable.getField(b);
-                    this.ballTable.setBall(field[0], field[1], null);
-                    this.ballsToMove.remove(i);
-                }
-            } else {
-                b.update();
-            }
-            ++i;
-        }
-    }
 }

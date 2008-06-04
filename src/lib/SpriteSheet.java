@@ -1,33 +1,46 @@
+/*
+ * @version 0.0 23.04.2008
+ * @author 	Tobse F
+ */
 package lib;
 
 import org.newdawn.slick.Image;
 
-public class SpriteSheet
-extends org.newdawn.slick.SpriteSheet {
-    public SpriteSheet(Image image, int tw, int th) {
-        super(image, tw, th);
-    }
+/** Extendened version of the Slick Spritesheet class */
+public class SpriteSheet extends org.newdawn.slick.SpriteSheet{
 
-    public Image getSprite(int nr) {
-        int y = 0;
-        if (nr > 0) {
-            y = nr / this.getHorizontalCount();
-        }
-        int x = nr - y * this.getHorizontalCount();
-        return this.getSprite(x, y);
-    }
+	public SpriteSheet(Image image, int tw, int th) {
+		super(image, tw, th);
+	}
+	
+	/** Get get the sprite with the specifid number 
+	 * @param nr The number of the Sprite
+	 * @return The single Image of the Sprite Sheet
+	 */
+	public Image getSprite(int nr){
+		int y=0;
+		if(nr>0)//no div/0
+			y=nr/getHorizontalCount();
+		int x=nr-(y*getHorizontalCount());
+		return getSprite(x,y);
+	}
+	
+	/** Get get all Sprites from one row 
+	 * @param row The row (Y-Pos.) of the Sprites 
+	 * @return Array with Images
+	 */
+	public Image[] getSprites(int row){
+		Image[] images=new Image[getHorizontalCount()];
+		for(int i=0;i<getHorizontalCount();i++){
+			images[i]=getSprite(i,row);			
+		}
+		return images;
+	}
+	
+	/** @return The number of Sprites in the SpriteSheet
+	 */
+	public int getSpriteCount(){
+		return getHorizontalCount()*getVerticalCount();
+	}
 
-    public Image[] getSprites(int row) {
-        Image[] images = new Image[this.getHorizontalCount()];
-        int i = 0;
-        while (i < this.getHorizontalCount()) {
-            images[i] = this.getSprite(i, row);
-            ++i;
-        }
-        return images;
-    }
-
-    public int getSpriteCount() {
-        return this.getHorizontalCount() * this.getVerticalCount();
-    }
 }
