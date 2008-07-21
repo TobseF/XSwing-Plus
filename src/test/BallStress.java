@@ -1,7 +1,3 @@
-/*
- * @version 0.0 14.04.2008
- * @author 	Tobse F
- */
 package test;
 
 import org.newdawn.slick.AppGameContainer;
@@ -11,47 +7,42 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-public class BallStress extends BasicGame{
-	Image background,ball;
-	static AppGameContainer container;
-	public BallStress() {
-		super("sad");
-	}
+public class BallStress
+extends BasicGame {
+    Image background;
+    Image ball;
+    static AppGameContainer container;
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		try {
-			container = new AppGameContainer(new BallStress());
-			container.setDisplayMode(640,480,false);
-			container.setClearEachFrame(false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+    public BallStress() {
+        super("sad");
+    }
 
-	}
+    public static void main(String[] args) {
+        try {
+            container = new AppGameContainer(new BallStress());
+            container.setDisplayMode(640, 480, false);
+            container.setClearEachFrame(false);
+            container.start();
+        }
+        catch (SlickException e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public void init(GameContainer container) throws SlickException {
-		background=new Image("res/swing_background.jpg");
-		ball=new Image("res/ball.png");
-	}
+    public void init(GameContainer container) throws SlickException {
+        this.background = new Image("res/swing_background.jpg");
+        this.ball = new Image("res/ball.png");
+    }
 
+    public void render(GameContainer container, Graphics g) throws SlickException {
+        g.drawImage(this.background, 0.0f, 0.0f);
+        int i = 0;
+        while (i < 1000) {
+            g.drawImage(this.ball, (float)(Math.random() * (double)container.getWidth()), (float)(Math.random() * (double)container.getHeight()));
+            ++i;
+        }
+    }
 
-	@Override
-	public void render(GameContainer container, Graphics g)
-			throws SlickException {
-		g.drawImage(background,0,0);
-		for(int i=0;i<1000;i++){
-			g.drawImage(ball,(float)(Math.random()*container.getWidth()),(float)(Math.random()*container.getHeight()));
-		}
-	}
-
-	@Override
-	public void update(GameContainer container, int delta)
-			throws SlickException {	
-	}
-
+    public void update(GameContainer container, int delta) throws SlickException {
+    }
 }

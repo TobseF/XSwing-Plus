@@ -1,50 +1,43 @@
-/*
- * @version 0.0 25.04.2008
- * @author 	Tobse F
- */
 package xswing;
 
 import lib.Resetable;
 import lib.SpriteSheet;
+import xswing.Ball;
 
-/** The ball which counts the levels */
-public class Level extends Ball implements Resetable{
-	
-	/**The Level with wich the game starts (only for reset)*/
-	private int startLeveL=3;
-	/**The Highest reachable level*/
-	private int maxLeveL=45;
+public class Level
+extends Ball
+implements Resetable {
+    private int startLeveL = 3;
+    private int maxLeveL = 45;
 
-	public Level(int nr, int x, int y,SpriteSheet ballsSpriteSheet) {
-		super(nr, x, y,ballsSpriteSheet);
-		weight=nr+1;
-		setNr(nr);
-	}
-	
-	public void reset(){
-		setLevel(startLeveL);
-	}
-	
-	public void setLevel(int level){
-		setNr(level+1);
-		weight=level+1;
-	}
+    public Level(int nr, int x, int y, SpriteSheet ballsSpriteSheet) {
+        super(nr, x, y, ballsSpriteSheet);
+        this.weight = nr + 1;
+        this.setNr(nr);
+    }
 
-	@Override
-	public void update() {
-		//do nothing
-	}
-	
-	/** Returns the current level */
-	public int getLevel(){
-		return	getNr();
-	}
-	
-	/** swiches to the next level */
-	public void nextLevel(){
-		if(!(getNr()+1>=maxLeveL)){
-			setNr(getNr()+1);
-			weight=getNr()+1;
-		}
-	}
+    @Override
+    public void reset() {
+        this.setLevel(this.startLeveL);
+    }
+
+    public void setLevel(int level) {
+        this.setNr(level + 1);
+        this.weight = level + 1;
+    }
+
+    @Override
+    public void update() {
+    }
+
+    public int getLevel() {
+        return this.getNr();
+    }
+
+    public void nextLevel() {
+        if (this.getNr() + 1 < this.maxLeveL) {
+            this.setNr(this.getNr() + 1);
+            this.weight = this.getNr() + 1;
+        }
+    }
 }

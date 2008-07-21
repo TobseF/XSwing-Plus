@@ -1,47 +1,41 @@
-/*
- * @version 0.0 29.05.2008
- * @author 	Tobse F
- */
 package test;
 
-import org.newdawn.slick.*;
+import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.BasicGame;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 
-public class AppletTest extends BasicGame{
-	
-	public AppletTest() {
-		super("AppletTest");
-	}
+public class AppletTest
+extends BasicGame {
+    int r = 0;
 
-	public static void main(String[] args) {
-		AppGameContainer game=null;
-		//Log.setVerbose(false); //no debug infos
-		try {
-			game = new AppGameContainer(new AppletTest());
-			game.setDisplayMode(300,300,false);	
-			game.start();	
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	int r=0;
-	@Override
-	public void init(GameContainer container) throws SlickException {
-		
-	}
+    public AppletTest() {
+        super("AppletTest");
+    }
 
-	@Override
-	public void update(GameContainer container, int delta)
-			throws SlickException {
-		r++;
-	}
+    public static void main(String[] args) {
+        AppGameContainer game = null;
+        try {
+            game = new AppGameContainer(new AppletTest());
+            game.setDisplayMode(300, 300, false);
+            game.start();
+        }
+        catch (SlickException e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public void render(GameContainer container, Graphics g)
-			throws SlickException {
-		g.setAntiAlias(true);
-		g.rotate(150, 50, r);
-		g.fillRoundRect(50, 50, 200, 100,5);
-	}
+    public void init(GameContainer container) throws SlickException {
+    }
 
+    public void update(GameContainer container, int delta) throws SlickException {
+        ++this.r;
+    }
+
+    public void render(GameContainer container, Graphics g) throws SlickException {
+        g.setAntiAlias(true);
+        g.rotate(150.0f, 50.0f, this.r);
+        g.fillRoundRect(50.0f, 50.0f, 200.0f, 100.0f, 5);
+    }
 }
