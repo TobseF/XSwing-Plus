@@ -1,7 +1,7 @@
 package xswing;
 
-import lib.Resetable;
-import lib.SObject;
+import lib.mylib.Resetable;
+import lib.mylib.SObject;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SpriteSheet;
 

@@ -1,7 +1,7 @@
 package xswing;
 
-import lib.SObject;
-import lib.SpriteSheet;
+import lib.mylib.SObject;
+import lib.mylib.SpriteSheet;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Sound;

@@ -1,8 +1,8 @@
 package xswing;
 
 import java.util.Arrays;
-import lib.Resetable;
-import lib.SObject;
+import lib.mylib.Resetable;
+import lib.mylib.SObject;
 import xswing.Ball;
 
 public class BallTable

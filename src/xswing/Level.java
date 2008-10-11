@@ -1,7 +1,8 @@
 package xswing;
 
-import lib.Resetable;
-import lib.SpriteSheet;
+import lib.mylib.Resetable;
+import lib.mylib.SpriteSheet;
+import org.newdawn.slick.Graphics;
 import xswing.Ball;
 
 public class Level
@@ -28,6 +29,11 @@ implements Resetable {
 
     @Override
     public void update() {
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        super.draw(g);
     }
 
     public int getLevel() {

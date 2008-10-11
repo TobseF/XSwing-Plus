@@ -1,8 +1,8 @@
 package xswing;
 
 import java.text.NumberFormat;
-import lib.Resetable;
-import lib.SObject;
+import lib.mylib.Resetable;
+import lib.mylib.SObject;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
 import xswing.HighScoreMultiplicator;
@@ -41,5 +41,9 @@ implements Resetable {
     public void reset() {
         this.score = 0;
         this.bonus = 0;
+    }
+
+    public int getScore() {
+        return this.score;
     }
 }

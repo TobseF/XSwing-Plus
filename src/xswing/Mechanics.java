@@ -132,10 +132,20 @@ public class Mechanics {
     public void performWeight(int[] weights) {
         int i = 0;
         while (true) {
-            int w1 = weights[i];
-            int n = weights[i + 1];
             i += 2;
         }
+    }
+
+    public boolean checkHight() {
+        int maxHeight = 8;
+        int i = 0;
+        while (i < this.balls.length) {
+            if (this.ballTable.getBall(i, maxHeight) != null) {
+                return true;
+            }
+            ++i;
+        }
+        return false;
     }
 
     public int calculateScore(List<Ball> ballsTemp) {

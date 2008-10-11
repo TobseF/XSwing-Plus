@@ -1,7 +1,7 @@
 package xswing;
 
-import lib.SObject;
-import lib.SpriteSheet;
+import lib.mylib.SObject;
+import lib.mylib.SpriteSheet;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Sound;
@@ -43,6 +43,16 @@ extends SObject {
         this.ballsSpriteSheet = balls;
         if (balls != null) {
             this.setPic(this.ballsSpriteSheet.getSprite(this.nr));
+        }
+    }
+
+    public Ball(int nr, int wieght, int x, int y, SpriteSheet balls) {
+        super(x, y);
+        this.nr = nr + 1;
+        this.weight = wieght;
+        this.ballsSpriteSheet = balls;
+        if (balls != null) {
+            this.setPic(this.ballsSpriteSheet.getSprite(nr));
         }
     }
 
