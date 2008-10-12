@@ -11,9 +11,9 @@ import xswing.LoadingScreen;
 import xswing.MainGame;
 import xswing.gui.XSwingScreenController;
 
-public class XSwingMenue
+public class XSwingMenu
 extends StateBasedGame {
-    public XSwingMenue() {
+    public XSwingMenu() {
         super("Xswing");
     }
 
@@ -34,13 +34,14 @@ extends StateBasedGame {
         boolean fullsceen = !debug;
         Log.info("Debugmode: " + debug);
         try {
-            AppGameContainer game = new AppGameContainer(new XSwingMenue());
+            AppGameContainer game = new AppGameContainer(new XSwingMenu());
             game.setShowFPS(debug);
-            game.setMinimumLogicUpdateInterval(20);
-            game.setMaximumLogicUpdateInterval(20);
+            game.setMinimumLogicUpdateInterval(26);
+            game.setMaximumLogicUpdateInterval(26);
             game.setDisplayMode(1024, 768, fullsceen);
             game.setClearEachFrame(false);
             game.setIcons(new String[]{"res/16.png", "res/32.png"});
+            game.setMouseGrabbed(!debug);
             game.start();
         }
         catch (SlickException e) {

@@ -3,17 +3,17 @@ package xswing;
 import java.util.ArrayList;
 import java.util.List;
 import xswing.Ball;
-import xswing.HighScoreCounter;
 import xswing.Mechanics;
+import xswing.ScoreCounter;
 
 public class BallKiller {
     List<Ball> ballsToKill = new ArrayList<Ball>();
     private static int WAITING_BEFORE_KILL = 260;
     private int timeBeforeKill = WAITING_BEFORE_KILL;
     private Mechanics mechanics;
-    private HighScoreCounter score;
+    private ScoreCounter score;
 
-    public BallKiller(Mechanics mechanics, HighScoreCounter score) {
+    public BallKiller(Mechanics mechanics, ScoreCounter score) {
         this.mechanics = mechanics;
         this.score = score;
     }

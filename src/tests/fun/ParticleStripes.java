@@ -36,10 +36,10 @@ extends BasicGame {
     }
 
     public void init(GameContainer container) throws SlickException {
-        this.background = new Image("res/swing_background.jpg");
+        this.background = new Image("restest/swing_background.jpg");
         try {
-            this.configurableEmitter = ParticleIO.loadEmitter("res/explosion2.xml");
-            this.paticleSystem = ParticleIO.loadConfiguredSystem("res/emptySystem.xml");
+            this.configurableEmitter = ParticleIO.loadEmitter("restest/explosion2.xml");
+            this.paticleSystem = ParticleIO.loadConfiguredSystem("restest/emptySystem.xml");
             this.paticleSystem.setRemoveCompletedEmitters(true);
         }
         catch (IOException e) {

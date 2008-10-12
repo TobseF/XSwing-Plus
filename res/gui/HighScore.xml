@@ -35,7 +35,7 @@
           <panel height="16px" />
           <panel childLayout="horizontal">
             <panel width="*" />
-            <control id="backButton" name="button" label="Enter" align="right">
+            <control id="backButton" name="button" label="Press Enter" align="right">
             	<interact onClick="enterHighScore()"/>
             </control>
           </panel>

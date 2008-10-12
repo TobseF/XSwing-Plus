@@ -1,4 +1,4 @@
-package xswing;
+package trash;
 
 import lib.mylib.BasicGameState;
 import lib.mylib.Resetable;

@@ -9,6 +9,7 @@ public class Clock
 extends SObject
 implements Resetable {
     private long timeS;
+    private int timeTemp;
     private static long ttime;
     private Font font;
 
@@ -30,13 +31,23 @@ implements Resetable {
         this.start();
     }
 
-    public void tick() {
+    @Override
+    public void draw(Graphics g) {
+        this.renderTimer();
+    }
+
+    @Override
+    public void update() {
         this.timeS = (System.currentTimeMillis() - ttime) / 1000L;
     }
 
     @Override
-    public void draw(Graphics g) {
-        this.renderTimer();
+    public void update(int delta) {
+        this.timeTemp += delta;
+        if (this.timeTemp > 1000) {
+            ++this.timeS;
+            this.timeTemp = 1000 - this.timeTemp;
+        }
     }
 
     public void renderTimer() {

@@ -67,15 +67,15 @@ Updateable {
     }
 
     @Override
-    public void update() {
-    }
-
-    @Override
     public int getX() {
         return this.x;
     }
 
     @Override
     public void update(int delta) {
+    }
+
+    @Override
+    public void update() {
     }
 }

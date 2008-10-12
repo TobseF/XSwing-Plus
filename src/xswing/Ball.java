@@ -109,11 +109,7 @@ extends SObject {
 
     protected void drawNumber(Graphics g) {
         if (this.font != null) {
-            if (this.weight <= 9) {
-                this.font.drawString(this.x + 18, this.y + 21, String.valueOf(this.weight));
-            } else {
-                this.font.drawString(this.x + 13, this.y + 21, String.valueOf(this.weight));
-            }
+            this.font.drawString(this.x + 24 - this.font.getWidth(String.valueOf(this.weight)) / 2 - 1, this.y + 21, String.valueOf(this.weight));
         }
     }
 

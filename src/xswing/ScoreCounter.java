@@ -7,7 +7,7 @@ import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
 import xswing.HighScoreMultiplicator;
 
-public class HighScoreCounter
+public class ScoreCounter
 extends SObject
 implements Resetable {
     private int score = 0;
@@ -16,7 +16,7 @@ implements Resetable {
     private HighScoreMultiplicator multiplicator;
     private int letterLenght;
 
-    public HighScoreCounter(Font font, int x, int y, HighScoreMultiplicator multiplicator) {
+    public ScoreCounter(Font font, int x, int y, HighScoreMultiplicator multiplicator) {
         super(x, y);
         this.font = font;
         this.multiplicator = multiplicator;

@@ -1,5 +1,6 @@
 package xswing;
 
+import lib.mylib.EffectBlinking;
 import lib.mylib.Resetable;
 import lib.mylib.SpriteSheet;
 import org.newdawn.slick.Graphics;
@@ -10,16 +11,19 @@ extends Ball
 implements Resetable {
     private int startLeveL = 3;
     private int maxLeveL = 45;
+    EffectBlinking blinking;
 
     public Level(int nr, int x, int y, SpriteSheet ballsSpriteSheet) {
         super(nr, x, y, ballsSpriteSheet);
         this.weight = nr + 1;
         this.setNr(nr);
+        this.blinking = new EffectBlinking(9, 250L, false);
     }
 
     @Override
     public void reset() {
         this.setLevel(this.startLeveL);
+        this.blinking.reset();
     }
 
     public void setLevel(int level) {
@@ -33,7 +37,9 @@ implements Resetable {
 
     @Override
     public void draw(Graphics g) {
-        super.draw(g);
+        if (this.blinking.getBlink()) {
+            super.draw(g);
+        }
     }
 
     public int getLevel() {
@@ -44,6 +50,7 @@ implements Resetable {
         if (this.getNr() + 1 < this.maxLeveL) {
             this.setNr(this.getNr() + 1);
             this.weight = this.getNr() + 1;
+            this.blinking.reset();
         }
     }
 }

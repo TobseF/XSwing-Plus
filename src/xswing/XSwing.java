@@ -5,7 +5,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
-import xswing.GameOver;
 import xswing.LoadingScreen;
 import xswing.MainGame;
 
@@ -41,6 +40,5 @@ extends StateBasedGame {
     public void initStatesList(GameContainer container) throws SlickException {
         this.addState(new LoadingScreen(0));
         this.addState(new MainGame(1));
-        this.addState(new GameOver(2, 300));
     }
 }

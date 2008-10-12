@@ -13,6 +13,7 @@ implements Resetable {
     private int balls = 0;
     private Level level;
     private int letterLenght;
+    private int ballsPerLevel = 50;
 
     public BallCounter(Font font, int x, int y) {
         super(x, y);
@@ -27,7 +28,7 @@ implements Resetable {
 
     public void count() {
         ++this.balls;
-        if (this.level != null && this.balls % 50 == 0) {
+        if (this.level != null && this.balls % this.ballsPerLevel == 0) {
             this.level.nextLevel();
         }
     }

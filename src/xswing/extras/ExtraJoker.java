@@ -12,7 +12,7 @@ extends Ball {
         this.nr = 99;
         this.weight = 0;
         try {
-            this.setPic(new Image("res/ball.png"));
+            this.setPic(new Image("res/joker.png"));
         }
         catch (SlickException e) {
             e.printStackTrace();

@@ -3,6 +3,8 @@ package xswing.gui;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.textfield.TextFieldControl;
 import de.lessvoid.nifty.elements.render.TextRenderer;
+import de.lessvoid.nifty.input.NiftyInputEvent;
+import de.lessvoid.nifty.screen.KeyInputHandler;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import org.newdawn.slick.state.StateBasedGame;
@@ -29,6 +31,16 @@ implements ScreenController {
     public final void onStartScreen() {
         Screen screen = this.nifty.getCurrentScreen();
         this.setHighScore(screen);
+        screen.findElementByName("name").addInputHandler(new KeyInputHandler(){
+
+            public boolean keyEvent(NiftyInputEvent e) {
+                if (e == NiftyInputEvent.SubmitText) {
+                    ScoreScreenController.this.enterHighScore();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     public final void onEndScreen() {
@@ -38,8 +50,7 @@ implements ScreenController {
         System.out.println("entered HighScore");
         System.out.println("highscorestart");
         ((TextRenderer)((Object)screen.findElementByName("labelScore").getRenderer(TextRenderer.class))).setText("Your Score: " + this.highScore);
-        screen.setFocus(screen.findElementByName("name"));
-        screen.lostFocus(screen.findElementByName("name"));
+        screen.findElementByName("name").setFocus();
     }
 
     public final void enterHighScore() {

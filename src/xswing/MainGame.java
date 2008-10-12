@@ -10,6 +10,7 @@ import lib.mylib.Resetable;
 import lib.mylib.SObject;
 import lib.mylib.Sound;
 import lib.mylib.SpriteSheet;
+import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -25,10 +26,10 @@ import xswing.BallTable;
 import xswing.Cannon;
 import xswing.Clock;
 import xswing.Effects;
-import xswing.HighScoreCounter;
 import xswing.HighScoreMultiplicator;
 import xswing.Level;
 import xswing.Mechanics;
+import xswing.ScoreCounter;
 import xswing.SeesawTable;
 import xswing.extras.ExtraJoker;
 import xswing.gui.ScoreScreenController;
@@ -45,7 +46,7 @@ implements Resetable {
     Mechanics mechanics;
     SeesawTable seesawTable;
     BallCounter ballCounter;
-    HighScoreCounter scoreCounter;
+    ScoreCounter scoreCounter;
     HighScoreMultiplicator multiplicator;
     BallKiller ballKiller;
     Level levelBall;
@@ -60,16 +61,13 @@ implements Resetable {
     private SpriteSheet cannons;
     private SpriteSheetFont font;
     private SpriteSheetFont ballFont;
+    private AngelCodeFont fontText;
     private Sound klack1;
     private Sound kran1;
     private Sound wup;
     private Sound shrinc;
     private Sound warning;
     private Music music;
-    private final int rasterX = 248;
-    private final int rasterY = 289;
-    private final int canonX = 248;
-    private final int canonY = 166;
 
     public MainGame(int id) {
         super(id);
@@ -161,13 +159,13 @@ implements Resetable {
 
     public void newGame() {
         System.out.println("ResetGame");
-        this.game.setMouseGrabbed(true);
         this.reset.reset();
         this.ballsToMove.clear();
         this.addTopBalls();
         this.game.setPaused(false);
         this.game.getInput().clearControlPressedRecord();
         this.game.getInput().clearKeyPressedRecord();
+        this.game.getInput().clearMousePressedRecord();
     }
 
     @Override
@@ -206,12 +204,14 @@ implements Resetable {
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
         this.game = container;
+        container.setSoundVolume(0.5f);
         this.background = new Image("res/swing_background_b.jpg");
         this.multipl = new SpriteSheet(new Image("res/multiplicator_sp.jpg"), 189, 72);
         this.cannons = new SpriteSheet(new Image("res/cannons.png"), 72, 110);
         this.balls1 = new SpriteSheet(new Image("res/Balls1.png"), 48, 48);
         this.balls2 = new SpriteSheet(new Image("res/Balls2.png"), 48, 48);
         this.balls = this.balls1;
+        this.fontText = new AngelCodeFont("res/ballfont.fnt", "res/ballfont.png");
         this.font = new SpriteSheetFont(new SpriteSheet(new Image("res/numberFont_s19.png"), 15, 19), '.');
         this.ballFont = new SpriteSheetFont(new SpriteSheet(new Image("res/spriteFontBalls2.png"), 11, 16), '.');
         this.klack1 = new Sound("res/KLACK4.WAV");
@@ -229,7 +229,7 @@ implements Resetable {
         this.canon = new Cannon(this.cannons, 248, 166, new Sound[]{this.kran1, this.warning});
         this.canon.setBallTable(this.ballTable);
         this.multiplicator = new HighScoreMultiplicator(59, 93, this.multipl);
-        this.scoreCounter = new HighScoreCounter(this.font, 970, 106, this.multiplicator);
+        this.scoreCounter = new ScoreCounter(this.font, 970, 106, this.multiplicator);
         this.seesawTable = new SeesawTable(this.font, this.ballTable);
         this.seesawTable.setPos(285, 723);
         this.levelBall = new Level(3, 25, 15, this.balls);
@@ -277,8 +277,8 @@ implements Resetable {
         if (!this.music.playing()) {
             this.music.loop();
         }
-        this.timer.tick();
         this.canon.update(delta);
+        this.timer.update(delta);
         this.seesawTable.update();
         this.effects.update(delta);
         this.mechanics.checkOfFive();
@@ -291,6 +291,7 @@ implements Resetable {
         this.multiplicator.update(delta);
         if (in.isKeyDown(1)) {
             if (this.getID() == 2) {
+                in.pause();
                 game.enterState(1);
             } else {
                 container.exit();
@@ -302,7 +303,6 @@ implements Resetable {
     public void leave(GameContainer container, StateBasedGame game) throws SlickException {
         super.leave(container, game);
         this.music.pause();
-        container.setMouseGrabbed(false);
     }
 
     @Override
