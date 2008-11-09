@@ -1,44 +1,45 @@
+/*
+ * @version 0.0 25.04.2008
+ * @author 	Tobse F
+ */
 package xswing;
 
 import lib.mylib.Resetable;
 import lib.mylib.SObject;
+
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
-import xswing.Level;
 
-public class BallCounter
-extends SObject
-implements Resetable {
-    private Font font;
-    private int balls = 0;
-    private Level level;
-    private int letterLenght;
-    private int ballsPerLevel = 50;
-
-    public BallCounter(Font font, int x, int y) {
-        super(x, y);
-        this.font = font;
-        this.letterLenght = font.getWidth("0");
-    }
-
-    @Override
-    public void reset() {
-        this.balls = 0;
-    }
-
-    public void count() {
-        ++this.balls;
-        if (this.level != null && this.balls % this.ballsPerLevel == 0) {
-            this.level.nextLevel();
-        }
-    }
-
-    public void setLevel(Level level) {
-        this.level = level;
-    }
-
-    @Override
-    public void draw(Graphics g) {
-        this.font.drawString(this.x - (String.valueOf(this.balls).length() - 1) * this.letterLenght / 2, this.y, "" + this.balls);
-    }
+public class BallCounter extends SObject implements Resetable{
+	private Font font;
+	private int balls=0;
+	private Level level;
+	private int letterLenght;
+	private int ballsPerLevel=50;
+	
+	public BallCounter(Font font,int x, int y) {
+		super(x,y);
+		this.font=font;
+		letterLenght=font.getWidth("0");
+	}
+	
+	public void reset(){
+		balls=0;
+	}
+	
+	public void count() {
+		balls++;
+		if(level!=null)
+			if(balls%ballsPerLevel==0)
+				level.nextLevel();
+	}
+	
+	public void setLevel(Level level) {
+		this.level = level;
+	}
+	
+	@Override
+	public void draw(Graphics g) {
+		font.drawString(x-((balls+"").length()-1)*letterLenght/2, y,""+balls);
+	}
 }

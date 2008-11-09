@@ -1,41 +1,48 @@
+/*
+ * @version 0.0 13.06.2008
+ * @author 	Tobse F
+ */
 package tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
-public class MeineKlasse
-extends BasicGame {
-    Image testBild;
+public class MeineKlasse  extends BasicGame{
+	Image testBild;
 
-    public MeineKlasse(String title) {
-        super(title);
-    }
+	public MeineKlasse(String title) {
+		super(title);
+	}
 
-    public static void main(String[] args) {
-        try {
-            AppGameContainer container = new AppGameContainer(new MeineKlasse("MeinSpiel-Fenstername"));
-            container.setMinimumLogicUpdateInterval(20);
-            container.setDisplayMode(800, 600, false);
-            container.setClearEachFrame(false);
-            container.start();
-        }
-        catch (SlickException e) {
-            e.printStackTrace();
-        }
-    }
+	public static void main(String[] args) {
+		try {
+			AppGameContainer container = new AppGameContainer(new MeineKlasse("MeinSpiel-Fenstername"));
+			container.setMinimumLogicUpdateInterval(20);
+			container.setDisplayMode(800,600,false);
+			container.setClearEachFrame(false);
+			container.start();
+			
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 
-    public void init(GameContainer container) throws SlickException {
-        this.testBild = new Image("pfad/bild.jpg");
-    }
+	}
 
-    public void update(GameContainer container, int delta) throws SlickException {
-    }
+	@Override
+	public void init(GameContainer container) throws SlickException {
+		testBild=new Image("pfad/bild.jpg");
+		
+	}
 
-    public void render(GameContainer container, Graphics g) throws SlickException {
-        this.testBild.draw();
-    }
+	@Override
+	public void update(GameContainer container, int delta)
+			throws SlickException {
+		
+	}
+
+	@Override
+	public void render(GameContainer container, Graphics g)
+			throws SlickException {
+		testBild.draw();
+	}
+
 }

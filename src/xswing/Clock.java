@@ -1,59 +1,58 @@
+/*
+ * @version 0.0 15.04.2008
+ * @author 	Tobse F
+ */
 package xswing;
 
 import lib.mylib.Resetable;
 import lib.mylib.SObject;
+import lib.mylib.Updateable;
+
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
 
-public class Clock
-extends SObject
-implements Resetable {
-    private long timeS;
-    private int timeTemp;
-    private static long ttime;
-    private Font font;
+/**The timer which counts the seconds since the game was started*/
+public class Clock extends SObject implements Resetable,Updateable{
+	/** The time on timer start in ms -for calculating the timeSinceStart*/
+	private long timeOnStart;
+	/** The Clock Font*/
+	private Font font;
+	/** The Current time after timer was started in seconds */
+	private long timeSinceStart;
+	
+	public Clock(Font font,int x, int y) {
+		super(x,y);
+		this.font=font;
+	}
+	
+	public void setFont(Font font) {
+		this.font = font;
+	}
+	
+	public void reset(){
+		timeSinceStart=0;
+	}
+	
+	@Override
+	public void draw(Graphics g) {
+		renderTimer();
+	}
 
-    public Clock(Font font, int x, int y) {
-        super(x, y);
-        this.font = font;
-    }
+	@Override
+	 public void update(int delta){
+		timeOnStart += delta;
+	        if(timeOnStart > 1000)
+	        {
+	            timeSinceStart++;
+	            timeOnStart = 1000 - timeOnStart;
+	        }
+	    }
+	
+	public void renderTimer(){
+		String s=String.format("%02d",(int)timeSinceStart%60);
+		String m=String.format("%02d",(int)(timeSinceStart/60)%60);
+		String h=String.format("%02d",(int)((timeSinceStart/60)/60)%60);
+		font.drawString(x,y,h+":"+m+":"+s);
+	}
 
-    public void setFont(Font font) {
-        this.font = font;
-    }
-
-    public void start() {
-        ttime = System.currentTimeMillis();
-    }
-
-    @Override
-    public void reset() {
-        this.start();
-    }
-
-    @Override
-    public void draw(Graphics g) {
-        this.renderTimer();
-    }
-
-    @Override
-    public void update() {
-        this.timeS = (System.currentTimeMillis() - ttime) / 1000L;
-    }
-
-    @Override
-    public void update(int delta) {
-        this.timeTemp += delta;
-        if (this.timeTemp > 1000) {
-            ++this.timeS;
-            this.timeTemp = 1000 - this.timeTemp;
-        }
-    }
-
-    public void renderTimer() {
-        String s = String.format("%02d", (int)this.timeS % 60);
-        String m = String.format("%02d", (int)(this.timeS / 60L) % 60);
-        String h = String.format("%02d", (int)(this.timeS / 60L / 60L) % 60);
-        this.font.drawString(this.x, this.y, String.valueOf(h) + ":" + m + ":" + s);
-    }
 }

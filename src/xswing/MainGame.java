@@ -1,15 +1,20 @@
+/*
+ * @version 0.0 14.04.2008
+ * @author 	Tobse F
+ */
 package xswing;
 
-import de.lessvoid.nifty.screen.ScreenController;
-import de.lessvoid.nifty.slick.NiftyGameState;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
+
 import lib.mylib.BasicGameState;
 import lib.mylib.Reset;
 import lib.mylib.Resetable;
 import lib.mylib.SObject;
 import lib.mylib.Sound;
 import lib.mylib.SpriteSheet;
+
 import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -19,294 +24,297 @@ import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheetFont;
 import org.newdawn.slick.state.StateBasedGame;
-import xswing.Ball;
-import xswing.BallCounter;
-import xswing.BallKiller;
-import xswing.BallTable;
-import xswing.Cannon;
-import xswing.Clock;
-import xswing.Effects;
-import xswing.HighScoreMultiplicator;
-import xswing.Level;
-import xswing.Mechanics;
-import xswing.ScoreCounter;
-import xswing.SeesawTable;
+
 import xswing.extras.ExtraJoker;
 import xswing.gui.ScoreScreenController;
+import de.lessvoid.nifty.slick.NiftyGameState;
 
-public class MainGame
-extends BasicGameState
-implements Resetable {
-    private GameContainer game = null;
-    public static final String RES = "res/";
-    Effects effects;
-    Cannon canon;
-    Clock timer;
-    BallTable ballTable;
-    Mechanics mechanics;
-    SeesawTable seesawTable;
-    BallCounter ballCounter;
-    ScoreCounter scoreCounter;
-    HighScoreMultiplicator multiplicator;
-    BallKiller ballKiller;
-    Level levelBall;
-    Reset reset;
-    List<Ball> ballsToMove = new ArrayList<Ball>();
-    List<SObject> gui = new ArrayList<SObject>();
-    private Image background;
-    private SpriteSheet balls;
-    private SpriteSheet balls1;
-    private SpriteSheet balls2;
-    private SpriteSheet multipl;
-    private SpriteSheet cannons;
-    private SpriteSheetFont font;
-    private SpriteSheetFont ballFont;
-    private AngelCodeFont fontText;
-    private Sound klack1;
-    private Sound kran1;
-    private Sound wup;
-    private Sound shrinc;
-    private Sound warning;
-    private Music music;
+/** The main container class, which combines all container elements */
+public class MainGame extends BasicGameState implements Resetable{
+	public MainGame(int id) {
+		super(id);
+	}
 
-    public MainGame(int id) {
-        super(id);
-    }
+	private GameContainer container=null;
+	private StateBasedGame game=null;
+	
+	public static final String RES="res/";
+	private EffectCatalog effectCatalog;
+	private Cannon canon;
+	private Clock timer;
+	private BallTable ballTable;
+	private Mechanics mechanics;
+	private SeesawTable seesawTable;
+	private BallCounter ballCounter;
+	private ScoreCounter scoreCounter;
+	private HighScoreMultiplicator multiplicator;
+	private BallKiller ballKiller;
+	private Level levelBall;
+	private Reset reset;
+	private List<Ball> ballsToMove=new ArrayList<Ball>();
+	private List<SObject>gui=new ArrayList<SObject>();
+	
+	private Image background;
+	private SpriteSheet balls,balls1,balls2,multipl,cannons;
+	private SpriteSheetFont font,ballFont;
+	private AngelCodeFont fontText;
+	private Sound klack1,kran1,wup,shrinc,warning;
+	private Music music;
+	
+	
+	//private final int rasterX = 248 ;
+	//private final int rasterY = 289 ;
+	//private final int canonX = 248 ;
+	//private final int canonY = 166 ;
 
-    private void gameOver(GameContainer container, StateBasedGame game) {
-        System.out.println("Game Over !");
-        NiftyGameState highScore = new NiftyGameState(3);
-        highScore.fromXml("res/gui/HighScore.xml", new ScreenController[]{new ScoreScreenController(game, this.scoreCounter.getScore())});
-        game.addState(highScore);
-        game.enterState(3);
-    }
+	
+	private void gameOver(GameContainer container, StateBasedGame game){
+		System.out.println("Game Over !");
+		NiftyGameState highScore = new NiftyGameState(3);
+		highScore.fromXml("res/gui/HighScore.xml", new ScoreScreenController(game,scoreCounter.getScore()));
+		game.addState(highScore);	
+		game.enterState(3);
+	}
+	private void addNewBall() {
+	if(canon.isReadyToReleaseBall()){
+			Ball ball=getNewBall(canon.getX(),canon.getY());
+			canon.releaseBall(ball);
+			effectCatalog.addEffect(canon.getBall(),EffectCatalog.efectFlash);
+			ballCounter.count();
+	}
+}
+	
+	private Ball getNewBall(int x, int y){
+		Ball ball=new Ball(levelBall.getLevel(),x,y,balls);
+		ball.setGrid(ballTable);
+		ball.setFont(ballFont);
+		ball.setCollsionSound(klack1);
+		ball.setEffects(effectCatalog);
+		ballsToMove.add(ball);
+		return ball;
+	}
+	
+	private void addNewJoker() {
+		ExtraJoker ball=new ExtraJoker(33,canon.getX(),canon.getY());
+		ball.setGrid(ballTable);
+		ball.setCollsionSound(klack1);
+		ballsToMove.remove(canon.getBall());
+		ballsToMove.add(ball);
+		canon.setBall(ball);
+		effectCatalog.addEffect(canon.getBall(),EffectCatalog.efectFlash);
+		ballCounter.count();
+	}
+	
+	private void addTopBalls(){
+		for(int row=12;row>10;row--){
+			for(int column=0;column<8;column++){
+				int[]pos=ballTable.getFieldPosOnScreen(column,row);
+				Ball newBall=getNewBall(pos[0],pos[1]);		
+				ballTable.setBall(column,row, newBall);
+			}
+		}
+	}
+	
+	private void checkKeys(Input input){
+		if(input.isKeyPressed(Input.KEY_P)){
+			container.setPaused(!container.isPaused());
+		}
+		if(input.isKeyPressed(Input.KEY_N)){
+			newGame();
+		}
+		
+		if(input.isKeyDown(Input.KEY_ESCAPE)){
+			if(getID()==2){ //Game is started with Menue	
+				input.pause();	//have to be resumed in MainMenu			
+				game.enterState(1);
+			}
+			else //Game is started without Menue
+				container.exit();
+		}
+		
+		if(!container.isPaused()){ //no Input while game is paused
 
-    private void addNewBall() {
-        Ball ball = this.getNewBall(this.canon.getX(), this.canon.getY());
-        this.canon.releaseBall(ball);
-        this.effects.addEffect(this.canon.getBall(), 3);
-        this.ballCounter.count();
-    }
+			if(input.isKeyPressed(Input.KEY_LEFT)){
+				canon.moveLeft();
+			}
+			if(input.isKeyPressed(Input.KEY_RIGHT)){
+				canon.moveRight();
+			}
+			if(input.isKeyPressed(Input.KEY_DOWN)){
+				addNewBall();
+			}
+			if(input.isKeyPressed(Input.KEY_J)){ 
+				addNewJoker();
+			}
+			if(input.isKeyPressed(Input.KEY_E)){
+				effectCatalog.setShowParticles(!effectCatalog.isShowParticles());
+			}
+			if(input.isKeyPressed(Input.KEY_B)){
+				if(balls.equals(balls1))
+					balls=balls2;
+				else
+					balls=balls1;
+				newGame();
+				levelBall.setBallsSpriteSheet(balls);
+			}
+			if(input.isKeyPressed(Input.KEY_F)){
+				container.setShowFPS(!container.isShowingFPS());
+			}
+		}
+	}
 
-    private Ball getNewBall(int x, int y) {
-        Ball ball = new Ball(this.levelBall.getLevel(), x, y, this.balls);
-        ball.setGrid(this.ballTable);
-        ball.setFont(this.ballFont);
-        ball.setCollsionSound(this.klack1);
-        ball.setEffects(this.effects);
-        this.ballsToMove.add(ball);
-        return ball;
-    }
+	public void newGame(){
+		System.out.println("ResetGame");
+		//container.setMouseGrabbed(true);
+		reset.reset();
+		
+		ballsToMove.clear();
+		addTopBalls();
+		container.setPaused(false);	
 
-    private void addNewJoker() {
-        ExtraJoker ball = new ExtraJoker(33, this.canon.getX(), this.canon.getY());
-        ball.setGrid(this.ballTable);
-        ball.setCollsionSound(this.klack1);
-        this.ballsToMove.remove(this.canon.getBall());
-        this.ballsToMove.add(ball);
-        this.canon.setBall(ball);
-        this.effects.addEffect(this.canon.getBall(), 3);
-        this.ballCounter.count();
-    }
+		container.getInput().clearControlPressedRecord(); //TODO Better solution to reset input? -ask void
+		container.getInput().clearKeyPressedRecord();
+		container.getInput().clearMousePressedRecord();
+	}
+	
+	@Override
+	public void enter(GameContainer container, StateBasedGame game)throws SlickException {
+		super.enter(container, game);
+		newGame();	
+		this.game=game;
+		this.container=container;
+		if(!music.playing())
+			music.loop();
+	}
 
-    private void addTopBalls() {
-        int row = 12;
-        while (row > 10) {
-            int column = 0;
-            while (column < 8) {
-                int[] pos = this.ballTable.getFieldPosOnScreen(column, row);
-                Ball newBall = this.getNewBall(pos[0], pos[1]);
-                this.ballTable.setBall(column, row, newBall);
-                ++column;
-            }
-            --row;
-        }
-    }
+	private void updateBalls(int delta){
+		for(int i=0;i<ballsToMove.size();i++){
+			Ball b=ballsToMove.get(i);
+			if(b.isReadyToKill()){
+				
+				if(b.getReadyToKill()==Ball.WAITING_FOR_KILL){;
+					ballKiller.addBall(b);
+					effectCatalog.addEffect(b,EffectCatalog.effectDisappearing);
+					b.kill(Ball.KILLING_STARTED);
+				}
+				if(b.getReadyToKill()==Ball.WAITING_FOR_SHRINK){
+					shrinc.play();
+					b.kill(Ball.KILL_IMMEDIATELY);
+				}
+				if(b.getReadyToKill()==Ball.KILL_IMMEDIATELY){
+					effectCatalog.addEffect(b,EffectCatalog.effectDisappearing);
+					int[] field=ballTable.getField(b);;
+					ballTable.setBall(field[0],field[1],null);
+					ballsToMove.remove(i);
+				}
+			}
+			else
+				b.update(delta);
+		}
+	}
 
-    private void checkKeys(Input in) {
-        if (in.isKeyPressed(25)) {
-            this.game.setPaused(!this.game.isPaused());
-        }
-        if (in.isKeyPressed(49)) {
-            this.newGame();
-        }
-        if (!this.game.isPaused()) {
-            if (in.isKeyPressed(203)) {
-                this.canon.moveLeft();
-            }
-            if (in.isKeyPressed(205)) {
-                this.canon.moveRight();
-            }
-            if (in.isKeyPressed(208)) {
-                this.addNewBall();
-            }
-            if (in.isKeyPressed(36)) {
-                this.addNewJoker();
-            }
-            if (in.isKeyPressed(18)) {
-                this.effects.setShowParticles(!this.effects.isShowParticles());
-            }
-            if (in.isKeyPressed(48)) {
-                this.balls = this.balls.equals(this.balls1) ? this.balls2 : this.balls1;
-                this.newGame();
-                this.levelBall.setBallsSpriteSheet(this.balls);
-            }
-            if (in.isKeyPressed(33)) {
-                this.game.setShowFPS(!this.game.isShowingFPS());
-            }
-        }
-    }
+	@Override
+	public void init(GameContainer container, StateBasedGame game)throws SlickException {
+		this.container=container;	
+		container.setSoundVolume(0.5f); //calm down the Effect Sounds
+		//Images
+		background=new Image(RES+"swing_background_b.jpg");
+		//background=new BigImage(RES+"swing_background_b.jpg", Image.FILTER_NEAREST, 256);
+		multipl=new SpriteSheet(new Image(RES+"multiplicator_sp.jpg"),189,72);
+		cannons=new SpriteSheet(new Image(RES+"cannons.png"),72,110);
+		balls1=new SpriteSheet(new Image(RES+"Balls1.png"),Ball.A,Ball.A);
+		balls2=new SpriteSheet(new Image(RES+"Balls2.png"),Ball.A,Ball.A);
+		balls=balls1;
+		fontText=new AngelCodeFont(RES+"ballfont.fnt",RES+"ballfont.png");
+		font=new SpriteSheetFont(new SpriteSheet(new Image(RES+"numberFont_s19.png"),15,19),'.');
+		ballFont=new SpriteSheetFont(new SpriteSheet(new Image(RES+"spriteFontBalls2.png"),11,16),'.');
+		//Sounds
+		klack1=new Sound(RES+"KLACK4.WAV");
+		kran1=new Sound(RES+"KRAN1.WAV");
+		wup=new Sound(RES+"DREIER.WAV");
+		wup.setMaxPlyingTime(1000);
+		shrinc=new Sound(RES+"SPRATZ2.WAV");
+		warning=new Sound(RES+"ALARM1.WAV");
+		music=new Music(RES+"music.mod");
+		//Objects
+		effectCatalog=new EffectCatalog();
+		reset =new Reset();
+		ballTable=new BallTable(248,289);
+		mechanics=new Mechanics(ballTable);
+		timer=new Clock(font,85,718);
+		canon=new Cannon(cannons,248,166,new Sound[]{kran1,warning},ballTable);
+		multiplicator=new HighScoreMultiplicator(59,92,multipl);
+		scoreCounter=new ScoreCounter(font,970,106,multiplicator);
+		seesawTable=new SeesawTable(font,ballTable);
+		seesawTable.setPos(285, 723);
+		levelBall=new Level(3,25,15,balls);
+		levelBall.setFont(ballFont);
+		ballCounter=new BallCounter(ballFont,160,22);
+		ballCounter.setLevel(levelBall);
+		ballKiller=new BallKiller(mechanics,scoreCounter);
+		effectCatalog.setSound(wup,EffectCatalog.effectDisappearing);
+		
+		reset.add(timer);
+		reset.add(ballCounter);
+		reset.add(levelBall);
+		reset.add(scoreCounter);
+		reset.add(ballTable);
+		reset.add(effectCatalog);
+		reset.add(multiplicator);
+		reset.add(canon);
+		
+		gui.add(canon);
+		gui.add(timer);
+		gui.add(seesawTable);
+		gui.add(levelBall);
+		gui.add(ballCounter);
+		gui.add(multiplicator);
+		gui.add(scoreCounter);	
+		//newGame(); //only by entering game state	
+	}
 
-    public void newGame() {
-        System.out.println("ResetGame");
-        this.reset.reset();
-        this.ballsToMove.clear();
-        this.addTopBalls();
-        this.game.setPaused(false);
-        this.game.getInput().clearControlPressedRecord();
-        this.game.getInput().clearKeyPressedRecord();
-        this.game.getInput().clearMousePressedRecord();
-    }
+	@Override
+	public void render(GameContainer container, StateBasedGame game, Graphics g)throws SlickException {
+			g.drawImage(background,0,0);
+			for(int i=0;i<gui.size();i++){
+				gui.get(i).draw(g);
+			}
+			for(int i=0;i<ballsToMove.size();i++){
+				ballsToMove.get(i).draw(g);
+			}
+			effectCatalog.draw(g);
+	}
+	
+	@Override
+	public void update(GameContainer container, StateBasedGame game, int delta)throws SlickException {
+			Input input=container.getInput();
+			checkKeys(input);
+			
+			if(!container.isPaused()){
+				ListIterator<SObject> gui = this.gui.listIterator(0 );
+				while(gui.hasNext()){
+					gui.next().update(delta);
+				}
+				effectCatalog.update(delta);			
+				mechanics.checkOfFive();
+				mechanics.checkOfThree();
+				if(mechanics.checkHight()){
+					gameOver(container,game);
+				}
+				ballKiller.update(delta);
+				updateBalls(delta);
+			}
+	}
 
-    @Override
-    public void enter(GameContainer container, StateBasedGame game) throws SlickException {
-        super.enter(container, game);
-        this.newGame();
-    }
+	@Override
+	public void leave(GameContainer container, StateBasedGame game)throws SlickException {
+		super.leave(container, game);
+		music.pause();
+	}
+	
+	@Override
+	public void reset() {		
+		newGame();	
+	}
 
-    private void updateBalls() {
-        int i = 0;
-        while (i < this.ballsToMove.size()) {
-            Ball b = this.ballsToMove.get(i);
-            if (b.isReadyToKill()) {
-                if (b.getReadyToKill() == 1) {
-                    this.ballKiller.addBall(b);
-                    this.effects.addEffect(b, 2);
-                    b.kill(3);
-                }
-                if (b.getReadyToKill() == 4) {
-                    this.shrinc.play();
-                    b.kill(2);
-                }
-                if (b.getReadyToKill() == 2) {
-                    this.effects.addEffect(b, 2);
-                    int[] field = this.ballTable.getField(b);
-                    this.ballTable.setBall(field[0], field[1], null);
-                    this.ballsToMove.remove(i);
-                }
-            } else {
-                b.update();
-            }
-            ++i;
-        }
-    }
-
-    @Override
-    public void init(GameContainer container, StateBasedGame game) throws SlickException {
-        this.game = container;
-        container.setSoundVolume(0.5f);
-        this.background = new Image("res/swing_background_b.jpg");
-        this.multipl = new SpriteSheet(new Image("res/multiplicator_sp.jpg"), 189, 72);
-        this.cannons = new SpriteSheet(new Image("res/cannons.png"), 72, 110);
-        this.balls1 = new SpriteSheet(new Image("res/Balls1.png"), 48, 48);
-        this.balls2 = new SpriteSheet(new Image("res/Balls2.png"), 48, 48);
-        this.balls = this.balls1;
-        this.fontText = new AngelCodeFont("res/ballfont.fnt", "res/ballfont.png");
-        this.font = new SpriteSheetFont(new SpriteSheet(new Image("res/numberFont_s19.png"), 15, 19), '.');
-        this.ballFont = new SpriteSheetFont(new SpriteSheet(new Image("res/spriteFontBalls2.png"), 11, 16), '.');
-        this.klack1 = new Sound("res/KLACK4.WAV");
-        this.kran1 = new Sound("res/KRAN1.WAV");
-        this.wup = new Sound("res/DREIER.WAV");
-        this.wup.setMaxPlyingTime(1000L);
-        this.shrinc = new Sound("res/SPRATZ2.WAV");
-        this.warning = new Sound("res/ALARM1.WAV");
-        this.music = new Music("res/music.mod");
-        this.effects = new Effects();
-        this.reset = new Reset();
-        this.ballTable = new BallTable(248, 289);
-        this.mechanics = new Mechanics(this.ballTable);
-        this.timer = new Clock(this.font, 85, 718);
-        this.canon = new Cannon(this.cannons, 248, 166, new Sound[]{this.kran1, this.warning});
-        this.canon.setBallTable(this.ballTable);
-        this.multiplicator = new HighScoreMultiplicator(59, 93, this.multipl);
-        this.scoreCounter = new ScoreCounter(this.font, 970, 106, this.multiplicator);
-        this.seesawTable = new SeesawTable(this.font, this.ballTable);
-        this.seesawTable.setPos(285, 723);
-        this.levelBall = new Level(3, 25, 15, this.balls);
-        this.levelBall.setFont(this.ballFont);
-        this.ballCounter = new BallCounter(this.ballFont, 160, 22);
-        this.ballCounter.setLevel(this.levelBall);
-        this.ballKiller = new BallKiller(this.mechanics, this.scoreCounter);
-        this.effects.setSound(this.wup, 2);
-        this.reset.add(this.timer);
-        this.reset.add(this.ballCounter);
-        this.reset.add(this.levelBall);
-        this.reset.add(this.scoreCounter);
-        this.reset.add(this.ballTable);
-        this.reset.add(this.effects);
-        this.reset.add(this.multiplicator);
-        this.gui.add(this.canon);
-        this.gui.add(this.timer);
-        this.gui.add(this.seesawTable);
-        this.gui.add(this.levelBall);
-        this.gui.add(this.ballCounter);
-        this.gui.add(this.scoreCounter);
-        this.gui.add(this.multiplicator);
-    }
-
-    @Override
-    public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-        g.drawImage(this.background, 0.0f, 0.0f);
-        int i = 0;
-        while (i < this.gui.size()) {
-            this.gui.get(i).draw(g);
-            ++i;
-        }
-        i = 0;
-        while (i < this.ballsToMove.size()) {
-            this.ballsToMove.get(i).draw(g);
-            ++i;
-        }
-        this.effects.draw(g);
-    }
-
-    @Override
-    public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        Input in = container.getInput();
-        this.checkKeys(in);
-        if (!this.music.playing()) {
-            this.music.loop();
-        }
-        this.canon.update(delta);
-        this.timer.update(delta);
-        this.seesawTable.update();
-        this.effects.update(delta);
-        this.mechanics.checkOfFive();
-        this.mechanics.checkOfThree();
-        if (this.mechanics.checkHight()) {
-            this.gameOver(container, game);
-        }
-        this.ballKiller.update(delta);
-        this.updateBalls();
-        this.multiplicator.update(delta);
-        if (in.isKeyDown(1)) {
-            if (this.getID() == 2) {
-                in.pause();
-                game.enterState(1);
-            } else {
-                container.exit();
-            }
-        }
-    }
-
-    @Override
-    public void leave(GameContainer container, StateBasedGame game) throws SlickException {
-        super.leave(container, game);
-        this.music.pause();
-    }
-
-    @Override
-    public void reset() {
-        this.newGame();
-    }
 }

@@ -1,7 +1,12 @@
+/*
+ * @version 0.0 06.06.2008
+ * @author 	Tobse F
+ */
 package tests;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
@@ -13,296 +18,275 @@ import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.InputAdapter;
 
 public class Menu {
-    private static SGL GL = Renderer.get();
-    private Input input;
-    private MenuListener listener;
-    private List<String> entries = new ArrayList<String>();
-    private int currentIndex;
-    private int yOffset;
-    private boolean wrapAround;
-    private boolean stopAnimation;
-    private boolean isAnimationWrapping;
-    private boolean disableUpAnimation;
-    private boolean disableDownAnimation;
-    private int animationDirection;
-    private int animationTime;
-    private int animationSpeed;
-    private int regularSpeed = 125;
-    private int wrapSpeed = 1000;
-    private float fastMultiplier = 6.0f;
-    private int x;
-    private int y;
-    private int width;
-    private int height;
-    private Font font;
-    private int entryHeight;
-    private int gradientHeight;
+	   private static SGL GL = Renderer.get();
 
-    public Menu(Font font, Input input, final MenuListener listener) {
-        if (font == null) {
-            throw new IllegalArgumentException("font cannot be null.");
-        }
-        if (input == null) {
-            throw new IllegalArgumentException("input cannot be null.");
-        }
-        this.font = font;
-        this.input = input;
-        this.listener = listener;
-        input.addListener(new InputAdapter(){
+	   private Input input;
+	   private MenuListener listener;
+	   private List<String> entries = new ArrayList<String>();
+	   private int currentIndex, yOffset;
+	   private boolean wrapAround;
+	   private boolean stopAnimation, isAnimationWrapping, disableUpAnimation, disableDownAnimation;
+	   private int animationDirection, animationTime, animationSpeed;
+	   private int regularSpeed = 125, wrapSpeed = 1000;
+	   private float fastMultiplier = 6;
+	   private int x, y, width, height;
+	   private Font font;
+	   private int entryHeight;
+	   private int gradientHeight;
 
-            public void keyPressed(int key, char c) {
-                switch (key) {
-                    case 201: {
-                        Menu.this.stopAnimation();
-                        Menu menu = Menu.this;
-                        menu.currentIndex = (int)((double)menu.currentIndex - Math.max(1.0, Math.floor((float)Menu.this.height / (float)Menu.this.entryHeight) - 1.0));
-                        if (Menu.this.currentIndex < 0) {
-                            Menu menu2 = Menu.this;
-                            menu2.currentIndex = menu2.currentIndex + Menu.this.entries.size();
-                        }
-                        Menu.this.fireEntryChanged();
-                        break;
-                    }
-                    case 209: {
-                        Menu.this.stopAnimation();
-                        Menu menu = Menu.this;
-                        menu.currentIndex = (int)((double)menu.currentIndex + Math.max(1.0, Math.floor((float)Menu.this.height / (float)Menu.this.entryHeight) - 1.0));
-                        if (Menu.this.currentIndex >= Menu.this.entries.size()) {
-                            Menu menu3 = Menu.this;
-                            menu3.currentIndex = menu3.currentIndex - Menu.this.entries.size();
-                        }
-                        Menu.this.fireEntryChanged();
-                        break;
-                    }
-                    case 199: {
-                        Menu.this.stopAnimation();
-                        Menu.this.currentIndex = 0;
-                        Menu.this.fireEntryChanged();
-                        break;
-                    }
-                    case 207: {
-                        Menu.this.stopAnimation();
-                        Menu.this.currentIndex = Menu.this.entries.size() - 1;
-                        Menu.this.fireEntryChanged();
-                        break;
-                    }
-                    case 28: {
-                        if (listener == null) break;
-                        listener.entrySelected();
-                    }
-                }
-            }
-        });
-        this.entryHeight = font.getLineHeight();
-    }
+	   public Menu (Font font, Input input, final MenuListener listener) {
+	      if (font == null) throw new IllegalArgumentException("font cannot be null.");
+	      if (input == null) throw new IllegalArgumentException("input cannot be null.");
+	      this.font = font;
+	      this.input = input;
+	      this.listener = listener;
 
-    public void setBounds(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-    }
+	      input.addListener(new InputAdapter() {
+	         public void keyPressed (int key, char c) {
+	            switch (key) {
+	            case 201: // pageup
+	               stopAnimation();
+	               currentIndex -= Math.max(1, Math.floor(height / (float)entryHeight) - 1);
+	               if (currentIndex < 0) currentIndex += entries.size();
+	               fireEntryChanged();
+	               break;
+	            case 209: // pagedown
+	               stopAnimation();
+	               currentIndex += Math.max(1, Math.floor(height / (float)entryHeight) - 1);
+	               if (currentIndex >= entries.size()) currentIndex -= entries.size();
+	               fireEntryChanged();
+	               break;
+	            case Input.KEY_HOME:
+	               stopAnimation();
+	               currentIndex = 0;
+	               fireEntryChanged();
+	               break;
+	            case Input.KEY_END:
+	               stopAnimation();
+	               currentIndex = entries.size() - 1;
+	               fireEntryChanged();
+	               break;
+	            case Input.KEY_ENTER:
+	               if (listener != null) listener.entrySelected();
+	               break;
+	            }
+	         }
+	      });
 
-    public void render(Graphics g) throws SlickException {
-        if (this.entries.size() == 0) {
-            return;
-        }
-        g.translate(this.x, this.y);
-        g.setWorldClip(0.0f, 0.0f, this.width, this.height);
-        int entryCount = this.entries.size();
-        int startY = this.height / 2 - this.entryHeight / 2;
-        boolean entriesWrap = this.entriesWrap();
-        g.setBackground(Color.red);
-        g.clear();
-        this.renderEntrySelection(g, this.width / 2, startY);
-        g.setFont(this.font);
-        int entryY = startY + this.yOffset + 1;
-        int entryIndex = this.currentIndex;
-        int i = 0;
-        while (i < entryCount) {
-            this.renderEntry(g, this.entries.get(entryIndex), entryY);
-            if ((entryY += this.entryHeight) > this.height) break;
-            if (++entryIndex == entryCount) {
-                if (!entriesWrap) break;
-                entryIndex = 0;
-            }
-            ++i;
-        }
-        entryY = startY + this.yOffset - this.entryHeight;
-        entryIndex = this.currentIndex - 1;
-        i = 0;
-        while (i < entryCount) {
-            if (entryIndex == -1) {
-                if (!entriesWrap) break;
-                entryIndex = entryCount - 1;
-            }
-            this.renderEntry(g, this.entries.get(entryIndex), entryY);
-            if ((entryY -= this.entryHeight) < 0 - this.entryHeight) break;
-            --entryIndex;
-            ++i;
-        }
-        if (this.gradientHeight > 0) {
-            g.clearAlphaMap();
-            g.setDrawMode(Graphics.MODE_ALPHA_MAP);
-            TextureImpl.bindNone();
-            GL.glBegin(7);
-            new Color(1, 1, 1, 1).bind();
-            GL.glVertex2f(0.0f, this.height - this.gradientHeight);
-            GL.glVertex2f(this.width, this.height - this.gradientHeight);
-            Color.white.bind();
-            GL.glVertex2f(this.width, this.height);
-            GL.glVertex2f(0.0f, this.height);
-            Color.white.bind();
-            GL.glVertex2f(0.0f, 0.0f);
-            GL.glVertex2f(this.width, 0.0f);
-            new Color(1, 1, 1, 1).bind();
-            GL.glVertex2f(this.width, this.gradientHeight);
-            GL.glVertex2f(0.0f, this.gradientHeight);
-            GL.glEnd();
-            g.setDrawMode(Graphics.MODE_ALPHA_BLEND);
-            g.setColor(Color.red);
-            g.fillRect(0.0f, 0.0f, this.width, this.height);
-            g.setDrawMode(Graphics.MODE_NORMAL);
-        }
-        g.clearWorldClip();
-        g.resetTransform();
-    }
+	      entryHeight = font.getLineHeight();
+	   }
 
-    protected void renderEntrySelection(Graphics g, int x, int y) {
-        g.setColor(new Color(1.0f, 1.0f, 1.0f, 0.4f));
-        int currentEntryWidth = this.font.getWidth(this.getSelectedEntry().toString());
-        g.fillRect(0.0f, y, currentEntryWidth + 7, this.entryHeight);
-        g.setColor(Color.white);
-    }
+	   public void setBounds (int x, int y, int width, int height) {
+	      this.x = x;
+	      this.y = y;
+	      this.width = width;
+	      this.height = height;
+	   }
 
-    protected void renderEntry(Graphics g, Object entry, int y) {
-        g.drawString(entry.toString(), 1.0f, y);
-    }
+	   public void render (Graphics g) throws SlickException {
+	      if (entries.size() == 0) return;
 
-    private void stopAnimation() {
-        this.yOffset = 0;
-        this.animationDirection = 0;
-        this.animationTime = 0;
-    }
+	      g.translate(x, y);
+	      g.setWorldClip(0, 0, width, height);
 
-    public void fireEntryChanged() {
-        if (this.listener != null) {
-            this.listener.entryChanged(this.entries.get(this.currentIndex));
-        }
-    }
+	      int entryCount = entries.size();
+	      int startY = height / 2 - entryHeight / 2;
 
-    private boolean entriesWrap() {
-        return this.wrapAround && (double)this.entries.size() > Math.ceil((int)Math.floor(this.height / this.entryHeight));
-    }
+	      boolean entriesWrap = entriesWrap();
 
-    private void animate(int direction) {
-        boolean reverseOldAnimation;
-        if (this.entries.size() < 2) {
-            return;
-        }
-        this.stopAnimation = false;
-        int oldAnimationDirection = this.animationDirection;
-        this.animationDirection = direction;
-        this.isAnimationWrapping = false;
-        if (!this.entriesWrap() && (this.animationDirection > 0 && this.currentIndex == 0 || this.animationDirection < 0 && this.currentIndex == this.entries.size() - 1)) {
-            this.isAnimationWrapping = true;
-        }
-        this.currentIndex = this.animationDirection > 0 ? (this.currentIndex == 0 ? this.entries.size() - 1 : this.currentIndex - 1) : (this.currentIndex == this.entries.size() - 1 ? 0 : this.currentIndex + 1);
-        this.fireEntryChanged();
-        boolean bl = reverseOldAnimation = oldAnimationDirection != 0 && oldAnimationDirection != direction;
-        if (reverseOldAnimation) {
-            this.animationTime = this.animationSpeed - this.animationTime;
-        }
-        this.animationSpeed = this.isAnimationWrapping ? this.wrapSpeed : this.regularSpeed;
-        if (!reverseOldAnimation) {
-            this.animationTime = this.animationSpeed;
-        }
-    }
+	      g.setBackground(Color.red);
+	      g.clear();
 
-    public void update(int delta) throws SlickException {
-        if (this.input.isKeyDown(200)) {
-            if (!this.disableUpAnimation && this.animationDirection != 1) {
-                this.animate(1);
-            }
-        } else {
-            if (this.animationDirection == 1) {
-                this.stopAnimation = true;
-            }
-            this.disableUpAnimation = false;
-        }
-        if (this.input.isKeyDown(208)) {
-            if (!this.disableDownAnimation && this.animationDirection != -1) {
-                this.animate(-1);
-            }
-        } else {
-            if (this.animationDirection == -1) {
-                this.stopAnimation = true;
-            }
-            this.disableDownAnimation = false;
-        }
-        if (this.animationDirection != 0 || this.animationTime > 0) {
-            boolean useFastMultiplier = this.input.isKeyDown(157) || this.input.isKeyDown(29);
-            this.animationTime = (int)((float)this.animationTime - (float)delta * (useFastMultiplier ? this.fastMultiplier : 1.0f));
-            if (this.animationTime <= 0) {
-                boolean entriesWrap = this.entriesWrap();
-                if (!entriesWrap && this.animationDirection > 0 && this.currentIndex == 0) {
-                    this.stopAnimation();
-                    this.disableUpAnimation = true;
-                } else if (!entriesWrap && this.animationDirection < 0 && this.currentIndex == this.entries.size() - 1) {
-                    this.stopAnimation();
-                    this.disableDownAnimation = true;
-                } else if (this.stopAnimation) {
-                    this.stopAnimation();
-                } else {
-                    this.yOffset = 0;
-                    int negativeTimeOver = this.animationTime;
-                    this.animate(this.animationDirection);
-                    this.animationTime += negativeTimeOver;
-                    if (this.animationTime <= 0) {
-                        this.animationTime = this.animationSpeed;
-                    }
-                }
-            }
-            int distance = this.isAnimationWrapping ? this.height + this.entryHeight : this.entryHeight;
-            this.yOffset = -((int)((float)distance * ((float)this.animationTime / (float)this.animationSpeed))) * this.animationDirection;
-            if (this.isAnimationWrapping && Math.abs(this.yOffset) > this.height / 2 + this.entryHeight) {
-                this.yOffset -= (this.height + this.entryHeight * (this.entries.size() - 1) + this.entryHeight) * -this.animationDirection;
-            }
-        }
-    }
+	      renderEntrySelection(g, width / 2, startY);
 
-    public void setSpeeds(int regularSpeed, int wrapSpeed, float fastMultiplier) {
-        this.regularSpeed = regularSpeed;
-        this.wrapSpeed = wrapSpeed;
-        this.fastMultiplier = fastMultiplier;
-    }
+	      g.setFont(font);
+	      int entryY = startY + yOffset + 1;
+	      int entryIndex = currentIndex;
+	      for (int i = 0; i < entryCount; i++) {
+	         renderEntry(g, entries.get(entryIndex), entryY);
+	         entryY += entryHeight;
+	         if (entryY > height) break;
+	         entryIndex++;
+	         if (entryIndex == entryCount) {
+	            if (!entriesWrap) break;
+	            entryIndex = 0;
+	         }
+	      }
 
-    public void setWrapAround(boolean wrapAround) {
-        this.wrapAround = wrapAround;
-    }
+	      entryY = startY + yOffset - entryHeight;
+	      entryIndex = currentIndex - 1;
+	      for (int i = 0; i < entryCount; i++) {
+	         if (entryIndex == -1) {
+	            if (!entriesWrap) break;
+	            entryIndex = entryCount - 1;
+	         }
+	         renderEntry(g, entries.get(entryIndex), entryY);
+	         entryY -= entryHeight;
+	         if (entryY < 0 - entryHeight) break;
+	         entryIndex--;
+	      }
 
-    public void setGradientHeight(int gradientHeight) {
-        this.gradientHeight = gradientHeight;
-    }
+	      if (gradientHeight > 0) {
+	         g.clearAlphaMap();
+	         g.setDrawMode(Graphics.MODE_ALPHA_MAP);
 
-    public Object getSelectedEntry() {
-        if (this.currentIndex < 0 || this.currentIndex >= this.entries.size()) {
-            return null;
-        }
-        return this.entries.get(this.currentIndex);
-    }
+	         TextureImpl.bindNone();
+	         GL.glBegin(SGL.GL_QUADS);
+	         new Color(1, 1, 1, 1).bind();
+	         GL.glVertex2f(0, height - gradientHeight);
+	         GL.glVertex2f(width, height - gradientHeight);
+	         Color.white.bind();
+	         GL.glVertex2f(width, height);
+	         GL.glVertex2f(0, height);
 
-    public List<String> getEntries() {
-        return this.entries;
-    }
+	         Color.white.bind();
+	         GL.glVertex2f(0, 0);
+	         GL.glVertex2f(width, 0);
+	         new Color(1, 1, 1, 1).bind();
+	         GL.glVertex2f(width, gradientHeight);
+	         GL.glVertex2f(0, gradientHeight);
+	         GL.glEnd();
 
-    public void setEntries(List<String> entries) {
-        this.entries = entries;
-    }
+	         g.setDrawMode(Graphics.MODE_ALPHA_BLEND);
 
-    public static interface MenuListener {
-        public void entryChanged(Object var1);
+	         g.setColor(Color.red);
+	         g.fillRect(0, 0, width, height);
 
-        public void entrySelected();
-    }
-}
+	         g.setDrawMode(Graphics.MODE_NORMAL);
+	      }
+
+	      g.clearWorldClip();
+	      g.resetTransform();
+	   }
+
+	   protected void renderEntrySelection (Graphics g, int x, int y) {
+	      g.setColor(new Color(1f, 1f, 1f, 0.4f));
+	      int currentEntryWidth = font.getWidth(getSelectedEntry().toString());
+	      g.fillRect(0, y, currentEntryWidth + 7, entryHeight);
+	      g.setColor(Color.white);
+	   }
+
+	   protected void renderEntry (Graphics g, Object entry, int y) {
+	      g.drawString(entry.toString(), 1, y);
+	   }
+
+	   private void stopAnimation () {
+	      yOffset = 0;
+	      animationDirection = 0;
+	      animationTime = 0;
+	   }
+
+	   public void fireEntryChanged () {
+	      if (listener != null) listener.entryChanged(entries.get(currentIndex));
+	   }
+
+	   private boolean entriesWrap () {
+	      return wrapAround && entries.size() > Math.ceil((int)Math.floor(height / entryHeight));
+	   }
+
+	   private void animate (int direction) {
+	      if (entries.size() < 2) return;
+
+	      stopAnimation = false;
+
+	      int oldAnimationDirection = animationDirection;
+	      animationDirection = direction;
+
+	      isAnimationWrapping = false;
+	      if (!entriesWrap()) {
+	         if ((animationDirection > 0 && currentIndex == 0) || (animationDirection < 0 && currentIndex == entries.size() - 1))
+	            isAnimationWrapping = true;
+	      }
+
+	      if (animationDirection > 0)
+	         currentIndex = currentIndex == 0 ? entries.size() - 1 : currentIndex - 1;
+	      else
+	         currentIndex = currentIndex == entries.size() - 1 ? 0 : currentIndex + 1;
+	      fireEntryChanged();
+
+	      boolean reverseOldAnimation = oldAnimationDirection != 0 && oldAnimationDirection != direction;
+	      if (reverseOldAnimation) animationTime = animationSpeed - animationTime;
+
+	      if (isAnimationWrapping)
+	         animationSpeed = wrapSpeed;
+	      else
+	         animationSpeed = regularSpeed;
+
+	      if (!reverseOldAnimation) animationTime = animationSpeed;
+	   }
+
+	   public void update (int delta) throws SlickException {
+	      if (input.isKeyDown(Input.KEY_UP)) {
+	         if (!disableUpAnimation && animationDirection != 1) animate(1);
+	      } else {
+	         if (animationDirection == 1) stopAnimation = true;
+	         disableUpAnimation = false;
+	      }
+	      if (input.isKeyDown(Input.KEY_DOWN)) {
+	         if (!disableDownAnimation && animationDirection != -1) animate(-1);
+	      } else {
+	         if (animationDirection == -1) stopAnimation = true;
+	         disableDownAnimation = false;
+	      }
+
+	      if (animationDirection != 0 || animationTime > 0) {
+	         boolean useFastMultiplier = input.isKeyDown(Input.KEY_RCONTROL) || input.isKeyDown(Input.KEY_LCONTROL);
+	         animationTime -= delta * (useFastMultiplier ? fastMultiplier : 1);
+	         if (animationTime <= 0) {
+	            boolean entriesWrap = entriesWrap();
+	            if (!entriesWrap && animationDirection > 0 && currentIndex == 0) {
+	               stopAnimation();
+	               disableUpAnimation = true;
+	            } else if (!entriesWrap && animationDirection < 0 && currentIndex == entries.size() - 1) {
+	               stopAnimation();
+	               disableDownAnimation = true;
+	            } else if (stopAnimation)
+	               stopAnimation();
+	            else {
+	               yOffset = 0;
+	               int negativeTimeOver = animationTime;
+	               animate(animationDirection);
+	               animationTime += negativeTimeOver;
+	               if (animationTime <= 0) animationTime = animationSpeed;
+	            }
+	         }
+	         int distance = isAnimationWrapping ? height + entryHeight : entryHeight;
+	         yOffset = -(int)(distance * (animationTime / (float)animationSpeed)) * animationDirection;
+	         if (isAnimationWrapping && Math.abs(yOffset) > height / 2 + entryHeight)
+	            yOffset -= (height + entryHeight * (entries.size() - 1) + entryHeight) * -animationDirection;
+	      }
+	   }
+
+	   public void setSpeeds (int regularSpeed, int wrapSpeed, float fastMultiplier) {
+	      this.regularSpeed = regularSpeed;
+	      this.wrapSpeed = wrapSpeed;
+	      this.fastMultiplier = fastMultiplier;
+	   }
+
+	   public void setWrapAround (boolean wrapAround) {
+	      this.wrapAround = wrapAround;
+	   }
+
+	   public void setGradientHeight (int gradientHeight) {
+	      this.gradientHeight = gradientHeight;
+	   }
+
+	   public Object getSelectedEntry () {
+	      if (currentIndex < 0 || currentIndex >= entries.size()) return null;
+	      return entries.get(currentIndex);
+	   }
+
+	   public List<String> getEntries () {
+	      return entries;
+	   }
+
+	   public void setEntries (List<String> entries) {
+	      this.entries = entries;
+	   }
+
+	   static public interface MenuListener {
+	      public void entryChanged (Object entry);
+
+	      public void entrySelected ();
+	   }
+	}

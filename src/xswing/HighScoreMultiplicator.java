@@ -1,53 +1,60 @@
+/*
+ * @version 0.0 28.04.2008
+ * @author 	Tobse F
+ */
 package xswing;
 
 import lib.mylib.Resetable;
 import lib.mylib.SObject;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SpriteSheet;
 
-public class HighScoreMultiplicator
-extends SObject
-implements Resetable {
-    private SpriteSheet multiplicator;
-    private int multi = 0;
-    private int timer;
-    private int timerTemp = this.timer = 2500;
+/**Draws and returns the score multiplicatorSprites which can be set to the maximum of four and decrease automatically*/
+public class HighScoreMultiplicator extends SObject implements Resetable{
+	private SpriteSheet multiplicatorSprites;
+	/** The ScoreMuliplication value (for the HighScore calculation)*/
+	private int multiplicator=1;
+	/** Time in ms, before for one light burns out*/
+	private int timerStep = 2500 ;
+	private int timerTemp=0;
+	
+	public HighScoreMultiplicator(int x, int y,SpriteSheet multiplicatorSprites) {
+		super(x,y);
+		this.multiplicatorSprites=multiplicatorSprites;
+	}
+	
+	/**Sets the score multiplicatorSprites to 4*/
+	public void score(){
+		reset();
+		multiplicator=4;
+	}
+	
+	public void update(int delta) {
+		timerTemp+=delta;
+		if(timerTemp>=timerStep){
+			if(multiplicator>1){
+				multiplicator--;
+			}
+			timerTemp=0;
+		}
+	}
+	
+	@Override
+	public void draw(Graphics g) {
+		if(multiplicator>1)//Only muliplicator states 2,3 and 4 are in the spritesheet
+			g.drawImage(multiplicatorSprites.getSprite(0, 4-multiplicator),x,y);
+	}
+	
+	/** Returns the Score multiplication factor*/
+	public int getMulti() {
+		return multiplicator;
+	}
 
-    public HighScoreMultiplicator(int x, int y, SpriteSheet multiplicator) {
-        super(x, y);
-        this.multiplicator = multiplicator;
-    }
+	@Override
+	public void reset() {
+		multiplicator=1;
+		timerTemp=0;
+	}
 
-    public void score() {
-        this.multi = 4;
-        this.timerTemp = this.timer;
-    }
-
-    @Override
-    public void update(int delta) {
-        this.timerTemp += delta;
-        if (this.timerTemp >= this.timer) {
-            if (this.multi > 0) {
-                --this.multi;
-            }
-            this.timerTemp = 0;
-        }
-    }
-
-    @Override
-    public void draw(Graphics g) {
-        if (this.multi > 0) {
-            g.drawImage(this.multiplicator.getSprite(0, 3 - this.multi), this.x, this.y);
-        }
-    }
-
-    public int getMulti() {
-        return this.multi + 1;
-    }
-
-    @Override
-    public void reset() {
-        this.multi = 0;
-        this.timerTemp = 0;
-    }
 }

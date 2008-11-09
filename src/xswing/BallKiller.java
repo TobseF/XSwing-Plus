@@ -1,51 +1,49 @@
+/*
+ * @version 0.0 30.05.2008
+ * @author 	Tobse F
+ */
 package xswing;
 
 import java.util.ArrayList;
 import java.util.List;
-import xswing.Ball;
-import xswing.Mechanics;
-import xswing.ScoreCounter;
 
 public class BallKiller {
-    List<Ball> ballsToKill = new ArrayList<Ball>();
-    private static int WAITING_BEFORE_KILL = 260;
-    private int timeBeforeKill = WAITING_BEFORE_KILL;
-    private Mechanics mechanics;
-    private ScoreCounter score;
+	List<Ball>ballsToKill=new ArrayList<Ball>();
+	private static int WAITING_BEFORE_KILL=260;
+	private int timeBeforeKill=WAITING_BEFORE_KILL;
+	private Mechanics mechanics;
+	private ScoreCounter score;
+	
+	public BallKiller(Mechanics mechanics,ScoreCounter score) {
+		this.mechanics=mechanics;
+		this.score=score;
+	}
+	
+	public void addBall(Ball ball){
+		ballsToKill.add(ball);
+	}
+	
+	public void reset(){
+		timeBeforeKill=WAITING_BEFORE_KILL;
+	}
 
-    public BallKiller(Mechanics mechanics, ScoreCounter score) {
-        this.mechanics = mechanics;
-        this.score = score;
-    }
-
-    public void addBall(Ball ball) {
-        this.ballsToKill.add(ball);
-    }
-
-    public void reset() {
-        this.timeBeforeKill = WAITING_BEFORE_KILL;
-    }
-
-    public void update(int delta) {
-        if (this.ballsToKill.size() > 0) {
-            this.timeBeforeKill -= delta;
-            if (this.timeBeforeKill <= 0) {
-                this.killBalls();
-            }
-        }
-    }
-
-    private void killBalls() {
-        Ball bTemp = this.ballsToKill.get(0);
-        this.ballsToKill = this.mechanics.getConnectedBalls(bTemp);
-        this.score.score(this.mechanics.calculateScore(this.ballsToKill));
-        int i = 0;
-        while (i < this.ballsToKill.size()) {
-            Ball b = this.ballsToKill.get(i);
-            b.kill(2);
-            ++i;
-        }
-        this.reset();
-        this.ballsToKill.clear();
-    }
+	public void update(int delta){
+		if(ballsToKill.size()>0){
+			timeBeforeKill-=delta;
+			if(timeBeforeKill<=0)
+				killBalls();
+		}
+	}
+	
+	private void killBalls(){
+		Ball bTemp=ballsToKill.get(0);
+		score.score(mechanics.calculateScore(ballsToKill=mechanics.getConnectedBalls(bTemp)));
+		for(int i=0;i<ballsToKill.size();i++){
+			Ball b=ballsToKill.get(i);
+			b.kill(Ball.KILL_IMMEDIATELY);
+		}
+		reset();
+		ballsToKill.clear();
+	}
+	
 }

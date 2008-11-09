@@ -1,5 +1,11 @@
+/*
+ * @version 0.0 30.05.2008
+ * @author 	Tobse F
+ */
 package lib.mylib;
 
 public interface Resetable {
-    public void reset();
+
+	/**Resets the Object to the default values*/
+	public void reset();
 }

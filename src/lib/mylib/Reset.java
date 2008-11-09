@@ -1,23 +1,24 @@
+/*
+ * @version 0.0 01.06.2008
+ * @author 	Tobse F
+ */
 package lib.mylib;
 
 import java.util.ArrayList;
 import java.util.List;
-import lib.mylib.Resetable;
 
-public class Reset
-implements Resetable {
-    List<Resetable> list = new ArrayList<Resetable>();
 
-    public void add(Resetable resetableObject) {
-        this.list.add(resetableObject);
-    }
-
-    @Override
-    public void reset() {
-        int i = 0;
-        while (i < this.list.size()) {
-            this.list.get(i).reset();
-            ++i;
-        }
-    }
+public class Reset implements Resetable{
+	List<Resetable> list=new ArrayList<Resetable>();
+	
+	public void add(Resetable resetableObject){
+		list.add(resetableObject);
+	}
+	
+	/** Resets all Elements	 */
+	public void reset(){
+		for(int i=0;i<list.size();i++){
+			list.get(i).reset();
+		}
+	}
 }

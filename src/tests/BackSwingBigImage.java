@@ -1,67 +1,68 @@
+/*
+ * @version 0.0 14.04.2008
+ * @author 	Tobse F
+ */
 package tests;
 
-import org.newdawn.slick.AngelCodeFont;
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.BigImage;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
-public class BackSwingBigImage
-extends BasicGame {
-    static AppGameContainer container;
-    Image background;
-    Image backgroundBig;
-    AngelCodeFont font;
-    String time = "sdsd";
-    String t = "";
-    boolean bigImage = false;
-    static long ttime;
-    long timeS;
+public class BackSwingBigImage extends BasicGame{
+	static AppGameContainer container;
+	Image background,backgroundBig;
+	AngelCodeFont font;
+	String time="sdsd",t="";
+	boolean bigImage=false;
+	//BigImage back;
+	
+	public BackSwingBigImage() {
+		super("XSwing");
+	}
+	static long ttime;
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		try {
+			container = new AppGameContainer(new BackSwingBigImage());
+			container.setMinimumLogicUpdateInterval(20);
+			container.setDisplayMode(800,600,false);
+			container.setClearEachFrame(false);
+			container.start();
+			
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 
-    public BackSwingBigImage() {
-        super("XSwing");
-    }
+	}
 
-    public static void main(String[] args) {
-        try {
-            container = new AppGameContainer(new BackSwingBigImage());
-            container.setMinimumLogicUpdateInterval(20);
-            container.setDisplayMode(800, 600, false);
-            container.setClearEachFrame(false);
-            container.start();
-        }
-        catch (SlickException e) {
-            e.printStackTrace();
-        }
-    }
+	@Override
+	public void init(GameContainer container) throws SlickException {
+		background=new Image("res/swing_background.jpg");
+		backgroundBig=new BigImage("res/swing_background.jpg", Image.FILTER_NEAREST, 256);
+		font = new AngelCodeFont("res/font2.fnt","res/font2.png");
+		ttime=container.getTime();
+	}
+	
+	long timeS;
+	@Override
+	public void update(GameContainer container, int delta)throws SlickException {
+		timeS=((container.getTime()-ttime))/1000;
+		if(container.getInput().isKeyPressed(Input.KEY_SPACE))
+			bigImage=!bigImage;
+	}
 
-    public void init(GameContainer container) throws SlickException {
-        this.background = new Image("res/swing_background.jpg");
-        this.backgroundBig = new BigImage("res/swing_background.jpg", 2, 256);
-        this.font = new AngelCodeFont("res/font2.fnt", "res/font2.png");
-        ttime = container.getTime();
-    }
+	@Override
+	public void render(GameContainer container, Graphics g)
+			throws SlickException {
+		if(bigImage)
+			g.drawImage(backgroundBig,0,0);
+		else
+			g.drawImage(background,0,0);
+		String s=String.format("%02d",(int)timeS%60);
+		String m=String.format("%02d",(int)(timeS/60)%60);
+		String h=String.format("%02d",(int)((timeS/60)/60)%60);
+		font.drawString(55,443,h+":"+m+":"+s);
+		g.drawString("BigImage: "+bigImage,80,100);
+	}
 
-    public void update(GameContainer container, int delta) throws SlickException {
-        this.timeS = (container.getTime() - ttime) / 1000L;
-        if (container.getInput().isKeyPressed(57)) {
-            this.bigImage = !this.bigImage;
-        }
-    }
-
-    public void render(GameContainer container, Graphics g) throws SlickException {
-        if (this.bigImage) {
-            g.drawImage(this.backgroundBig, 0.0f, 0.0f);
-        } else {
-            g.drawImage(this.background, 0.0f, 0.0f);
-        }
-        String s = String.format("%02d", (int)this.timeS % 60);
-        String m = String.format("%02d", (int)(this.timeS / 60L) % 60);
-        String h = String.format("%02d", (int)(this.timeS / 60L / 60L) % 60);
-        this.font.drawString(55.0f, 443.0f, String.valueOf(h) + ":" + m + ":" + s);
-        g.drawString("BigImage: " + this.bigImage, 80.0f, 100.0f);
-    }
 }

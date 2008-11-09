@@ -1,3 +1,7 @@
+/*
+ * @version 0.0 24.07.2008
+ * @author 	Tobse F
+ */
 package lib.mylib;
 
 import org.newdawn.slick.GameContainer;
@@ -5,24 +9,31 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class BasicGameState
-extends org.newdawn.slick.state.BasicGameState {
-    private final int id;
+public class BasicGameState extends org.newdawn.slick.state.BasicGameState{
+	private final int id;
+	
+	public BasicGameState(int id) {
+		this.id=id;
+	}
+	
+	@Override
+	public int getID() {
+		return id;
+	}
 
-    public BasicGameState(int id) {
-        this.id = id;
-    }
+	@Override
+	public void init(GameContainer container, StateBasedGame game)
+			throws SlickException {		
+	}
 
-    public int getID() {
-        return this.id;
-    }
+	@Override
+	public void render(GameContainer container, StateBasedGame game, Graphics g)
+			throws SlickException {
+	}
 
-    public void init(GameContainer container, StateBasedGame game) throws SlickException {
-    }
+	@Override
+	public void update(GameContainer container, StateBasedGame game, int delta)
+			throws SlickException {	
+	}
 
-    public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-    }
-
-    public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-    }
 }
