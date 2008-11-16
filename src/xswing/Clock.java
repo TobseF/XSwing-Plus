@@ -17,7 +17,7 @@ public class Clock extends SObject implements Resetable,Updateable{
 	private long timeOnStart;
 	/** The Clock Font*/
 	private Font font;
-	/** The Current time after timer was started in seconds */
+	/** The Current time after timer was started in seconds*/
 	private long timeSinceStart;
 	
 	public Clock(Font font,int x, int y) {
@@ -25,34 +25,41 @@ public class Clock extends SObject implements Resetable,Updateable{
 		this.font=font;
 	}
 	
+	/** Set the font of the component*/
 	public void setFont(Font font) {
 		this.font = font;
 	}
 	
+	@Override
 	public void reset(){
 		timeSinceStart=0;
 	}
 	
+	/** Returns the current time in seconds since the game was started*/
+	public long getTimeSinceStart() {
+		return timeSinceStart;
+	}
+	
 	@Override
 	public void draw(Graphics g) {
-		renderTimer();
+		font.drawString(x,y,formatTime(timeSinceStart));
 	}
 
 	@Override
 	 public void update(int delta){
 		timeOnStart += delta;
-	        if(timeOnStart > 1000)
-	        {
-	            timeSinceStart++;
-	            timeOnStart = 1000 - timeOnStart;
-	        }
-	    }
+        if(timeOnStart > 1000){
+            timeSinceStart++;
+            timeOnStart = 1000 - timeOnStart;
+        }
+	 }
 	
-	public void renderTimer(){
+	/** Formats the Time in hh:mm:ss*/
+	public static String formatTime(long timeSinceStart){
 		String s=String.format("%02d",(int)timeSinceStart%60);
 		String m=String.format("%02d",(int)(timeSinceStart/60)%60);
 		String h=String.format("%02d",(int)((timeSinceStart/60)/60)%60);
-		font.drawString(x,y,h+":"+m+":"+s);
+		return h+":"+m+":"+s;
 	}
 
 }

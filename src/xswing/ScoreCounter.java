@@ -12,7 +12,7 @@ import lib.mylib.SObject;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
 
-/**Draws the HighScore and Bonus number*/
+/**Draws the HighScoreFormatter and Bonus number*/
 public class ScoreCounter extends SObject implements Resetable{
 	private int score=0;
 	private Font font;

@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * @author Tobse
+ *
+ * Holds resetable objects.
+ */
 public class Reset implements Resetable{
 	List<Resetable> list=new ArrayList<Resetable>();
 	

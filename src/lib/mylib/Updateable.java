@@ -4,6 +4,11 @@
  */
 package lib.mylib;
 
+/**
+ * @author Tobse
+ *
+ * For thnings that should be updated
+ */
 public interface Updateable {
 	abstract void update(int delta);
 }

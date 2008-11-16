@@ -4,6 +4,12 @@
  */
 package lib.mylib;
 
+/**
+ * @author Tobse
+ *
+ * A blinking effect.
+ * @see #getBlink() 
+ */
 public class EffectBlinking implements Resetable{
 	/**Times the Blinker should blink	 */
 	private int blincCount=0;
@@ -20,7 +26,7 @@ public class EffectBlinking implements Resetable{
 	private long lastBlinc;
 	
 
-	/**A blinking Etffect
+	/**
 	 * @param blincCount Times the Blinker did blinked
 	 * @param blincDuration Duration of a "blink" in ms
 	 * @param running start stats

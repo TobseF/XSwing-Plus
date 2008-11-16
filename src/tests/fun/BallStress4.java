@@ -52,6 +52,7 @@ public class BallStress4 extends BasicGame{
 			frame.pack();
 			size=frame.getSize();
 			frame.addWindowListener(new WindowAdapter() {
+				@Override
 				public void windowClosing(WindowEvent e) {
 					System.exit(0);
 				}

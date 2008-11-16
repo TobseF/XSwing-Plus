@@ -10,6 +10,12 @@ import lib.mylib.SObject;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
 
+
+/**
+ * @author Tobse
+ *
+ * GUI class which draws the number of already released balls 
+ */
 public class BallCounter extends SObject implements Resetable{
 	private Font font;
 	private int balls=0;

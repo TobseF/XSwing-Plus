@@ -21,7 +21,8 @@ public class Program extends BasicGame {
       super(title);
    }
 
-   public void init(GameContainer container) throws SlickException {
+   @Override
+public void init(GameContainer container) throws SlickException {
       try {
          image = new Image("res/balls1.png");
       } catch (SlickException e) {
@@ -31,7 +32,8 @@ public class Program extends BasicGame {
       shader = new Shader("data/shader/test");
    }
 
-   public void update(GameContainer container, int delta) throws SlickException {
+   @Override
+public void update(GameContainer container, int delta) throws SlickException {
       
    }
 

@@ -23,7 +23,8 @@ public class MenuTest extends BasicGame {
 	      super("MenuTest");
 	   }
 
-	   public void init (GameContainer container) throws SlickException {
+	   @Override
+	public void init (GameContainer container) throws SlickException {
 	      menu = new Menu(new AngelCodeFont("res/font.fnt", "res/font.tga"), container.getInput(), null);
 	      menu.setBounds(100, 40, 300, 400);
 
@@ -40,7 +41,8 @@ public class MenuTest extends BasicGame {
 	      g.drawRect(100, 40, 300, 400);
 	   }
 
-	   public void update (GameContainer container, int delta) throws SlickException {
+	   @Override
+	public void update (GameContainer container, int delta) throws SlickException {
 	      menu.update(delta);
 	   }
 

@@ -85,11 +85,11 @@ public class XSwingScreenController implements ScreenController {
   }
   
   public final void setHighScore() {
-	  System.out.println("entered HighScore");
+	  System.out.println("entered HighScoreFormatter");
   }
   
   public final void enterHighScore() {
-	  System.out.println("entered HighScore 2");
+	  System.out.println("entered HighScoreFormatter 2");
 	  Screen screen=nifty.getCurrentScreen();
 
 	  screen.findElementByName("labelScore").getRenderer(TextRenderer.class).setText("Your Score: 2200");

@@ -54,6 +54,7 @@ public class EmptyState extends BasicGameState{
 			
 			final long start = System.currentTimeMillis();
 			CrossStateTransition t = new CrossStateTransition(target) {				
+				@Override
 				public boolean isComplete() {
 					return (System.currentTimeMillis() - start) > 2000;
 				}

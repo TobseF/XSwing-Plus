@@ -13,7 +13,7 @@ import org.newdawn.slick.SpriteSheet;
 /**Draws and returns the score multiplicatorSprites which can be set to the maximum of four and decrease automatically*/
 public class HighScoreMultiplicator extends SObject implements Resetable{
 	private SpriteSheet multiplicatorSprites;
-	/** The ScoreMuliplication value (for the HighScore calculation)*/
+	/** The ScoreMuliplication value (for the HighScoreFormatter calculation)*/
 	private int multiplicator=1;
 	/** Time in ms, before for one light burns out*/
 	private int timerStep = 2500 ;
@@ -30,6 +30,7 @@ public class HighScoreMultiplicator extends SObject implements Resetable{
 		multiplicator=4;
 	}
 	
+	@Override
 	public void update(int delta) {
 		timerTemp+=delta;
 		if(timerTemp>=timerStep){

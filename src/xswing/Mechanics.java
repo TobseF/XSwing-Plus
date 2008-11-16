@@ -38,20 +38,12 @@ public class Mechanics {
 			ballsTemp.clear();//clear every row
 		}
 	}
-	
-	public Ball[][] getBalls() {
-		return balls;
-	}
 
 	/** Kills the saved balls if the're more than two*/
-		private void checkRow(List<Ball> ballsTemp){
-			if(ballsTemp.size()>2){
-					ballsTemp.get(0).kill(Ball.WAITING_FOR_KILL);		
-			}	
-		}
-		
-	public void getConnectedBalls(Ball b,int i){
-		getConnectedBalls(ballTable.getBall(ballTable.getField(b)[0],ballTable.getField(b)[1]));
+	private void checkRow(List<Ball> ballsTemp){
+		if(ballsTemp.size()>2){
+				ballsTemp.get(0).kill(Ball.WAITING_FOR_KILL);		
+		}	
 	}
 
 	/**Checks alls surrounding Balls of the given*/
@@ -72,10 +64,9 @@ public class Mechanics {
 		int[][] positions={{0,1},{1,0},{0,-1},{-1,0}};
 		for(int i=0;i<positions.length;i++){
 			checkinBall=ballTable.getPlayFieldBall(pos[0]+positions[i][0],pos[1]+positions[i][1]);
-			if(checkinBall!=null)
-				if(checkinBall.compare(ball))
-					if(!ballsTemp.contains(checkinBall))
-						ballsTemp.add(checkinBall);
+			if(checkinBall!=null&&checkinBall.compare(ball))
+				if(!ballsTemp.contains(checkinBall))
+					ballsTemp.add(checkinBall);
 		}
 		return ballsTemp;
 	}
@@ -85,13 +76,13 @@ public class Mechanics {
 		List<Ball> ballsT =new ArrayList<Ball>();
 		for(int column=0;column<8;column++){
 			for(int row=0;row<8;row++){
-				Ball b=ballTable.getBall(column,row);
-				if(b!=null){
-					ballsT.add(b);
+				Ball ball=ballTable.getBall(column,row);
+				if(ball!=null){
+					ballsT.add(ball);
 					if (ballsT.size() > 1) {
-						if (ballsT.get(ballsT.size() - 2).getNr() != b.getNr()) {
+						if (ballsT.get(ballsT.size() - 2).getNr() != ball.getNr()) {
 							ballsT.clear();
-							ballsT.add(b);
+							ballsT.add(ball);
 						} else {
 							if (ballsT.size() > 4)
 								shrinkRow(ballsT);
@@ -132,8 +123,6 @@ public class Mechanics {
 		}
 		return false;
 	}
-	
-	//private moveBalls
 
 	/** Calculates the score of the balls to kill*/
 	public int calculateScore(List<Ball> ballsTemp){

@@ -32,6 +32,7 @@ public class XSwing extends StateBasedGame{
 			game.setMinimumLogicUpdateInterval(26);
 			game.setMaximumLogicUpdateInterval(26);
 			game.setDisplayMode(1024,768,fullsceen);
+			//game.setDisplayMode(460,390,fullsceen);
 			game.setClearEachFrame(false);			
 			game.setIcons(new String[]{"res/16.png","res/32.png"});
 			game.setMouseGrabbed(!debug);

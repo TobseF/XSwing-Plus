@@ -11,6 +11,7 @@ import org.newdawn.slick.Image;
 public class SObject implements Drawable, Updateable{
 	protected int x,y;
 	protected Image pic=null;
+	protected boolean isVisible=true;
 	
 	public SObject() {
 	}
@@ -82,5 +83,10 @@ public class SObject implements Drawable, Updateable{
 	public void update(int delta) {		
 	}
 
-
+	public boolean isVisible() {
+		return isVisible;
+	}
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
+	}
 }

@@ -19,11 +19,13 @@ public class TextFieldTest extends BasicGame {
       super("Test");
    }
 
-   public void init (GameContainer container) throws SlickException {
+   @Override
+public void init (GameContainer container) throws SlickException {
       textField = new TextField(container, container.getDefaultFont(), 10, 30, 200, 30);
    }
 
-   public void update (GameContainer container, int delta) throws SlickException {
+   @Override
+public void update (GameContainer container, int delta) throws SlickException {
    }
 
    public void render (GameContainer container, Graphics g) throws SlickException {

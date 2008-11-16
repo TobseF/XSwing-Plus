@@ -29,6 +29,7 @@ public class CanvasSizeTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
+	@Override
 	public void init(GameContainer container) throws SlickException {
 		System.out.println(container.getWidth() + ", " + container.getHeight());
 	}
@@ -44,6 +45,7 @@ public class CanvasSizeTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#update(org.newdawn.slick.GameContainer, int)
 	 */
+	@Override
 	public void update(GameContainer container, int delta)
 			throws SlickException {
 	}
@@ -63,6 +65,7 @@ public class CanvasSizeTest extends BasicGame {
 			frame.add(container);
 			frame.pack();
 			frame.addWindowListener(new WindowAdapter() {
+				@Override
 				public void windowClosing(WindowEvent e) {
 					System.exit(0);
 				}

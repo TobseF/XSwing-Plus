@@ -9,16 +9,13 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
+
 import xswing.gui.XSwingScreenController;
 import de.lessvoid.nifty.slick.NiftyGameState;
 
-/**
- * Starts the Game with menue.
- * @see #main(String[]) to start game in debug mode
- */
-public class XSwingMenu extends StateBasedGame{
-	
-	public XSwingMenu() {
+public class XSwingMenuResizeable extends StateBasedGame{
+
+	public XSwingMenuResizeable() {
 		super("Xswing");
 	}
 
@@ -43,11 +40,12 @@ public class XSwingMenu extends StateBasedGame{
 		Log.info("Debugmode: "+debug);
 		//Log.setVerbose(debug); //debug info logging
 		try {
-			AppGameContainer game = new AppGameContainer(new XSwingMenu());
+			AppGameContainer game = new AppGameContainer(new XSwingMenuResizeable());
+			
 			game.setShowFPS(debug);
 			game.setMinimumLogicUpdateInterval(26);
 			game.setMaximumLogicUpdateInterval(26);
-			game.setDisplayMode(1024,768,fullsceen);
+			game.setDisplayMode(800,600,false);
 			game.setClearEachFrame(false);
 			game.setIcons(new String[]{"res/16.png","res/32.png"});
 			game.setMouseGrabbed(!debug);

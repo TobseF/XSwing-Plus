@@ -42,7 +42,8 @@ public class Menu {
 	      this.listener = listener;
 
 	      input.addListener(new InputAdapter() {
-	         public void keyPressed (int key, char c) {
+	         @Override
+			public void keyPressed (int key, char c) {
 	            switch (key) {
 	            case 201: // pageup
 	               stopAnimation();

@@ -1,5 +1,7 @@
 package xswing.gui;
 
+import lib.mylib.ScoreStoreable;
+
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
@@ -23,12 +25,12 @@ public class ScoreScreenController implements ScreenController{
   private Nifty nifty;
   private StateBasedGame game;
   private int highScore;
+  ScoreStoreable highscoreList;
 
-
-  public ScoreScreenController(StateBasedGame game,int highscore) {
+  public ScoreScreenController(StateBasedGame game,int highscore, ScoreStoreable highscoreList) {
   	this.game=game;
   	this.highScore=highscore;
-
+  	this.highscoreList=highscoreList;
   }
 
 /**
@@ -68,7 +70,7 @@ int s=0;
 
   
   private final void setHighScore(Screen screen) {
-	 System.out.println("entered HighScore");
+	 System.out.println("entered HighScoreFormatter");
 	  
 	 System.out.println("highscorestart");
 	 screen.findElementByName("labelScore").getRenderer(TextRenderer.class).setText("Your Score: "+highScore);
@@ -79,6 +81,7 @@ int s=0;
 	  Screen screen=nifty.getCurrentScreen();
       String t=((screen.findElementByName("name")).getControl(TextFieldControl.class)).getText();
       System.out.println("Score entered: "+t+" "+highScore);
+      highscoreList.addScore(highScore, t);
       ((MainGame)game.getState(2)).reset();
       game.enterState(2, new FadeOutTransition(), new FadeInTransition());
   }
