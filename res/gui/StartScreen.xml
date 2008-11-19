@@ -3,8 +3,8 @@
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
   <!-- load styles -->
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
-  <useStyles filename="nifty-default-styles.xml" />
-  <useControls filename="nifty-default-controls.xml" />
+  <useStyles filename="res/gui/my-default-styles.xml" />
+  <useControls filename="res/gui/my-default-controls.xml" />
 
 
   <!-- main menu style -->

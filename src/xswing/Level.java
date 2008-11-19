@@ -1,6 +1,6 @@
 /*
  * @version 0.0 25.04.2008
- * @author 	Tobse F
+ * @author Tobse F
  */
 package xswing;
 
@@ -11,55 +11,59 @@ import lib.mylib.SpriteSheet;
 import org.newdawn.slick.Graphics;
 
 /** The ball which counts the levels */
-public class Level extends Ball implements Resetable{
-	
-	/**The Level with wich the game starts (only for reset)*/
-	private int startLeveL=3;
-	/**The Highest reachable level*/
-	private int maxLeveL=45;
-	
-	EffectBlinking blinking;
-	/*/**A list of Balls which will be released within the next move -for Levels
-	private ArrayList<Integer>preDefinedBalls=new ArrayList<Integer>();*/
+public class Level extends Ball implements Resetable {
 
-	public Level(int nr, int x, int y,SpriteSheet ballsSpriteSheet) {
-		super(nr, x, y,ballsSpriteSheet);
-		weight=nr+1;
+	/** The Level with wich the game starts (only for reset) */
+	private int startLeveL = 3;
+	/** The Highest reachable level */
+	private int maxLeveL = 45;
+
+	private EffectBlinking blinking;
+
+	/*
+	 * /A list of Balls which will be released within the next move -for Levels private
+	 * ArrayList<Integer>preDefinedBalls=new ArrayList<Integer>();
+	 */
+
+	public Level(int nr, int x, int y, SpriteSheet ballsSpriteSheet) {
+		super(nr, x, y, ballsSpriteSheet);
+		weight = nr + 1;
 		setNr(nr);
-		blinking=new EffectBlinking(9,250,false);
+		blinking = new EffectBlinking(8, 300, true);
 	}
-	
-	public void reset(){
+
+	public void reset() {
 		setLevel(startLeveL);
 		blinking.reset();
 	}
-	
-	public void setLevel(int level){
-		setNr(level+1);
-		weight=level+1;
+
+	public void setLevel(int level) {
+		setNr(level + 1);
+		weight = level + 1;
 	}
 
 	@Override
 	public void update(int delta) {
-		//do nothing
+		blinking.update(delta);
 	}
-	
+
 	@Override
 	public void draw(Graphics g) {
-		if(blinking.getBlink())
+		if (blinking.getBlink()) {
 			super.draw(g);
+		}
 	}
-	
+
 	/** Returns the current level */
-	public int getLevel(){
-			return	getNr();
+	public int getLevel() {
+		return getNr();
 	}
-	
+
 	/** Swicht to the next level */
-	public void nextLevel(){
-		if(!(getNr()+1>=maxLeveL)){
-			setNr(getNr()+1);
-			weight=getNr()+1;
+	public void nextLevel() {
+		if (!(getNr() + 1 >= maxLeveL)) {
+			setNr(getNr() + 1);
+			weight = getNr() + 1;
 			blinking.reset();
 		}
 	}

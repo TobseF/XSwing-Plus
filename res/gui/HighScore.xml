@@ -4,13 +4,13 @@
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
   <!-- load default styles and controls -->
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
-  <useStyles filename="nifty-default-styles.xml" />
-  <useControls filename="nifty-default-controls.xml" />
+  <useStyles filename="res/gui/my-default-styles.xml" />
+  <useControls filename="res/gui/my-default-controls.xml" />
 
 
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
   <!-- start screen -->
-  <!-- +++++++++++++++++++++++++++++++++++++++ backgroundColor="#800f" -->
+  <!-- +++++++++++++++++++++++++++++++++++++++  -->
   
   <screen id="start" controller="xswing.gui.ScoreScreenController">
     <layer id="layer" childLayout="center">
@@ -20,8 +20,6 @@
       </effect>
       <panel id="dialog" style="nifty-panel" childLayout="center" width="80%" height="25%" align="center" valign="center">
         <effect>
-          <onStartScreen name="move2" direction="top" mode="in" length="500" startDelay="500" inherit="true"/>
-          <onEndScreen name="move" direction="bottom" mode="out" length="500" startDelay="0" inherit="true"/>
         </effect>
         <panel childLayout="vertical" width="95%" height="80%" align="center" valign="center">
           <panel id="namePanel" childLayout="horizontal">
@@ -41,6 +39,12 @@
           </panel>
         </panel>
       </panel>
+	  
     </layer>
+	 <layer  childLayout="center">
+	  <panel childLayout="vertical" width="80%" height="50%" align="center" valign="center">
+			<text id="game_over" text="Game Over" font="res/menu.fnt" align="center" valign="center"/>
+		</panel>
+	</layer>
   </screen>
 </nifty>

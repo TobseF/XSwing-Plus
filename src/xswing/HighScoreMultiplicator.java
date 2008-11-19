@@ -1,61 +1,75 @@
 /*
  * @version 0.0 28.04.2008
- * @author 	Tobse F
+ * @author Tobse F
  */
 package xswing;
 
+import lib.mylib.MyTimer;
 import lib.mylib.Resetable;
 import lib.mylib.SObject;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SpriteSheet;
 
-/**Draws and returns the score multiplicatorSprites which can be set to the maximum of four and decrease automatically*/
-public class HighScoreMultiplicator extends SObject implements Resetable{
+/**
+ * Draws and returns the score multiplicatorSprites which can be set to the maximum of four and
+ * decrease automatically
+ */
+public class HighScoreMultiplicator extends SObject implements Resetable {
 	private SpriteSheet multiplicatorSprites;
-	/** The ScoreMuliplication value (for the HighScoreFormatter calculation)*/
-	private int multiplicator=1;
-	/** Time in ms, before for one light burns out*/
-	private int timerStep = 2500 ;
-	private int timerTemp=0;
-	
-	public HighScoreMultiplicator(int x, int y,SpriteSheet multiplicatorSprites) {
-		super(x,y);
-		this.multiplicatorSprites=multiplicatorSprites;
+	/** The ScoreMuliplication value (for the HighScoreFormatter calculation) */
+	private int multiplicator = 1;
+	/** Time in ms, before for one light burns out */
+	private int timerStep = 2500;
+
+	private MyTimer timer;
+
+	public HighScoreMultiplicator(int x, int y, SpriteSheet multiplicatorSprites) {
+		super(x, y);
+		this.multiplicatorSprites = multiplicatorSprites;
+		timer = new MyTimer(timerStep, true, false) {
+			@Override
+			protected void timerAction() {
+				multiply();
+			}
+		};
 	}
-	
-	/**Sets the score multiplicatorSprites to 4*/
-	public void score(){
-		reset();
-		multiplicator=4;
+
+	/** Sets the score multiplicatorSprites to 4 */
+	public void score() {
+		timer.reset();
+		multiplicator = 4;
+		timer.start();
 	}
-	
+
 	@Override
 	public void update(int delta) {
-		timerTemp+=delta;
-		if(timerTemp>=timerStep){
-			if(multiplicator>1){
-				multiplicator--;
-			}
-			timerTemp=0;
+		timer.update(delta);
+	}
+
+	private void multiply() {
+		if (multiplicator > 1) {
+			multiplicator--;
+		} else {
+			timer.reset();
 		}
 	}
-	
+
 	@Override
 	public void draw(Graphics g) {
-		if(multiplicator>1)//Only muliplicator states 2,3 and 4 are in the spritesheet
-			g.drawImage(multiplicatorSprites.getSprite(0, 4-multiplicator),x,y);
+		if (multiplicator > 1) {// Only muliplicator states 2,3 & 4 are in the spritesheet
+			g.drawImage(multiplicatorSprites.getSprite(0, 4 - multiplicator), x, y);
+		}
 	}
-	
-	/** Returns the Score multiplication factor*/
+
+	/** Returns the Score multiplication factor */
 	public int getMulti() {
 		return multiplicator;
 	}
 
 	@Override
 	public void reset() {
-		multiplicator=1;
-		timerTemp=0;
+		multiplicator = 1;
+		timer.reset();
 	}
-
 }
