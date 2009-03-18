@@ -4,8 +4,8 @@
  */
 package trash;
 
-import lib.mylib.BasicGameState;
-import lib.mylib.Resetable;
+import lib.mylib.object.BasicGameState;
+import lib.mylib.object.Resetable;
 
 import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.Color;

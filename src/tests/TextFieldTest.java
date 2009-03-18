@@ -16,7 +16,7 @@ public class TextFieldTest extends BasicGame {
 	private TextField textField;
 
 	public TextFieldTest() {
-		super("Test");
+		super("TextFieldTest");
 	}
 
 	@Override

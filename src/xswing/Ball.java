@@ -4,15 +4,23 @@
  */
 package xswing;
 
-import lib.mylib.SObject;
+import java.awt.Point;
+
+import javax.swing.event.EventListenerList;
+
 import lib.mylib.SpriteSheet;
+import lib.mylib.object.SObject;
 
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Sound;
 
-/** The ball which moves on the screen. It can be stored in the BallTable */
-public class Ball extends SObject {
+import xswing.EffectCatalog.particleEffects;
+import xswing.events.BallEvent;
+import xswing.events.BallEventListener;
+import xswing.events.BallEvent.BallEventType;
+
+/** The ball which moves on the screen. It can be stored in a BallTable */
+public class Ball extends SObject implements Cloneable{
 	/** Font for drawing the weight */
 	protected Font font;
 	/** The number of the ball (0-49) */
@@ -25,43 +33,48 @@ public class Ball extends SObject {
 	private int speed = 20;
 	/** If the balls has to to be moved in update */
 	private boolean moving = false;
+	
 	/** The directions in which the Ball can move */
-	public static final int UP = 0;
-	/** The directions in which the Ball can move */
-	public static final int DOWN = 1;
-	/** The directions in which the Ball can move */
-	public static final int LEFT = 2;
-	/** The directions in which the Ball can move */
-	public static final int RIGHT = 3;
+	private enum MovingDirection {UP, DOWN, LEFT, RIGHT};
 	/** The current moving type */
-	private int movingType = DOWN;
+	private MovingDirection movingType = MovingDirection.DOWN;
 
 	protected BallTable ballTable = null;
-	private Sound collsionSound = null;
-	private EffectCatalog effectCatalog = null;
+	protected EffectCatalog effectCatalog = null;
 	private SpriteSheet ballsSpriteSheet = null;
+	
+	private EventListenerList eventListenerList = new EventListenerList();
 
-	public static final int STATE_ALIVE = 0;
-	public static final int STATE_WAITING_FOR_KILL = 1;
-	public static final int STATE_KILL_IMMEDIATELY = 2;
-	public static final int STATE_KILLING_STARTED = 3;
-	public static final int STATE_WAITING_FOR_SHRINK = 4;
-	private int stateType = STATE_ALIVE;
-
+	/** Lenght of an edge*/
 	public static final int A = 48;
 
-	public Ball() {}
-
+	/**
+	 * @param level 
+	 * @param x Position on screen
+	 * @param y Position on screen
+	 * @param balls Sprite sheet for 45 ball levels
+	 */
 	public Ball(int level, int x, int y, SpriteSheet balls) {
 		super(x, y);
-		nr = (int) (Math.random() * level + 1);
+		nr = (int) (Math.random() * level);
 		weight = 1 + (int) (Math.random() * (level + 1));
 		ballsSpriteSheet = balls;
 		if (balls != null) {
 			setImage(ballsSpriteSheet.getSprite(nr));
 		}
 	}
+	
+	public Ball(int x, int y) {
+		super(x,y);
+	}
 
+	/**
+	 * @param nr 
+	 * @param wieght
+	 * @param x
+	 * @param y
+	 * @param balls
+	 */
 	public Ball(int nr, int wieght, int x, int y, SpriteSheet balls) {
 		super(x, y);
 		this.nr = nr + 1;
@@ -75,13 +88,24 @@ public class Ball extends SObject {
 	public Ball(int level, int x, int y) {
 		this(level, x, y, null);
 	}
+	
+	public Ball(int nr) {
+		weight = nr;
+		this.nr = nr + 1;
+	}
 
 	public void setFont(Font font) {
 		this.font = font;
 	}
-
-	public void setCollsionSound(Sound collsionSound) {
-		this.collsionSound = collsionSound;
+	
+	 @Override
+	public Ball clone() {
+		 Ball newBall = null;
+		 try {
+			 newBall= (Ball) super.clone();
+		} catch (CloneNotSupportedException e) {
+		}
+		return newBall;
 	}
 
 	public void setEffects(EffectCatalog effectCatalog) {
@@ -93,19 +117,7 @@ public class Ball extends SObject {
 		setNr(nr);
 	}
 
-	public boolean isReadyToKill() {
-		return stateType > STATE_ALIVE;
-	}
-
-	public int getStateType() {
-		return stateType;
-	}
-
-	public void setStateType(int stateType) {
-		this.stateType = stateType;
-	}
-
-	public void setGrid(BallTable ballTable) {
+	public void setBallTable(BallTable ballTable) {
 		this.ballTable = ballTable;
 	}
 
@@ -120,8 +132,8 @@ public class Ball extends SObject {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		super.draw(g);
+	public void render(Graphics g) {
+		super.render(g);
 		drawNumber(g);
 	}
 
@@ -144,12 +156,12 @@ public class Ball extends SObject {
 	}
 
 	/**
-	 * Changes the moving state and (if necessary) removes the ball from the BallTable
+	 * Changes the moving BallState and (if necessary) removes the ball from the BallTable
 	 */
 	public void toggleMoving() {
 		moving = !moving;
 		if (moving && ballTable.isOverGrid(x, y)) {
-			// when moving the ball is remomved from the BallTable
+			// when moving ball is remomved from the BallTable
 			ballTable.removeBall(this);
 		}
 	}
@@ -159,17 +171,25 @@ public class Ball extends SObject {
 		this.speed = speed;
 	}
 
+	public void setSpiteSheet(SpriteSheet spriteSheet){
+		this.ballsSpriteSheet = spriteSheet;
+		setNr(nr);
+	}
+	
 	/** Checks wether the given ball has the same nr, 99 is the Joker */
 	public boolean compare(Ball ball) {
 		return getNr() == ball.getNr() || ball.getNr() == 99;
 	}
 
-	/** Sets a nr to the ball -it also changes the icon */
+	/** Sets a <code>nr</code> to the ball -it also changes the icon. Only values between
+	 * 0 and 45 are allowed.*/
 	public void setNr(int nr) {
-		this.nr = nr;
-		if (ballsSpriteSheet != null) {
-			image = ballsSpriteSheet.getSprite(nr);
-		}
+		if(nr >= 0 && nr < 44){ 
+			this.nr = nr;
+			if (ballsSpriteSheet != null) {
+				image = ballsSpriteSheet.getSprite(nr);
+			}
+		}else throw new IllegalArgumentException ("0>= nr <= 44 !");
 	}
 
 	/** Returns the current sped of the ball */
@@ -190,7 +210,7 @@ public class Ball extends SObject {
 				break;
 			case DOWN:
 				y += speed;
-				if (checkCollison()) {
+				if (isCollidingWithBall() || isCollidingWithSoil()) {
 					collide();
 				}
 				break;
@@ -199,34 +219,81 @@ public class Ball extends SObject {
 			case RIGHT:
 				break;
 			}
-		} else if (!checkCollison() && ballTable.isOverGrid(x, y)) {
+		} else if (ballTable.isOverGrid(x, y) && !(isCollidingWithBall() || isCollidingWithSoil())) {
 			toggleMoving();
 		}
-
+		
 	}
-
-	/**
-	 * Checks wether ther's a ball or soild below
-	 * 
-	 * @return true if collides
-	 */
-	private boolean checkCollison() {
-		int[] positionInBallTable = ballTable.getField(x, y);
-		return (positionInBallTable[1] == 0 || // collision with soild
-				!ballTable.isEmpty(positionInBallTable[0], 
-				positionInBallTable[1] - 1)); // collsion with ball;
+	
+	@Override
+	public String toString() {
+		return "["+getNr()+"]";
+	}
+	
+	private boolean isCollidingWithSoil(){
+		return ballTable.getField(x, y).y == 0;
+	}
+	
+	private boolean isCollidingWithBall(){
+		Point positionInBallTable = ballTable.getField(x, y);
+			return !isCollidingWithSoil() && positionInBallTable.y <=8 &&
+				!ballTable.isEmpty(positionInBallTable.x, positionInBallTable.y - 1);
 	}
 
 	/** Performs a collsion with a ball below */
 	private void collide() {
-		if (collsionSound != null) {
-			collsionSound.play(); // Plays the sound
-		}
 		toggleMoving();
 		ballTable.addBall(this);
+		if(isCollidingWithSoil())
+			notifyListener(new BallEvent(this, this, BallEventType.BALL_HITS_GROUND));
+		if(isCollidingWithBall())
+			notifyListener(new BallEvent(this, this, BallEventType.BALL_HITS_BALL));
+		
 		if (effectCatalog != null) {
-			effectCatalog.addEffect(this, EffectCatalog.effectBouncing);
+			effectCatalog.addEffect(this, particleEffects.BOUNCING);
 		}
+	}
+	
+	/** Checks wether the ball has the same Nr (Color)
+	 * @param ball Ball to check with
+	 * @return wether the ball has the same Nr as the given
+	 */
+	public boolean isSameNr(Ball ball) {
+		if(ball == null){
+			return false;
+		}else{
+			return ball.getNr() == getNr();
+		}
+	}
+	
+	/**
+	 * Adds an {@code BallEventListener} to the Ball.
+	 * @param listener the {@code BallEventListener} to be added
+	 */
+	public void addBallEventListener(BallEventListener listener) {
+		eventListenerList.add(BallEventListener.class, listener);
+	}
+
+	/**
+	 * Removes an {@code BallEventListener} from the Ball
+	 * @param listener to be removed
+	 */
+	public void removeBallEventListener(BallEventListener listener) {
+		eventListenerList.remove(BallEventListener.class, listener);
+	}
+
+	/**
+	 * Notifies all {@code BallEventListener}s about a {@code BallEvent}
+	 * @param event the {@code BallEvent} object
+	 * @see EventListenerList
+	 */
+	protected synchronized void notifyListener(BallEvent event) {
+		for (BallEventListener l : eventListenerList.getListeners(BallEventListener.class))
+			l.ballEvent(event);
+	}
+	
+	protected void fireBallEvent(BallEventType eventType){
+		notifyListener(new BallEvent(this, this, eventType));
 	}
 
 }

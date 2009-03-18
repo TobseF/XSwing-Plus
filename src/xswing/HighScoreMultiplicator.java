@@ -5,8 +5,8 @@
 package xswing;
 
 import lib.mylib.MyTimer;
-import lib.mylib.Resetable;
-import lib.mylib.SObject;
+import lib.mylib.object.Resetable;
+import lib.mylib.object.SObject;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SpriteSheet;
@@ -24,8 +24,7 @@ public class HighScoreMultiplicator extends SObject implements Resetable {
 
 	private MyTimer timer;
 
-	public HighScoreMultiplicator(int x, int y, SpriteSheet multiplicatorSprites) {
-		super(x, y);
+	public HighScoreMultiplicator(SpriteSheet multiplicatorSprites) {
 		this.multiplicatorSprites = multiplicatorSprites;
 		timer = new MyTimer(timerStep, true, false) {
 			@Override
@@ -56,8 +55,8 @@ public class HighScoreMultiplicator extends SObject implements Resetable {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		if (multiplicator > 1) {// Only muliplicator states 2,3 & 4 are in the spritesheet
+	public void render(Graphics g) {
+		if (isVisible && multiplicator > 1) {// Only muliplicator states 2,3 & 4 are in the spritesheet
 			g.drawImage(multiplicatorSprites.getSprite(0, 4 - multiplicator), x, y);
 		}
 	}

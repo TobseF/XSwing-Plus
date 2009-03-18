@@ -6,13 +6,14 @@ package xswing;
 
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Locale;
 
-import lib.mylib.HighScoreFormatter;
 import lib.mylib.MyTimer;
-import lib.mylib.Resetable;
-import lib.mylib.SObject;
-import lib.mylib.ScoreStoreable;
-import lib.mylib.TransparancySlider;
+import lib.mylib.color.TransparancySlider;
+import lib.mylib.highscore.HighScoreFormatter;
+import lib.mylib.highscore.ScoreStoreable;
+import lib.mylib.object.Resetable;
+import lib.mylib.object.SObject;
 
 import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.Color;
@@ -35,8 +36,7 @@ public class HighScore extends SObject implements ScoreStoreable, Resetable {
 	private AngelCodeFont font;
 	private TransparancySlider fadeIn, fadeOut;
 
-	public HighScore(int x, int y, AngelCodeFont font, String fileName) {
-		super(x, y);
+	public HighScore(AngelCodeFont font, String fileName) {
 		this.font = font;
 		try {
 			localFile = new SavedState(fileName);
@@ -54,8 +54,6 @@ public class HighScore extends SObject implements ScoreStoreable, Resetable {
 			}
 		};
 	}
-
-	public HighScore() {}
 
 	private void saveScore() {
 		String[][] cryptedHighScoreTable = scoreFormatter.cryptScore(highScoreTable);
@@ -81,7 +79,7 @@ public class HighScore extends SObject implements ScoreStoreable, Resetable {
 	}
 
 	@Override
-	public void draw(Graphics g) {
+	public void render(Graphics g) {
 		if (isVisible) {
 			drawScoreTableFading();
 		}
@@ -98,7 +96,7 @@ public class HighScore extends SObject implements ScoreStoreable, Resetable {
 				drawScoreTable(index + 1, gap, fadeInColor);
 				/*
 				 * if (highScoreTable.length >= 4) { drawScoreTable( getNextIndex() + 1, 0,
-				 * fadeOutColor); drawScoreTable( getNextIndex() + 2, gap, fadeOutColor); }
+				 * fadeOutColor); drawScoreTable( getNextIndex() + 2, gab_between_balls, fadeOutColor); }
 				 */
 			}
 		}
@@ -106,7 +104,7 @@ public class HighScore extends SObject implements ScoreStoreable, Resetable {
 
 	private void drawScoreTable(int index, int gapBetweenLines, Color transparency) {
 		int maxScoreLength = font.getWidth("000000");
-
+		
 		// Position
 		font.drawString(x - 150, y + gapBetweenLines, (index + 1) + "", transparency);
 		// Name
@@ -120,10 +118,10 @@ public class HighScore extends SObject implements ScoreStoreable, Resetable {
 				formattesScore, transparency);
 	}
 
-	public static void main(String[] args) {
-		new HighScore();
-	}
-
+	
+	/**
+	 * Switch to the next element in the highScoreList
+	 */
 	private void switchIndex() {
 		index = getNextIndex();
 		fadeIn.reset();
@@ -132,6 +130,10 @@ public class HighScore extends SObject implements ScoreStoreable, Resetable {
 		// fadeIn.invert();
 	}
 
+	
+	/**
+	 * @return nextIndexInHighScoreList
+	 */ 
 	private int getNextIndex() {
 		int indexNew = (index + 1) < (highScoreTable.length - 1) ? index + 1 : 0;
 		return indexNew;
@@ -144,6 +146,7 @@ public class HighScore extends SObject implements ScoreStoreable, Resetable {
 		timer.update(delta);
 	}
 
+	/** Ads a new Score value to the highscore table*/
 	@Override
 	public void addScore(int score, String name) {
 		highScoreTable = scoreFormatter.addScore(highScoreTable, name, score, 50);

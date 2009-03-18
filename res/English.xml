@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>English</comment>
+<entry key="show_options_on_start">Show options on start</entry>
+<entry key="start">Start</entry>
+<entry key="exit">Exit</entry>
+<entry key="german">German</entry>
+<entry key="exit_">Exit </entry>
+<entry key="loading">Loading</entry>
+<entry key="resolution">Resoulution</entry>
+<entry key="language">Language</entry>
+<entry key="next">Next</entry>
+<entry key="window">Window</entry>
+<entry key="english">English</entry>
+<entry key="fullscreen">Fullscreen</entry>
+<entry key="game">Game</entry>
+<entry key="window_size">Window Size</entry>
+<entry key="options">Options</entry>
+</properties>

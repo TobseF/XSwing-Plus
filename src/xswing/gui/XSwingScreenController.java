@@ -1,9 +1,15 @@
 package xswing.gui;
 
+import lib.mylib.util.LanguageSelector;
+
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.state.StateBasedGame;
 
+import xswing.LocationController;
+import xswing.start.XSwing;
+
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.input.NiftyInputEvent;
 import de.lessvoid.nifty.input.NiftyInputMapping;
 import de.lessvoid.nifty.input.keyboard.KeyboardInputEvent;
@@ -36,6 +42,10 @@ public class XSwingScreenController implements ScreenController {
 	public final void bind(final Nifty nifty, final Screen newScreen) {
 		this.nifty = nifty;
 		screen = newScreen;
+		screen.findElementByName("version").getRenderer(TextRenderer.class).setText(
+		XSwing.VERSION);
+		
+		setLanguageStings();
 	}
 
 	/**
@@ -44,7 +54,7 @@ public class XSwingScreenController implements ScreenController {
 	public final void onStartScreen() {
 		nifty.addControls();
 
-		screen.findElementByName("start").setFocus();
+		screen.findElementByName("startSinglePlayer").setFocus();
 		screen.addKeyboardInputHandler(new NiftyInputMapping() {
 			@Override
 			public NiftyInputEvent convert(KeyboardInputEvent e) {
@@ -58,15 +68,35 @@ public class XSwingScreenController implements ScreenController {
 			@Override
 			public boolean keyEvent(NiftyInputEvent e) {
 				if (e != null && e == NiftyInputEvent.Escape) {
-					System.out.println("ESC pressed");
+					System.out.println("pressed: ESC");
 					exitXSwing();
 				}
 				return false;
 			}
 		});
 		game.getContainer().getInput().resume();
+		
 	}
 
+	private void setLanguageStings(){
+		setElementName("startSinglePlayer");
+		setElementName("startMultiplayer");
+		setElementName("tutorial");
+		setElementName("options");
+		setElementName("credits");
+		setElementName("exit");
+		//TODO: void: available? ((MenuItemType)screen.findElementByName("labelScore")).setHintText("View the Tutorials stages")
+	}
+	
+	private void setElementName(String elementName){
+		setElementName(screen, elementName);
+	}
+	
+	public static void setElementName(Screen screen, String elementName){
+		screen.findElementByName(elementName).getRenderer(TextRenderer.class).setText(
+				LanguageSelector.getString(elementName));
+	}
+	
 	/**
 	 * on end screen.
 	 */
@@ -74,8 +104,15 @@ public class XSwingScreenController implements ScreenController {
 		screen.findElementByName("Start").setFocus();
 	}
 
-	public final void startXSwing() {
-		System.out.println("start XSing()");
+	public final void startSingleplayer() {
+		System.out.println("pressed: start XSing()");
+		LocationController.setMultiplayer(false);
+		game.enterState(2);
+	}
+	
+	public final void startMultiplayer() {
+		System.out.println("pressed: start XSing()");
+		LocationController.setMultiplayer(true);
 		game.enterState(2);
 	}
 

@@ -5,44 +5,53 @@
 package xswing;
 
 import java.io.IOException;
+import java.util.EnumMap;
+import java.util.Map;
 
-import lib.mylib.Drawable;
-import lib.mylib.Resetable;
 import lib.mylib.Sound;
-import lib.mylib.Updateable;
+import lib.mylib.object.Drawable;
+import lib.mylib.object.Resetable;
+import lib.mylib.object.Updateable;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.particles.ParticleIO;
 import org.newdawn.slick.particles.ParticleSystem;
 
-/** Provides the particle effects */
+/** Provides particle & sound effects */
 public class EffectCatalog implements Resetable, Updateable, Drawable {
-	private static ParticleSystem paticleSystem = null;
-	private ConfigurableEmitter[] effects = new ConfigurableEmitter[7];
-	public static final int effectBouncing = 1;
-	public static final int effectExplosion = 2;
-	public static final int efectFlash = 3;
-	public static final int efectShrinc = 4;
-	private Sound[] sounds = new Sound[4];
-	private boolean showParticles = true;
-
-	public void setSound(Sound sound, int effectNr) {
-		sounds[effectNr] = sound;
+	
+	private ParticleSystem paticleSystem = null;
+	public enum particleEffects{BOUNCING, EXPLOSION, FLASH, SHRINC, 
+		SHRINC1 ,SHRINC2, SHRINC3, SHRINC4};
+	private Map<particleEffects, ConfigurableEmitter> emitterList = 
+		new EnumMap<particleEffects, ConfigurableEmitter>(particleEffects.class);
+	private Map<particleEffects, Sound> sounds = new EnumMap<particleEffects, Sound>(particleEffects.class);
+	private boolean showParticles = true;	
+	
+	public void setSound(Sound sound, particleEffects effect) {
+		sounds.put(effect, sound);
 	}
 
 	public EffectCatalog() {
 		if (paticleSystem == null) {
 			try {
 				paticleSystem = ParticleIO.loadConfiguredSystem("res/emptySystem.xml");
-				effects[effectBouncing] = ParticleIO.loadEmitter("res/bounce3.xml");
-				effects[effectExplosion] = ParticleIO.loadEmitter("res/explosion2.xml");
-				effects[efectFlash] = ParticleIO.loadEmitter("res/glitter2.xml");
-				for(int i = 0; i<3; i++){
-					effects[efectShrinc+i] = ParticleIO.loadEmitter("res/shrink"+(i+1)+".xml");
-				}
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+			
+			for(particleEffects particleEffect : particleEffects.values()){
+				ConfigurableEmitter emitter = null;
+				if (particleEffect != particleEffects.SHRINC)
+				try {
+					emitter = ParticleIO.loadEmitter("res/"
+							+ particleEffect.toString().toLowerCase()+ ".xml"); 
+				} catch (IOException e) {
+				}
+				if(emitter != null){
+					emitterList.put(particleEffect, emitter);
+				}		
 			}
 		}
 		paticleSystem.setRemoveCompletedEmitters(true);
@@ -53,35 +62,43 @@ public class EffectCatalog implements Resetable, Updateable, Drawable {
 		effect.setPosition(x, y);
 		paticleSystem.addEmitter(effect);
 	}
-
-	public void addEffect(Ball ball, int effectNr) {
+	
+	/**
+	 * Adds an Paticle effect to a ball
+	 * @param ball which executes an effect
+	 * @param effectNr
+	 */
+	public void addEffect(Ball ball, particleEffects effect) {
 		if (showParticles) {
 			int a = Ball.A;
-			ConfigurableEmitter effect=null;
-			switch (effectNr) {
-			case effectBouncing:
-				effect = effects[effectBouncing].duplicate();
-				addEmitter(ball.getX() + a / 2, ball.getY() + a, effect);
+			ConfigurableEmitter currentEmitter=null;
+			
+			switch (effect) {
+			case BOUNCING:
+				currentEmitter = emitterList.get(effect).duplicate();
+				addEmitter(ball.getX() + a / 2, ball.getY() + a, currentEmitter);
 				break;
-			case effectExplosion:
-				effect = effects[effectExplosion].duplicate();
-				addEmitter(ball.getX() + a / 2, ball.getY() + a / 2, effect);
+			case EXPLOSION:
+				currentEmitter = emitterList.get(effect).duplicate();
+				addEmitter(ball.getX() + a / 2, ball.getY() + a / 2, currentEmitter);
 				break;
-			case efectFlash:
-				effect = effects[efectFlash].duplicate();
-				addEmitter(ball.getX() - 42, ball.getY() + 50, effect);
+			case FLASH:
+				currentEmitter = emitterList.get(effect).duplicate();
+				addEmitter(ball.getX() - 42, ball.getY() + 50, currentEmitter);
 				break;
-			case efectShrinc:
-				for(int i = 0; i<3; i++){
-					effect = effects[efectShrinc+i].duplicate();
-					addEmitter(ball.getX() + a / 2, ball.getY() + a / 2, effect);
+			case SHRINC:
+				int lenght = particleEffects.values().length;
+				for (int i = lenght - 1; i >= (lenght - 4); i--){
+					addEmitter(ball.getX() + a / 2, ball.getY() + a / 2,  
+							emitterList.get(particleEffects.values()[i]).duplicate());
+					System.out.println("er"+i);
 				}
 				break;
 			default:
 				break;
 			}
-			if (effectNr<4 && sounds[effectNr] != null && !sounds[effectNr].playing()) {
-				sounds[effectNr].play();
+			if (sounds.get(effect) != null && !sounds.get(effect).playing()) {
+				sounds.get(effect).play();
 			}
 		}
 	}
@@ -89,15 +106,15 @@ public class EffectCatalog implements Resetable, Updateable, Drawable {
 	public void reset() {
 		paticleSystem.removeAllEmitters();
 		paticleSystem.reset();
-		for (Sound sound : sounds) {
-			if (sound != null) {
-				sound.stop();
+		for ( particleEffects effect : particleEffects.values()) { 
+			if (sounds.get(effect) != null) {
+				sounds.get(effect).stop();
 			}
 		}
 	}
 
 	@Override
-	public void draw(Graphics g) {
+	public void render(Graphics g) {
 		if (showParticles) {
 			paticleSystem.render();
 		}
@@ -110,6 +127,9 @@ public class EffectCatalog implements Resetable, Updateable, Drawable {
 		}
 	}
 
+	/**
+	 * @return The current number of particles 
+	 */
 	public int getParticleCount() {
 		return paticleSystem.getParticleCount();
 	}
@@ -117,7 +137,10 @@ public class EffectCatalog implements Resetable, Updateable, Drawable {
 	public void setShowParticles(boolean showParticles) {
 		this.showParticles = showParticles;
 	}
-
+	
+	/**
+	 * @return Whether particles are printed on screen (true if yes)
+	 */
 	public boolean isShowParticles() {
 		return showParticles;
 	}

@@ -4,7 +4,7 @@
  */
 package tests;
 
-import lib.mylib.FontStringsToSpiteSheetConverter;
+import lib.mylib.util.FontStringsToSpiteSheetConverter;
 
 import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.AppGameContainer;

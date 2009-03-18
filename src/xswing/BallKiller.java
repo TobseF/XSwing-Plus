@@ -8,12 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lib.mylib.MyTimer;
-import lib.mylib.Resetable;
-import lib.mylib.Updateable;
+import lib.mylib.object.Resetable;
+import lib.mylib.object.Updateable;
+import xswing.EffectCatalog.particleEffects;
+import xswing.events.BallEvent;
+import xswing.events.BallEventListener;
+import xswing.events.BallEvent.BallEventType;
 
-public class BallKiller implements Resetable, Updateable {
-	List<Ball> ballsToKill = new ArrayList<Ball>();
-	private static int WAITING_BEFORE_KILL = 320;
+public class BallKiller implements Resetable, Updateable, BallEventListener {
+	private List<Ball> ballsToKill = new ArrayList<Ball>();
+	private static final int WAITING_BEFORE_KILL = 320;
 	private Mechanics mechanics;
 	private HighScoreCounter score;
 	private MyTimer timer;
@@ -40,10 +44,6 @@ public class BallKiller implements Resetable, Updateable {
 		timer.start();
 	}
 
-	/*
-	 * public void newBall(){ timer.reset(); timer.start(); }
-	 */
-
 	@Override
 	public void reset() {
 		timer.reset();
@@ -56,14 +56,26 @@ public class BallKiller implements Resetable, Updateable {
 
 	private void killBalls() {
 		Ball bTemp = ballsToKill.get(0);
-		score.score(mechanics.calculateScore(ballsToKill = mechanics
-						.getConnectedBalls(bTemp)));
+		score.score(mechanics.calculateScore(
+				ballsToKill = mechanics.getConnectedBalls(bTemp)));
 		for (int i = 0; i < ballsToKill.size(); i++) {
 			Ball b = ballsToKill.get(i);
-			effectCatalog.addEffect(b, EffectCatalog.effectExplosion);
-			b.setStateType(Ball.STATE_KILL_IMMEDIATELY);
+			if(i == 0)
+				b.fireBallEvent(BallEventType.BALL_EXPLODED);
+			effectCatalog.addEffect(b, particleEffects.EXPLOSION); //TODO: move to EffectLib
+			b.fireBallEvent(BallEventType.BALL_CAUGHT_BY_EXPLOSION);
 		}
 		ballsToKill.clear();
 		reset();
+	}
+	
+	private void explodeRow(){
+		//TODO: implements row exploding
+	}
+
+	@Override
+	public void ballEvent(BallEvent e) {
+		//if(e.getSource())
+	
 	}
 }

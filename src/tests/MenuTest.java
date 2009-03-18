@@ -16,14 +16,14 @@ import org.newdawn.slick.SlickException;
 
 public class MenuTest extends BasicGame {
 	private Menu menu;
-
+	private static final String  resFolder = "restest/";
 	public MenuTest() {
 		super("MenuTest");
 	}
 
 	@Override
 	public void init(GameContainer container) throws SlickException {
-		menu = new Menu(new AngelCodeFont("res/font.fnt", "res/font.tga"), container
+		menu = new Menu(new AngelCodeFont(resFolder + "font.fnt",resFolder + "font.tga"), container
 				.getInput(), null);
 		menu.setBounds(100, 40, 300, 400);
 

@@ -5,18 +5,19 @@
 package xswing;
 
 import lib.mylib.EffectBlinking;
-import lib.mylib.Resetable;
 import lib.mylib.SpriteSheet;
+import lib.mylib.object.Resetable;
 
+import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
 
-/** The ball which counts the levels */
+/** The ball which counts the levels. Level can be 1-45 */
 public class Level extends Ball implements Resetable {
 
 	/** The Level with wich the game starts (only for reset) */
-	private int startLeveL = 3;
+	private int startLeveL;
 	/** The Highest reachable level */
-	private int maxLeveL = 45;
+	private static final int MAX_LEVEL = 45;
 
 	private EffectBlinking blinking;
 
@@ -25,10 +26,11 @@ public class Level extends Ball implements Resetable {
 	 * ArrayList<Integer>preDefinedBalls=new ArrayList<Integer>();
 	 */
 
-	public Level(int nr, int x, int y, SpriteSheet ballsSpriteSheet) {
-		super(nr, x, y, ballsSpriteSheet);
-		weight = nr + 1;
-		setNr(nr);
+	public Level(int level, SpriteSheet ballsSpriteSheet, Font font) {
+		super(level, 0, 0, ballsSpriteSheet);
+		startLeveL = level;
+		this.font = font;
+		setLevel(level);
 		blinking = new EffectBlinking(8, 300, true);
 	}
 
@@ -37,9 +39,14 @@ public class Level extends Ball implements Resetable {
 		blinking.reset();
 	}
 
+	/**
+	 * Set the current level
+	 * @param level
+	 * @see #getLevel()
+	 */
 	public void setLevel(int level) {
-		setNr(level + 1);
-		weight = level + 1;
+		setNr(level - 1);
+		weight = level;
 	}
 
 	@Override
@@ -48,23 +55,28 @@ public class Level extends Ball implements Resetable {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		if (blinking.getBlink()) {
-			super.draw(g);
+	public void render(Graphics g) {
+		if (isVisible && blinking.getBlink()) {
+			super.render(g);
 		}
 	}
 
 	/** Returns the current level */
 	public int getLevel() {
-		return getNr();
+		return weight;
 	}
 
 	/** Swicht to the next level */
 	public void nextLevel() {
-		if (!(getNr() + 1 >= maxLeveL)) {
+		if (!(getNr() + 1 >= MAX_LEVEL)) {
 			setNr(getNr() + 1);
 			weight = getNr() + 1;
 			blinking.reset();
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return "Level: "+ weight;
 	}
 }

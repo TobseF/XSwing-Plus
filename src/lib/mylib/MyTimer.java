@@ -4,9 +4,12 @@
  */
 package lib.mylib;
 
+import lib.mylib.object.Resetable;
+import lib.mylib.object.Updateable;
+
 /**
  * Timer wich provides a {@link #timerAction()} function. It's called after the
- * <code>duration</code> .
+ * <code>duration</code>.
  * 
  * @author Tobse
  * @see #timerAction()
@@ -21,11 +24,12 @@ public class MyTimer implements Updateable, Resetable {
 	private boolean runningOnStart = true;
 
 	/**
-	 * @param duration Timer before the Timer Action is called.
+	 * @param duration time before the Timer Action is called.
 	 * @param repeat Whether the timer schould run consecutively (true) or stop after one
 	 *            runningOnStart Whether the Timer should start running on build (true) ore
 	 *            have started with {@link #setPause(boolean)} Timer Action (false)
 	 * @see #MyTimer(int, boolean)
+	 * @see #timerAction()
 	 */
 	public MyTimer(int duration, boolean repeat, boolean runningOnStart) {
 		this(duration, repeat);
@@ -34,10 +38,11 @@ public class MyTimer implements Updateable, Resetable {
 	}
 
 	/**
-	 * @param duration Timer before the Timer Action is called.
+	 * @param duration time before the Timer Action is called.
 	 * @param repeat Whether the timer schould run consecutively (true) or stop after one Timer
 	 *            Action (false)
 	 * @see #MyTimer(int, boolean, boolean)
+	 * @see #timerAction()
 	 */
 	public MyTimer(int duration, boolean repeat) {
 		this.duration = duration;
@@ -72,9 +77,22 @@ public class MyTimer implements Updateable, Resetable {
 	public boolean isInPause() {
 		return !running;
 	}
+	
+	public boolean isFinsihed(){
+		return (!running && timeSinceStart >= duration);
+	}
 
 	public void start() {
 		running = true;
+	}
+	
+	public void pause(){
+		running = false;
+	}
+	
+	public void setDuration(int duration) {
+		this.duration = duration;
+		reset();
 	}
 
 	@Override

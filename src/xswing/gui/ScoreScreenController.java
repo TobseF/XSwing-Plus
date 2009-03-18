@@ -2,13 +2,13 @@ package xswing.gui;
 
 import java.text.NumberFormat;
 
-import lib.mylib.ScoreStoreable;
+import lib.mylib.highscore.ScoreStoreable;
 
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.state.transition.FadeInTransition;
-import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.state.transition.EmptyTransition;
 
-import xswing.MainGame;
+import xswing.GamePanel;
+import xswing.start.XSwing;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.textfield.TextFieldControl;
 import de.lessvoid.nifty.elements.render.TextRenderer;
@@ -40,6 +40,7 @@ public class ScoreScreenController implements ScreenController {
 	 */
 	public final void bind(final Nifty newNifty, final Screen newScreen) {
 		nifty = newNifty;
+		//nifty.render(true);
 	}
 
 	/**
@@ -79,8 +80,9 @@ public class ScoreScreenController implements ScreenController {
 		String name = textField.getText();
 		System.out.println("Score entered: " + name + " " + highScore);
 		highscoreList.addScore(highScore, name);
-		((MainGame) game.getState(2)).reset();
-		game.enterState(2, new FadeOutTransition(), new FadeInTransition());
+		((GamePanel) game.getState(XSwing.GAME_PANEL)).reset();
+		//game.enterState(XSwingMenu.GAME_PANEL, new FadeOutTransition(), new FadeInTransition());
+		game.enterState(XSwing.GAME_PANEL, new EmptyTransition(), new EmptyTransition());
 	}
 
 }

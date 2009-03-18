@@ -4,8 +4,7 @@
  */
 package tests;
 
-import lib.ibxm.FrameAverage;
-import lib.mylib.TransparancySlider;
+import lib.mylib.color.TransparancySlider;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -15,6 +14,8 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+
+import trash.FrameAverage;
 
 public class TranparencySliderTest extends BasicGame {
 	static AppGameContainer container;

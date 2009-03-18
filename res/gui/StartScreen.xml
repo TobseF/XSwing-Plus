@@ -82,8 +82,11 @@
       <panel height="30%" childLayout="center"/>
       <panel height="50%" childLayout="center">
         <menu id="mainMenu" font="res/menu.fnt" style="menu">
-          <menuItem id="start" text="Start" style="menu-item" hintText="Start the XSwing Game!" focusable="true">
-            <interact onClick="startXSwing()"/>
+          <menuItem id="startSinglePlayer" text="Singe Player" style="menu-item" hintText="Start the XSwing Plus singleplayer game!" focusable="true">
+            <interact onClick="startSingleplayer()"/>
+          </menuItem>
+          <menuItem id="startMultiplayer" text="Multiplayer" style="menu-item" hintText="Start the XSwing Plus multiplayer game!" focusable="true">
+            <interact onClick="startMultiplayer()"/>
           </menuItem>
           <menuItem id="tutorial" text="Tutorial" style="menu-item" hintText="View the Tutorials stages" focusable="true">
             <interact onClick="textAlign()"/>
@@ -116,6 +119,9 @@
           <onEndScreen name="fade" startColor="#ffff" endColor="#0000" length="800" />
         </effect>
       </image>
+    </layer>
+     <layer id="versionInfo" childLayout="vertical">
+         <label id="version" height="100%" width="98%" text="v0.344" textHAlign="left" textVAlign="bottom"/>
     </layer>
   </screen>
   

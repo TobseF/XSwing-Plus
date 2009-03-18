@@ -7,8 +7,8 @@ package xswing;
 import java.text.NumberFormat;
 
 import lib.mylib.EffectBlinking;
-import lib.mylib.Resetable;
-import lib.mylib.SObject;
+import lib.mylib.object.Resetable;
+import lib.mylib.object.SObject;
 
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
@@ -22,8 +22,7 @@ public class HighScoreCounter extends SObject implements Resetable{
 	private int letterLenght;
 	private EffectBlinking blinking;
 
-	public HighScoreCounter(Font font, int x, int y, HighScoreMultiplicator multiplicator) {
-		super(x, y);
+	public HighScoreCounter(Font font, HighScoreMultiplicator multiplicator) {
 		this.font = font;
 		this.multiplicator = multiplicator;
 		letterLenght = font.getWidth("0");
@@ -39,10 +38,10 @@ public class HighScoreCounter extends SObject implements Resetable{
 	}
 
 	@Override
-	public void draw(Graphics g) {
+	public void render(Graphics g) {
 			String scoreS = NumberFormat.getInstance().format(score);
 			font.drawString(x - (scoreS.length() - 1) * letterLenght, y, scoreS);
-		if(blinking.getBlink()){
+		if(blinking.getBlink() && !LocationController.isMultiplayer()){
 			String bonusS = NumberFormat.getInstance().format(bonus);
 			font.drawString(x - (bonusS.length() - 1) * letterLenght, y + 55, bonusS);
 		}
@@ -58,6 +57,10 @@ public class HighScoreCounter extends SObject implements Resetable{
 	/** Returns the highscore */
 	public int getScore() {
 		return score;
+	}
+	
+	public int getBonus() {
+		return bonus;
 	}
 	
 	@Override

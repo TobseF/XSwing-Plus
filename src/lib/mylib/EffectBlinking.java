@@ -4,6 +4,9 @@
  */
 package lib.mylib;
 
+import lib.mylib.object.Resetable;
+import lib.mylib.object.Updateable;
+
 /**
  * A blinking effect.
  * 
@@ -17,14 +20,14 @@ public class EffectBlinking implements Resetable, Updateable {
 	private int blincedCount = 0;
 	/** The blinc statuse */
 	private boolean blinc;
-	/** Blinc state on start (saved for reset) */
+	/** Blinc BallState on start (saved for reset) */
 	private boolean visibleOnStart;
 	private MyTimer timer;
 
 	/**
 	 * @param blincCount Times the Blinker should blink
 	 * @param blincDuration Duration of a blink in ms (visible Time)
-	 * @param visibleOnStart Wether blinc state should be on start <code>true<code>
+	 * @param visibleOnStart Wether blinc BallState should be on start <code>true<code>
 	 * @see {@link #getBlink()}
 	 */
 	public EffectBlinking(int blincCount, int blincDuration, boolean visibleOnStart) {
@@ -49,7 +52,7 @@ public class EffectBlinking implements Resetable, Updateable {
 		}
 	}
 
-	/** Returns the current blincing state */
+	/** Returns the current blincing BallState */
 	public boolean getBlink() {
 		return blinc;
 	}

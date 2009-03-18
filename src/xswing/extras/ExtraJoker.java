@@ -9,15 +9,16 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import xswing.Ball;
+import xswing.BallTable;
+import xswing.EffectCatalog;
+import xswing.constant.Constants;
 
-public class ExtraJoker extends Ball {
+public class ExtraJoker extends Extra {
 
-	public ExtraJoker(int level, int x, int y) {
-		super(level, x, y);
-		nr = 99;
-		weight = 0;
+	public ExtraJoker(int x, int y, BallTable ballTable, EffectCatalog effectCatalog) {
+		super(99, x, y, ballTable, effectCatalog);
 		try {
-			setImage(new Image("res/joker.png"));
+			setImage(new Image(Constants.RESOURCE_FOLDER + "joker.png"));
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
@@ -30,7 +31,6 @@ public class ExtraJoker extends Ball {
 
 	@Override
 	protected void drawNumber(Graphics g) {
-
 	// do nothing
 	}
 }
