@@ -5,25 +5,20 @@
 package xswing;
 
 import lib.mylib.SpriteSheet;
-import lib.mylib.object.Countable;
-import lib.mylib.object.Resetable;
-import lib.mylib.object.SObject;
-
-import org.newdawn.slick.Animation;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Sound;
-
+import lib.mylib.object.*;
+import org.newdawn.slick.*;
 import xswing.EffectCatalog.particleEffects;
 
 /** Provides a moveable Cannon which releses the Balls */
 public class Cannon extends SObject implements Resetable {
+
 	/** Gap between balls */
 	private int gap = 16; //
 	/** Ball lenght */
 	private int ballLenght = 48;
 	/** The current column */
 	private int cannonPosition = 0;
-	
+
 	private Countable ballCounter;
 
 	private Ball ball = null;
@@ -35,7 +30,7 @@ public class Cannon extends SObject implements Resetable {
 	private Animation animationDanger;
 	/** period of time of one anmation frame */
 	private final int duration = 180;
-	
+
 	private EffectCatalog effectCatalog;
 
 	private Ball lastreleasedBall = null;
@@ -47,8 +42,8 @@ public class Cannon extends SObject implements Resetable {
 	 * @param sounds The moving sound (0) and the alarm sound
 	 * @param ballTable
 	 */
-	public Cannon(SpriteSheet cannons, Sound[] sounds, 
-			BallTable ballTable, Countable ballCounter, EffectCatalog effectCatalog) {
+	public Cannon(SpriteSheet cannons, Sound[] sounds, BallTable ballTable,
+			Countable ballCounter, EffectCatalog effectCatalog) {
 		super(cannons.getSprite(0, 0));
 		gap = LocationController.getGapBetweenBalls();
 		move = sounds[0];
@@ -111,7 +106,7 @@ public class Cannon extends SObject implements Resetable {
 
 	/** Lets the ball start moving and loads the next Ball from the BallTable */
 	public void releaseBall(Ball nextBall) {
-		if(isReadyToReleaseBall()){
+		if (isReadyToReleaseBall()) {
 			if (ball != null) {
 				ball.toggleMoving(); // Ball should start falling
 				ball.setPos(getX(), y + 30); // Set the Ball position

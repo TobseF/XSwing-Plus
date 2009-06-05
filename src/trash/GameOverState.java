@@ -4,22 +4,14 @@
  */
 package trash;
 
-import lib.mylib.object.BasicGameState;
-import lib.mylib.object.Resetable;
-
-import org.newdawn.slick.AngelCodeFont;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Font;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import lib.mylib.object.*;
+import org.newdawn.slick.*;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.state.transition.FadeInTransition;
-import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.state.transition.*;
 
 public class GameOverState extends BasicGameState {
+
 	private int score;
 	private TextField textField = null;
 	private Font font;

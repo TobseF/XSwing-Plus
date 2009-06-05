@@ -4,16 +4,10 @@
  */
 package tests;
 
-import org.newdawn.slick.AngelCodeFont;
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
 public class GoBackSwing extends BasicGame {
+
 	private static AppGameContainer container;
 	private Image background, ball;
 	private AngelCodeFont font;

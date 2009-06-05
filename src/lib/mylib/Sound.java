@@ -8,6 +8,7 @@ import org.newdawn.slick.SlickException;
 
 /** Extendened version of the Slick Sound class */
 public class Sound extends org.newdawn.slick.Sound {
+
 	private long startTime;
 	private long maxPlayingTime;
 

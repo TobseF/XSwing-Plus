@@ -6,10 +6,10 @@ package xswing.testcases;
 
 import static org.junit.Assert.assertArrayEquals;
 import lib.mylib.highscore.HighScoreFormatter;
-
 import org.junit.Test;
 
-public class HighScoreFormatterTest{
+public class HighScoreFormatterTest {
+
 	HighScoreFormatter scoreFormatter = new HighScoreFormatter();
 
 	public HighScoreFormatterTest() {
@@ -65,13 +65,13 @@ public class HighScoreFormatterTest{
 		// compare sorted & enCrypted highScoreTable
 		assertArrayEquals(sortedHighScoreList, enCryptedHighScoreList);
 	}
-	
+
 	@Test
-	public void removeLinesWithEmptyFieldsTest(){
-		String[][] testHighScoreList = { { "10", "Tobse" }, { "", "Marco" },
-				{ "", "" }, { "3000", "" },{ "100", "Tim" } };
+	public void removeLinesWithEmptyFieldsTest() {
+		String[][] testHighScoreList = { { "10", "Tobse" }, { "", "Marco" }, { "", "" },
+				{ "3000", "" }, { "100", "Tim" } };
 		testHighScoreList = scoreFormatter.removeLinesWithEmptyFields(testHighScoreList);
-		assertArrayEquals(testHighScoreList, new String[][]{{ "10", "Tobse" },
-				{ "100", "Tim" }});
+		assertArrayEquals(testHighScoreList, new String[][] { { "10", "Tobse" },
+				{ "100", "Tim" } });
 	}
 }

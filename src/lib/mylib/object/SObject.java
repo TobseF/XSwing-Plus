@@ -4,27 +4,26 @@
  */
 package lib.mylib.object;
 
-
 import java.awt.Point;
-
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
+import org.newdawn.slick.*;
 
 /** A basic Object on the Screen, which can be moved and drawn */
-public class SObject implements Drawable, Updateable, Positionable{
+public class SObject implements Drawable, Updateable, Positionable {
+
 	/** X and Y- position on the screen. */
 	protected int x, y;
-	/** Default image which is rendered in {@link #render(Graphics)}*/
+	/** Default image which is rendered in {@link #render(Graphics)} */
 	protected Image image = null;
-	
+
 	/**
-	 * Wether the <code>SObject</code> shoulb be rendered or not. Every <code>SObject</code> 
-	 * has to add this behavior by it self. So it's not guaranteed that it's really invisble. 
+	 * Wether the <code>SObject</code> shoulb be rendered or not. Every <code>SObject</code>
+	 * has to add this behavior by it self. So it's not guaranteed that it's really invisble.
 	 */
 	protected boolean isVisible = true;
 	/**
-	 * Weheter liftife of the <code>SObject</code> is finished. Useful for the <code>SObjectList</code>
-	 * which can remove finshed object automatically.
+	 * Weheter liftife of the <code>SObject</code> is finished. Useful for the
+	 * <code>SObjectList</code> which can remove finshed object automatically.
+	 * 
 	 * @see #isFinished()
 	 * @see #finish()
 	 */
@@ -45,7 +44,9 @@ public class SObject implements Drawable, Updateable, Positionable{
 		this.image = image;
 	}
 
-	/** SObject with position
+	/**
+	 * SObject with position
+	 * 
 	 * @param x
 	 * @param y
 	 */
@@ -54,7 +55,9 @@ public class SObject implements Drawable, Updateable, Positionable{
 		this.y = y;
 	}
 
-	/** SObject with position
+	/**
+	 * SObject with position
+	 * 
 	 * @param image default image which is drawn with draw
 	 * @param x
 	 * @param y
@@ -82,7 +85,6 @@ public class SObject implements Drawable, Updateable, Positionable{
 		this.y = y;
 	}
 
-	
 	/**
 	 * @return x position
 	 */
@@ -97,22 +99,26 @@ public class SObject implements Drawable, Updateable, Positionable{
 		return y;
 	}
 
-	/** Sets x and y position on screen
+	/**
+	 * Sets x and y position on screen
+	 * 
 	 * @param pos array with x and y position (pos[0] = x, po[1] = y)
 	 */
 	public void setPos(int[] pos) {
 		setPos(pos[0], pos[1]);
 	}
-	
+
 	/**
 	 * @return the position of the <code>SObject</code>
 	 */
-	public Point getPosition(){
+	public Point getPosition() {
 		return new Point(x, y);
 	}
 
-	/** Sets x and y position on screen
-	 * @param x 
+	/**
+	 * Sets x and y position on screen
+	 * 
+	 * @param x
 	 * @param y
 	 */
 	public void setPos(int x, int y) {
@@ -148,21 +154,20 @@ public class SObject implements Drawable, Updateable, Positionable{
 	public void setVisible(boolean isVisible) {
 		this.isVisible = isVisible;
 	}
-	
+
 	/**
-	 * Tags the <code>SObject</code> as finshed. Useful for the <code>SObjectList</code>
-	 * which can remove finshed object automatically.  
+	 * Tags the <code>SObject</code> as finshed. Useful for the <code>SObjectList</code> which
+	 * can remove finshed object automatically.
 	 */
-	public void finish(){
+	public void finish() {
 		finished = true;
 	}
 
-	
 	/**
-	 * @return Whether the object is ready to be get removed 
+	 * @return Whether the object is ready to be get removed
 	 */
 	public boolean isFinished() {
 		return finished;
 	}
-	
+
 }

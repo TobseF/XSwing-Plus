@@ -4,8 +4,7 @@
  */
 package lib.mylib;
 
-import lib.mylib.object.Resetable;
-import lib.mylib.object.Updateable;
+import lib.mylib.object.*;
 
 /**
  * A blinking effect.
@@ -14,6 +13,7 @@ import lib.mylib.object.Updateable;
  * @see #getBlink()
  */
 public class EffectBlinking implements Resetable, Updateable {
+
 	/** Times the Blinker should blink */
 	private int blincCount = 0;
 	/** Times the Blinker did blinked */
@@ -35,6 +35,7 @@ public class EffectBlinking implements Resetable, Updateable {
 		this.visibleOnStart = visibleOnStart;
 		blinc = !visibleOnStart;
 		timer = new MyTimer(blincDuration, true) {
+
 			@Override
 			protected void timerAction() {
 				switchBlink();

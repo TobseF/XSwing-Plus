@@ -4,8 +4,7 @@
  */
 package lib.mylib;
 
-import lib.mylib.object.Resetable;
-import lib.mylib.object.Updateable;
+import lib.mylib.object.*;
 
 /**
  * Changes a transparancy value over time.
@@ -15,22 +14,30 @@ import lib.mylib.object.Updateable;
  * @see #invert
  */
 public class ValueSlider implements Updateable, Resetable {
+
 	private double currentValue = 0;
 	private MyTimer timer;
-	public enum ValueSliderType {SLIDE_IN, SLIDE_OUT};
+
+	public enum ValueSliderType {
+		SLIDE_IN, SLIDE_OUT
+	};
+
 	private boolean invert = false;
 	private int steps;
 	private double valueByStep;
 	private double minValue = 0, maxValue = 1;
 	private boolean pause = false;
 
-	public ValueSlider(double minValue, double maxValue, int steps, int duration, ValueSliderType slydeType) {
-		
-		//FIXME: BUg: size = new ValueSlider(1, 1.7, 20, 50, ValueSliderType.SLIDE_IN); slider starts with 0.034!
-		
+	public ValueSlider(double minValue, double maxValue, int steps, int duration,
+			ValueSliderType slydeType) {
+
+		// FIXME: BUg: size = new ValueSlider(1, 1.7, 20, 50, ValueSliderType.SLIDE_IN); slider
+		// starts with 0.034!
+
 		this.steps = steps;
 		setRange(minValue, maxValue);
 		timer = new MyTimer((int) ((double) duration / steps), true) {
+
 			@Override
 			protected void timerAction() {
 				nextValue();
@@ -39,7 +46,7 @@ public class ValueSlider implements Updateable, Resetable {
 		switch (slydeType) {
 		case SLIDE_OUT:
 			invert();
-			
+
 			break;
 		case SLIDE_IN:
 			break;
@@ -80,17 +87,18 @@ public class ValueSlider implements Updateable, Resetable {
 
 	@Override
 	public void update(int delta) {
-		if(!pause)
+		if (!pause)
 			timer.update(delta);
 	}
-	
+
 	public boolean isPause() {
 		return pause;
 	}
+
 	public void setPause(boolean pause) {
 		this.pause = pause;
 	}
-	
+
 	public boolean isInverted() {
 		return invert;
 	}
@@ -108,10 +116,9 @@ public class ValueSlider implements Updateable, Resetable {
 			currentValue = minValue;
 		}
 	}
-	
-	public boolean isFinshed(){
-		return (!invert && currentValue == maxValue)  ||
-				(invert && currentValue == minValue);
+
+	public boolean isFinshed() {
+		return (!invert && currentValue == maxValue) || (invert && currentValue == minValue);
 	}
 
 	@Override
@@ -126,15 +133,15 @@ public class ValueSlider implements Updateable, Resetable {
 	public void invert() {
 		invert = !invert;
 	}
-	
+
 	public void setInvert(boolean invert) {
 		this.invert = invert;
 	}
-	
+
 	public double getMaxValue() {
 		return maxValue;
 	}
-	
+
 	public double getMinValue() {
 		return minValue;
 	}

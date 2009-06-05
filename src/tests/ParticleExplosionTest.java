@@ -5,18 +5,11 @@
 package tests;
 
 import java.io.IOException;
-
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.particles.ParticleIO;
-import org.newdawn.slick.particles.ParticleSystem;
+import org.newdawn.slick.*;
+import org.newdawn.slick.particles.*;
 
 public class ParticleExplosionTest extends BasicGame {
+
 	private Image background;
 	private ParticleSystem paticles1;
 
@@ -38,9 +31,9 @@ public class ParticleExplosionTest extends BasicGame {
 	@Override
 	public void init(GameContainer container) throws SlickException {
 		ParticleSystem.setRelativePath(_TestProps.RES);
-		background = new Image(_TestProps.RES+"swing_background.jpg");
+		background = new Image(_TestProps.RES + "swing_background.jpg");
 		try {
-			paticles1 = ParticleIO.loadConfiguredSystem(_TestProps.RES+"explosion.xml");
+			paticles1 = ParticleIO.loadConfiguredSystem(_TestProps.RES + "explosion.xml");
 		} catch (IOException e) {
 			throw new SlickException("Failed to load particle systems", e);
 		}
@@ -49,7 +42,7 @@ public class ParticleExplosionTest extends BasicGame {
 	@Override
 	public void update(GameContainer container, int delta) throws SlickException {
 		Input in = container.getInput();
-		if(in.isKeyPressed(Input.KEY_SPACE)){
+		if (in.isKeyPressed(Input.KEY_SPACE)) {
 			paticles1.reset();
 		}
 		paticles1.update(delta);

@@ -5,16 +5,11 @@
 package trash;
 
 import lib.mylib.SpriteSheet;
-
-import org.newdawn.slick.AngelCodeFont;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Font;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
 /** A test class, that can genarate an image with balls and numbers */
 public class StandartBallMaker {
+
 	static SpriteSheet sp;
 	private final int ballsX = 9, ballsY = 5, balls = 45, ballsA = 48;
 	Image image = null, ballBackgrund = null;

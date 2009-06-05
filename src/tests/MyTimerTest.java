@@ -5,15 +5,10 @@
 package tests;
 
 import lib.mylib.MyTimer;
-
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
 public class MyTimerTest extends BasicGame {
+
 	private static AppGameContainer container;
 	private Image background;
 	private MyTimer timer;
@@ -39,6 +34,7 @@ public class MyTimerTest extends BasicGame {
 	public void init(GameContainer container) throws SlickException {
 		background = new Image("restest/swing_background.jpg");
 		timer = new MyTimer(500, true) {
+
 			@Override
 			protected void timerAction() {
 				drawOval = !drawOval;

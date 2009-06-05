@@ -6,16 +6,8 @@ package xswing.tests.fun;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.ImageBuffer;
-import org.newdawn.slick.SlickException;
+import java.util.*;
+import org.newdawn.slick.*;
 
 public class PixelTest3 extends BasicGame {
 
@@ -99,13 +91,12 @@ public class PixelTest3 extends BasicGame {
 			b++;
 		}
 	}
-	
 
 	@Override
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		imgage.get(j).draw();
-		if(b < 200)
-			g.drawString("Calculating Animation: frame " + b + " of 200" , 10, 25);
+		if (b < 200)
+			g.drawString("Calculating Animation: frame " + b + " of 200", 10, 25);
 		else
 			g.drawString("playing", 10, 25);
 	}

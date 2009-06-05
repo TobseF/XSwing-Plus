@@ -1,11 +1,10 @@
 /*
  * @version 0.0 20.12.2008
- * @author 	Tobse F
+ * @author Tobse F
  */
 package lib.mylib.hacks;
 
 import org.newdawn.slick.particles.ConfigurableEmitter.Value;
-
 
 /**
  * A configurable simple single value
@@ -13,14 +12,14 @@ import org.newdawn.slick.particles.ConfigurableEmitter.Value;
  * @author void
  */
 public class SimpleValue implements Value {
+
 	/** The value configured */
 	private float value;
 
 	/**
 	 * Create a new configurable new value
 	 * 
-	 * @param value
-	 *            The initial value
+	 * @param value The initial value
 	 */
 	public SimpleValue(float value) {
 		this.value = value;
@@ -38,8 +37,7 @@ public class SimpleValue implements Value {
 	/**
 	 * Set the configured value
 	 * 
-	 * @param value
-	 *            The configured value
+	 * @param value The configured value
 	 */
 	public void setValue(float value) {
 		this.value = value;

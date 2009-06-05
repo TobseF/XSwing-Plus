@@ -1,128 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nifty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="nifty.xsd">
-  <!-- +++++++++++++++++++++++++++++++++++++++ -->
-  <!-- load styles -->
-  <!-- +++++++++++++++++++++++++++++++++++++++ -->
-  <useStyles filename="res/gui/my-default-styles.xml" />
-  <useControls filename="res/gui/my-default-controls.xml" />
+<nifty>
+
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<!-- load default styles and controls -->
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<useStyles filename="nifty-default-styles.xml" />
+	<useControls filename="nifty-default-controls.xml" />
+
+	<!--<registerSound id="popup" filename="sound/34556__Corsica_S__reverse_bass_blip_2.wav" />	-->
+	
+	<registerSound id="popup" filename="restest/BubblePo-Benjamin-8.wav" />
+	<registerSound id="click" filename="restest/Pop-J_Fairba-1725.wav" />
+
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<!-- register effects we want to use -->
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<registerEffect name="move" class="de.lessvoid.nifty.effects.impl.Move" />
+	<registerEffect name="myChangeFont" class="lib.mylib.hacks.MyChangeFont" />
 
 
-  <!-- main menu style -->
-  <style id="menu">
-    <attributes childLayout="vertical" align="center" valign="center" height="50%"/>
-    <effect>
-      <onStartScreen name="hide" length="500" inherit="true" startDelay="1000"/>
-      <onStartScreen name="fade" startColor="#fff0" endColor="#ffff" length="1000" startDelay="500" inherit="true"/>
-      <onEndScreen name="fade" startColor="#ffff" endColor="#fff0" length="500" inherit="true"/>
-    </effect>
-  </style>
+	<!-- Spacer between the buttons-->
+	<style id="my-spacer">
+		<attributes height="12px" />
+	</style>
 
-  <!-- menu item style -->
-  <style id="menu-item">
-    <attributes align="center"/>
-    <hover width="200%" falloffConstraint="horizontal"/>
-    <effect>
-      <onHover name="hoverFocus" />
-      <onHover name="hoverHint" targetElement="hintElement" hintText="$hintText" />
-      <onFocus name="pulsate" hoverWidth="100%" width="100%" period="500" startColor="#3c000000" endColor="#ff7c00ff" timeType="infinite" cycle="false"/>
-    </effect>
-  </style>
+	<!-- style for the button panel-->
+	<style id="my-button#panel">
+		<attributes backgroundImage="restest/main_menu_button.png" imageMode="resize:20,270,22,18,20,270,22,39,20,270,22,20"
+			width="362px" height="77px" childLayout="center" visibleToMouse="true" align="center"
+			focusable="true" />
+		<effect>
+			<onHover name="focus" />
+			<onFocus name="imageOverlay" filename="restest/button-main-menu_hoover.png"
+				imageMode="resize:20,270,22,18,20,270,22,39,20,270,22,20" post="true" inset="-2px" />
+			<onFocus name="playSound" sound="popup" />
+			<onClick name="playSound" sound="click" />
+			<onFocus name="imageSize" startSize="1.0" endSize="1.04" length="40" />
+			<onLostFocus name="imageSize" startSize="1.04" endSize="1" length="400" />
+		</effect>
+	</style>
 
-  <!-- glowing text -->
-  <style id="glowText">
-    <effect>
-      <onHover name="hoverSaveState" />
-      <onHover name="hoverChangeFont" font="verdana-24-glow.fnt" post="false" inherit="false"/>
-      <onHover name="hoverColorPulsate" startColor="#0000" endColor="#000f" post="false" inherit="false"/>
-      <onHover name="hoverRenderElement" />
-      <onHover name="hoverRestoreState" />
-    </effect>
-  </style>
-
-  <style id="text-only-button#panel">
-    <attributes align="center" childLayout="center" visibleToMouse="true" />
-  </style>
-  <style id="text-only-button#text">
-    <attributes font="verdana-24-shadow.fnt" align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="true"/>
-    <effect>
-      <onHover name="hoverSaveState" />
-      <onHover name="hoverChangeFont" font="verdana-24-glow.fnt" post="false" inherit="false"/>
-      <onHover name="hoverColorPulsate" startColor="#0000" endColor="#000f" post="false" inherit="false"/>
-      <onHover name="hoverRenderElement" />
-      <onHover name="hoverRestoreState" />
-
-      <onFocus timeType="infinite" name="saveState" />
-      <onFocus timeType="infinite" name="changeFont" font="verdana-24-glow.fnt" post="false" inherit="false"/>
-      <onFocus timeType="infinite" name="colorPulsate" startColor="#0000" endColor="#000f" post="false" inherit="false"/>
-      <onFocus timeType="infinite" name="renderElement" />
-      <onFocus timeType="infinite" name="restoreState" />
-    </effect>
-  </style>
+	<!-- style for the button text -->
+	<style id="my-button#text">
+		<attributes font="restest/berlin_sans_sb_45_bw.fnt" align="center" valign="center"
+			textHAlign="center" textVAlign="center" visibleToMouse="true" />
+		<effect>
+			<!--  <onFocus name="textSize" startSize="1.0" endSize="1.06" length="150" /> -->
+			<onFocus name="myChangeFont" font="restest/berlin_sans_sb_45_bw_hover.fnt"></onFocus>
+			<onHover name="myChangeFont" font="restest/berlin_sans_sb_45_bw_hover.fnt"></onHover>
+		</effect>
+	</style>
 
 
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<!-- start screen -->
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<screen id="start" controller="xswing.gui.XSwingScreenController">
 
-  <!-- +++++++++++++++++++++++++++++++++++++++ -->
-  <!-- menu screen -->
-  <!-- +++++++++++++++++++++++++++++++++++++++ -->
-  <screen id="start" controller="xswing.gui.XSwingScreenController">
-    <layer id="top" childLayout="vertical" backgroundColor="#393939ff">
-      <effect>
-        <onStartScreen name="fade" startColor="#0000" endColor="#393939ff" length="500"/>
-        <onEndScreen name="fade" startColor="#393939ff" endColor="#00000000" length="500"/>
-      </effect>
-      <panel id="panel" height="30%" childLayout="center">
-        <image id="image" filename="res/xswing.png" align="center">
-          <effect>
-            <onEndScreen name="fade" startColor="#ffff" endColor="#0000" length="500" />
-          </effect>
-        </image>
-      </panel>
-    </layer>
-    <layer id="menu" childLayout="vertical">
-      <panel height="30%" childLayout="center"/>
-      <panel height="50%" childLayout="center">
-        <menu id="mainMenu" font="res/menu.fnt" style="menu">
-          <menuItem id="startSinglePlayer" text="Singe Player" style="menu-item" hintText="Start the XSwing Plus singleplayer game!" focusable="true">
-            <interact onClick="startSingleplayer()"/>
-          </menuItem>
-          <menuItem id="startMultiplayer" text="Multiplayer" style="menu-item" hintText="Start the XSwing Plus multiplayer game!" focusable="true">
-            <interact onClick="startMultiplayer()"/>
-          </menuItem>
-          <menuItem id="tutorial" text="Tutorial" style="menu-item" hintText="View the Tutorials stages" focusable="true">
-            <interact onClick="textAlign()"/>
-          </menuItem>
-          <menuItem id="options" text="Options" style="menu-item" hintText="Make Options" focusable="true">
-            <interact onClick="textField()"/>
-          </menuItem>
-          <menuItem id="credits" text="Credits" hintText="View Credits" style="menu-item" focusable="true">
-            <interact onClick="multiplayer()"/>
-          </menuItem>
-          <menuItem id="exit" text="Exit" style="menu-item" hintText="Exit Game" focusable="true">
-            <interact onClick="exitXSwing()"/>
-          </menuItem>
-        </menu>
-      </panel>
-      <panel id="hintArea" childLayout="center" align="center" valign="center" height="20%">
-        <effect>
-          <onStartScreen name="fade" startColor="#0000" endColor="#000f" length="500" inherit="true" />
-          <onEndScreen name="fade" startColor="#000f" endColor="#0000" length="500" inherit="true" />
-        </effect>
-        <text id="hintElement" text="Welcome to Nifty Examples" font="verdana-24-shadow.fnt" align="center" valign="center"/>
-      </panel>
-    </layer>
-    <layer id="example" childLayout="absolute">
-      <image x="550px" y="140px" filename="res/plus.png" align="center">
-        <effect>
-          <onStartScreen name="move" direction="right" mode="in" length="800" />
-          <onStartScreen name="fade" startColor="#0000" endColor="#ffff" length="800" />
-          <onEndScreen name="move" direction="right" mode="out" length="800" />
-          <onEndScreen name="fade" startColor="#ffff" endColor="#0000" length="800" />
-        </effect>
-      </image>
-    </layer>
-     <layer id="versionInfo" childLayout="vertical">
-         <label id="version" height="100%" width="98%" text="v0.344" textHAlign="left" textVAlign="bottom"/>
-    </layer>
-  </screen>
-  
+		<!-- Background -->
+		<layer id="background_image" backgroundImage="restest/main_menu_background.jpg"
+			childLayout="center">
+		</layer>
+
+		<!-- Logo: XSwing -->
+		<layer id="logo_xswing" childLayout="vertical">
+			<panel childLayout="vertical" align="center" valign="center" width="20%">
+				<panel childLayout="horizontal" height="20px" />
+				<image filename="res/xswing.png" align="center">
+					<effect>
+						<onStartScreen name="move" timeType="exp" factor="3.5" direction="top"
+							mode="in" length="600" startDelay="50" />
+					</effect>
+				</image>
+			</panel>
+		</layer>
+
+		<!-- Logo: Plus -->
+		<layer id="logo_plus" childLayout="absolute">
+			<image x="568px" y="120px" filename="res/plus.png">
+				<effect>
+					<onStartScreen name="imageSize" startSize="2" endSize="1.0" length="250"
+						startDelay="600" />
+					<onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="600" />
+				</effect>
+			</image>
+		</layer>
+
+
+		<!-- Logo: XSwing -->
+		<layer id="main_menu" childLayout="vertical">
+			<panel childLayout="vertical" align="center" valign="center" width="40%">
+				<panel childLayout="horizontal" height="300px" />
+				<panel height="300px" childLayout="vertical">
+					<control style="my-button" id="startSinglePlayer" name="button" label="Singleplayer">
+						<interact onClick="startSingleplayer()" />
+					</control>
+					<panel style="my-spacer" />
+					<control style="my-button" id="startMultiplayer" name="button" label="Multiplayer">
+						<interact onClick="startMultiplayer()" />
+					</control>
+					<panel style="my-spacer" />
+					<control style="my-button" id="options" name="button" label="Options">
+						<interact onClick="XXXX()" />
+					</control>
+					<panel style="my-spacer" />
+					<control style="my-button" id="credits" name="button" label="Credits">
+						<interact onClick="XXXX()" />
+					</control>
+					<panel style="my-spacer" />
+					<control style="my-button" id="exit" name="button" label="Exit">
+						<interact onClick="exitXSwing()" />
+					</control>
+				</panel>
+			</panel>
+		</layer>
+
+		<!-- Label: Game Version -->
+		<layer id="version" childLayout="absolute">
+			<label font="res/arial_bold_black_24.fnt" id="version_label" x="20px" y="718px"
+				text="v0.35" color="#0E131Cff" hintText="Game Version">
+			</label>
+		</layer>
+
+	</screen>
 </nifty>

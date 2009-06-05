@@ -1,29 +1,22 @@
 /*
  * @version 0.0 21.12.2008
- * @author 	Tobse F
+ * @author Tobse F
  */
 package trash;
 
 import java.io.IOException;
-
 import lib.mylib.object.BasicGameState;
 import lib.mylib.util.LanguageSelector;
-
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.loading.DeferredResource;
-import org.newdawn.slick.loading.LoadingList;
+import org.newdawn.slick.*;
+import org.newdawn.slick.loading.*;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.state.transition.EmptyTransition;
-import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.*;
 
-public class LoadingScreenOld extends BasicGameState{
+public class LoadingScreenOld extends BasicGameState {
 
 	private DeferredResource nextResource;
-	
-	public LoadingScreenOld(int id ) {
+
+	public LoadingScreenOld(int id) {
 		super(id);
 	}
 
@@ -39,8 +32,8 @@ public class LoadingScreenOld extends BasicGameState{
 
 		g.setColor(Color.white);
 		if (nextResource != null) {
-			g.drawString(LanguageSelector.getString("loading") + ": " + 
-					nextResource.getDescription(), 100, 100);
+			g.drawString(LanguageSelector.getString("loading") + ": "
+					+ nextResource.getDescription(), 100, 100);
 		}
 
 		int total = LoadingList.get().getTotalResources();
@@ -72,7 +65,7 @@ public class LoadingScreenOld extends BasicGameState{
 
 	private void enterMenue(StateBasedGame game) {
 		LoadingList.setDeferredLoading(false); // All resources should be loaded
-		game.enterState(getID() + 1,  new EmptyTransition(), new FadeInTransition());	
+		game.enterState(getID() + 1, new EmptyTransition(), new FadeInTransition());
 	}
-	
+
 }

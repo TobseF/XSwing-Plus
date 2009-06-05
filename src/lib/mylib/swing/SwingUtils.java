@@ -1,83 +1,132 @@
 /*
  * @version 0.0 19.02.2009
- * @author 	Tobse F
+ * @author Tobse F
  */
 package lib.mylib.swing;
 
-import java.awt.AWTEvent;
-import java.awt.Frame;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.event.AWTEventListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.net.URL;
 import java.util.ArrayList;
-
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
+import javax.swing.*;
 import org.newdawn.slick.util.ResourceLoader;
 
 public class SwingUtils {
-	
-	public static boolean setSystemLookAndFeel(){
+
+	/**
+	 * Tries to set the LookAndFeel to the os default
+	 * 
+	 * @return if the system look and feel could be set
+	 */
+	public static boolean setSystemLookAndFeel() {
 		boolean isSystemLookAndFeelSet = true;
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			isSystemLookAndFeelSet = false;
 		}
-		return isSystemLookAndFeelSet;	
+		return isSystemLookAndFeelSet;
 	}
-	
-	public static boolean setNimbusLookAndFeel(){
+
+	/**
+	 * Tries to set the NimbusLookAndFeel
+	 * 
+	 * @return if the NimbusLookAndFeel could bet set
+	 */
+	public static boolean setNimbusLookAndFeel() {
 		boolean isNumbusSet = true;
 		try { // Nimbus Loyout
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-		} catch (ClassNotFoundException e) {isNumbusSet = false;
-		} catch (InstantiationException e) {isNumbusSet = false;
-		} catch (IllegalAccessException e) {isNumbusSet = false;
-		} catch (UnsupportedLookAndFeelException e) {isNumbusSet = false;}
-		return isNumbusSet;
-		
-		/*try {//alternative way
-			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (UnsupportedLookAndFeelException e) {
 		} catch (ClassNotFoundException e) {
+			isNumbusSet = false;
 		} catch (InstantiationException e) {
+			isNumbusSet = false;
 		} catch (IllegalAccessException e) {
-		}*/
+			isNumbusSet = false;
+		} catch (UnsupportedLookAndFeelException e) {
+			isNumbusSet = false;
+		}
+		return isNumbusSet;
+
+		/*
+		 * try {//alternative way for (LookAndFeelInfo info :
+		 * UIManager.getInstalledLookAndFeels()) { if ("Nimbus".equals(info.getName())) {
+		 * UIManager.setLookAndFeel(info.getClassName()); break; } } } catch
+		 * (UnsupportedLookAndFeelException e) { } catch (ClassNotFoundException e) { } catch
+		 * (InstantiationException e) { } catch (IllegalAccessException e) { }
+		 */
 	}
-		
-	public static boolean setCoolLookAndFeel(){
+
+	/**
+	 * Tries to set the NimbusLookAndFeel or (if Nibus is not available) the OS like
+	 * LookAndFeel
+	 * 
+	 * @return true if the LookAndFeel could be changed
+	 */
+	public static boolean setCoolLookAndFeel() {
 		return (setNimbusLookAndFeel() || setSystemLookAndFeel());
 	}
 
-	public static void setLocationToCenter(Window window){
+	/**
+	 * Sets the given {@link Window} to the center of the sceen
+	 * 
+	 * @param window to set to the screen center
+	 */
+	public static void setLocationToCenter(Window window) {
 		window.setLocationRelativeTo(null);
 	}
-	
-	public static void addGlobalKexListener(AWTEventListener listener){
-		/*AWTEventListener ael = new AWTEventListener() { 
-			  public void eventDispatched( AWTEvent e ) {
-				  if(e.getID() == KeyEvent.KEY_PRESSED){ }
-				   keyPressed((KeyEvent) e);
-			  } 
-			};*/ 
-		Toolkit.getDefaultToolkit().addAWTEventListener( listener, AWTEvent.KEY_EVENT_MASK );
+
+	/**
+	 * Adds a global Keylistener which receive all KeyEvents which are sent.</br> Code
+	 * Example:</br> <code><pre>
+	 * AWTEventListener ael = new AWTEventListener() { 
+	 * 	public void eventDispatched(AWTEvent e ) { 
+	 * 		if(e.getID() == KeyEvent.KEY_PRESSED){
+	 * 			doSomeThing(); //eg. keyPressed((KeyEvent) e);  
+	 * 		}  
+	 * 	}
+	 * };
+	 * </pre>
+	 *</code>
+	 * 
+	 * @param listener to add
+	 */
+	public static void addGlobalKeyListener(AWTEventListener listener) {
+		Toolkit.getDefaultToolkit().addAWTEventListener(listener, AWTEvent.KEY_EVENT_MASK);
 	}
-	
-	public static void setIcons(Frame frame, String iconFolder) {
-		String icon = "icon";
+
+	/**
+	 * Sets icons to the given {@link Frame}. Icons have to be saved as
+	 * "iconName16.png, iconName32.png etc". Follwing sizes are shearched: 16, 22, 32, 48, 64 &
+	 * 128.
+	 * 
+	 * @param frame which should get the icon
+	 * @param iconFolder path to the folder whre the icon images are located
+	 * @param iconName name of the icon without resoultion key and fileextions eg.
+	 *            wariningImage
+	 */
+	public static void setIcons(Frame frame, String iconFolder, String iconName) {
 		ArrayList<Image> imageList = new ArrayList<Image>();
-		for (int i = 1; i < 4; i++) {
-			imageList.add(Toolkit.getDefaultToolkit().getImage(
-					ResourceLoader.getResource(iconFolder + icon + (16 * i) + ".png")));
+		int[] sizes = { 16, 22, 32, 48, 64, 128 };
+		for (int size : sizes) {
+			try {
+				URL filepaph = ResourceLoader.getResource(iconFolder + iconName + size
+						+ ".png");
+				imageList.add(Toolkit.getDefaultToolkit().getImage(filepaph));
+			} catch (RuntimeException e) {}
 		}
 		frame.setIconImages(imageList);
+	}
+
+	/**
+	 * As icon name "icon" will be used. For more information see
+	 * {@link #setIcons(Frame, String, String)}
+	 * 
+	 * @see #setIcons(Frame, String, String)
+	 * @param frame
+	 * @param iconFolder
+	 */
+	public static void setIcons(Frame frame, String iconFolder) {
+		setIcons(frame, iconFolder, "icon");
 	}
 }

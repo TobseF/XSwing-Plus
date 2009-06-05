@@ -4,13 +4,8 @@
  */
 package xswing.extras;
 
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
-
-import xswing.Ball;
-import xswing.BallTable;
-import xswing.EffectCatalog;
+import org.newdawn.slick.*;
+import xswing.*;
 import xswing.constant.Constants;
 
 public class ExtraJoker extends Extra {

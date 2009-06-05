@@ -5,51 +5,38 @@
 package xswing;
 
 import java.awt.Point;
-
 import javax.swing.event.EventListenerList;
-
 import lib.mylib.Sound;
 import lib.mylib.SpriteSheet;
-import lib.mylib.object.BasicGameState;
-import lib.mylib.object.Reset;
-import lib.mylib.object.Resetable;
-import lib.mylib.object.SObjectList;
+import lib.mylib.object.*;
 import lib.mylib.util.Clock;
-
-import org.newdawn.slick.AngelCodeFont;
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.Music;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheetFont;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
-
 import tools.BallDropSimulator;
 import xswing.EffectCatalog.particleEffects;
 import xswing.LocationController.GameComponentLocation;
 import xswing.ai.AIInterface;
-import xswing.events.BallEvent;
-import xswing.events.BallEventListener;
-import xswing.events.XSwingEvent;
-import xswing.events.XSwingListener;
+import xswing.events.*;
 import xswing.events.BallEvent.BallEventType;
 import xswing.events.XSwingEvent.GameEventType;
 import xswing.gui.ScoreScreenController;
 import xswing.start.XSwing;
 import de.lessvoid.nifty.slick.NiftyGameState;
 
-/** 
+/**
  * The main container class, which combines all container elements
+ * 
  * @author Tobse
  */
-public class MainGame extends BasicGameState implements Resetable, BallEventListener, XSwingListener{
+public class MainGame extends BasicGameState implements Resetable, BallEventListener,
+		XSwingListener {
+
 	public MainGame(GameComponentLocation gameLocation) {
 		this.gameLocation = gameLocation;
-		//super(id);
+		gameEventListeners = new EventListenerList();
+		// super(id);
 	}
+
 	private GameComponentLocation gameLocation;
 	private GameContainer container = null;
 	private StateBasedGame game = null;
@@ -57,9 +44,9 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	private int widht, height;
 	/** Folder with resources */
 	public static final String RES = "res/";
-	private int keyLeft = Input.KEY_LEFT, 
-		keyRight = Input.KEY_RIGHT, 
-		keyDown = Input.KEY_DOWN;
+	public static final String HIGH_SCORE_FILE = XSwing.class.getSimpleName() + "_high_score.hscr"; 
+	private int keyLeft = Input.KEY_LEFT, keyRight = Input.KEY_RIGHT,
+			keyDown = Input.KEY_DOWN;
 	private LocationController locationController;
 	private EffectCatalog effectCatalog;
 	private Cannon canon;
@@ -85,13 +72,19 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	private Sound klack1, kran1, wup, shrinc, warning;
 	private Music music;
 	private Pause pause;
-	
+
+	/** Toggles if the {@link #highScoreState} should be drawn */
+	private boolean isGameOver = false;
 	private AIInterface ai;
 	private BallDropSimulator ballDropSimulator;
-	
+
 	private EventListenerList gameEventListeners;
 	/** Current scale of the graphics */
 	private float graphicsScale = 1f;
+
+	private NiftyGameState highScoreState = null;
+
+	private ScoreScreenController scoreScreenController;
 
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
@@ -100,19 +93,19 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		height = container.getHeight();
 		widht = container.getWidth();
 		// Images
-		//background = new Image(RES + "swing_background_b.jpg");
+		// background = new Image(RES + "swing_background_b.jpg");
 		// background=new BigImage(RES+"swing_background_b.jpg",
 		multipl = new SpriteSheet(new Image(RES + "multiplicator_sp.jpg"), 189, 72);
 		cannons = new SpriteSheet(new Image(RES + "cannons.png"), 72, 110);
 		balls1 = new SpriteSheet(new Image(RES + "balls1.png"), Ball.A, Ball.A);
 		balls2 = new SpriteSheet(new Image(RES + "balls2.png"), Ball.A, Ball.A);
-		fontText = new AngelCodeFont(RES + "font_arial_16_bold.fnt", 
-				RES + "font_arial_16_bold.png");
-		pauseFont = new AngelCodeFont(RES + "arial_black_71.fnt", 
-				RES + "arial_black_71.png");
-		fontScore = new AngelCodeFont(RES + "berlin_sans_fb_demi_38.fnt", 
-				RES + "berlin_sans_fb_demi_38.png");
-		numberFont = new SpriteSheetFont(new SpriteSheet(new Image(RES + "numberFont_s19.png"), 15, 19), ',');
+		fontText = new AngelCodeFont(RES + "font_arial_16_bold.fnt", RES
+				+ "font_arial_16_bold.png");
+		pauseFont = new AngelCodeFont(RES + "arial_black_71.fnt", RES + "arial_black_71.png");
+		fontScore = new AngelCodeFont(RES + "berlin_sans_fb_demi_38.fnt", RES
+				+ "berlin_sans_fb_demi_38.png");
+		numberFont = new SpriteSheetFont(new SpriteSheet(
+				new Image(RES + "numberFont_s19.png"), 15, 19), ',');
 		ballFont = new SpriteSheetFont(new SpriteSheet(
 				new Image(RES + "spriteFontBalls2.png"), 11, 16), '.');
 		// Sounds
@@ -126,8 +119,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		warning = new Sound(RES + "ALARM1.WAV");
 		music = new Music(RES + "music.mod", true);
 		// Objects
-		gameEventListeners = new EventListenerList();
-		addBallEventListener(this);
+		addXSwingListener(this);
 		locationController = new LocationController(gameLocation);
 		ballsToMove = new SObjectList();
 		gui = new SObjectList();
@@ -144,24 +136,24 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		levelBall = new Level(4, balls1, ballFont);
 		locationController.setLocationToObject(levelBall);
 		ballCounter.setLevel(levelBall);
-		canon = new Cannon(cannons, new Sound[] { kran1, warning }, 
-				ballTable, ballCounter, effectCatalog);
+		canon = new Cannon(cannons, new Sound[] { kran1, warning }, ballTable, ballCounter,
+				effectCatalog);
 		locationController.setLocationToObject(canon);
 		multiplicator = new HighScoreMultiplicator(multipl);
 		locationController.setLocationToObject(multiplicator);
 		highScoreCounter = new HighScoreCounter(numberFont, multiplicator);
 		locationController.setLocationToObject(highScoreCounter);
-		highScore = new HighScore(fontText, "properties.txt");
+		highScore = new HighScore(fontText, HIGH_SCORE_FILE);
 		locationController.setLocationToObject(highScore);
+		scoreScreenController = new ScoreScreenController(game,highScore);
 		seesawTable = new SeesawTable(numberFont, ballTable);
 		locationController.setLocationToObject(seesawTable);
 		effectCatalog.setSound(wup, particleEffects.EXPLOSION);
 		effectCatalog.setSound(shrinc, particleEffects.SHRINC);
 		effectCatalog.setSound(klack1, particleEffects.BOUNCING);
 		ballKiller = new BallKiller(mechanics, highScoreCounter, effectCatalog);
-		ballFactory = new BallFactory(this, ballTable, ballsToMove, ballFont, 
-				new SpriteSheet[]{balls1, balls2}, effectCatalog, 
-				canon, levelBall);
+		ballFactory = new BallFactory(this, ballTable, ballsToMove, ballFont,
+				new SpriteSheet[] { balls1, balls2 }, effectCatalog, canon, levelBall);
 		scorePopups = new SObjectList();
 		pause = new Pause(pauseFont, container.getWidth(), container.getHeight());
 		pause.setVisible(false);
@@ -170,7 +162,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		reset.add(ballsToMove);
 		reset.add(scorePopups);
 		reset.add(effectCatalog);
-		
+
 		gui.add(canon);
 		gui.add(timer);
 		gui.add(seesawTable);
@@ -179,18 +171,21 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		gui.add(multiplicator);
 		gui.add(highScoreCounter);
 		gui.add(highScore);
-		
-		boolean ki = false;
-		if(ki && gameLocation == GameComponentLocation.LEFT)
-			ai = new AIInterface(this, ballTable, canon);		
+
+		boolean activateAI = false;
+		if (activateAI && gameLocation == GameComponentLocation.CENTER) {
+			ai = new AIInterface(this, ballTable, canon);
+		}
+		highScoreState = new NiftyGameState(XSwing.GAME_OVER);
+		highScoreState.init(container, game);
 	}
-	
-	public void setKeys(int keyCodeLeft, int keyCodeRight, int keyCodeDown){
+
+	public void setKeys(int keyCodeLeft, int keyCodeRight, int keyCodeDown) {
 		this.keyLeft = keyCodeLeft;
 		this.keyRight = keyCodeRight;
 		this.keyDown = keyCodeDown;
 	}
-	
+
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
 		super.enter(container, game);
@@ -208,6 +203,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		ballFactory.addTopBalls();
 		container.setPaused(false);
 		resetInput();
+		fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_SARTED));
 	}
 
 	@Override
@@ -224,13 +220,15 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
-		//g.scale(graphicsScale, graphicsScale);
-		//g.drawImage(background, 0, 0);
+		// g.scale(graphicsScale, graphicsScale);
+		// g.drawImage(background, 0, 0);
 		gui.render(g);
 		ballsToMove.render(g);
 		effectCatalog.render(g);
 		scorePopups.render(g);
 		pause.render(g);
+		if (isGameOver)
+			highScoreState.render(container, game, g);
 	}
 
 	@Override
@@ -242,186 +240,227 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		if (!container.isPaused()) {
 			gui.update(delta);
 			effectCatalog.update(delta);
-			//mechanics.checkOfFive();
-			//mechanics.checkOfThree();
+			// mechanics.checkOfFive();
+			// mechanics.checkOfThree();
 			scorePopups.update(delta);
 			if (mechanics.checkHight()) {
 				gameOver(game);
 			}
 			ballKiller.update(delta);
 			ballFactory.updateBalls(delta);
+			if (ai != null) {
+				ai.update(delta);
+			}
 		}
-		if(ai !=null)
-			ai.update(delta);
+		if (isGameOver)
+			highScoreState.update(container, game, XSwing.GAME_OVER);
 	}
-	
-	/** Performs all KeyEvents
+
+	/**
+	 * Performs all KeyEvents
+	 * 
 	 * @param input GameInput
 	 */
 	private void checkKeys(Input input) {
-		if (input.isKeyPressed(Input.KEY_P)) {
-			container.setPaused(!container.isPaused());
-			pause.setVisible(!pause.isVisible());
-			resetInput();
-		}
-		if (input.isKeyPressed(Input.KEY_N)) {
-			newGame();
-		}
-		if (input.isKeyDown(Input.KEY_ESCAPE)) {
-			if (game.getCurrentState().getID() == 2) { // Game is started with Menue
-				System.out.println("getID() == 2");
-				input.pause(); // have to be resumed in MainMenu
-				game.enterState(1);
-			} else {
-				// Game is started without Menue
-				System.out.println("container.exit();");
-				container.exit();
+		if (!isGameOver) {
+			if (input.isKeyPressed(Input.KEY_P)) {
+				if (container.isPaused()) {
+					fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_PAUSED));
+				} else {
+					fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_RESUMED));
+				}
+				container.setPaused(!container.isPaused());
+				pause.setVisible(!pause.isVisible());
+				resetInput();
 			}
-		}
-		if (!container.isPaused()) { // no Input while game is paused
-			if (input.isKeyPressed(keyLeft)) {
-				notifyListener(new XSwingEvent(this, GameEventType.CANNON_MOVED_LEFT));
+			if (input.isKeyPressed(Input.KEY_N)) {
+				fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_STOPPED));
+				newGame();
 			}
-			if (input.isKeyPressed(keyRight)) {
-				notifyListener(new XSwingEvent(this, GameEventType.CANNON_MOVED_RIGHT));
+			if (input.isKeyDown(Input.KEY_ESCAPE)) {
+				fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_STOPPED));
+				if (game.getCurrentState().getID() == 2) { // Game is started with Menue
+					System.out.println("getID() == 2");
+					// input.pause(); // have to be resumed in MainMenu
+					game.enterState(1);
+				} else {
+					// Game is started without Menue
+					System.out.println("container.exit();");
+					container.exit();
+				}
 			}
-			if (input.isKeyPressed(keyDown)) {
-				notifyListener(new XSwingEvent(this, GameEventType.PRESSED_DOWN));
-			}
-			if (input.isKeyPressed(Input.KEY_J)) {
-				ballFactory.addNewJoker();
-			}
-			if (input.isKeyPressed(Input.KEY_K)) {
-				if(ballDropSimulator == null)
-					ballDropSimulator = new BallDropSimulator();
-				ballDropSimulator.setBallTable(ballTable.clone());
-			}
-			if (input.isKeyPressed(Input.KEY_E)) {
-				effectCatalog.setShowParticles(!effectCatalog.isShowParticles());
-			}
-			if (input.isKeyPressed(Input.KEY_B)) {
-				ballFactory.toggleSpriteSheet();
-			}
-			if (input.isKeyPressed(Input.KEY_M)) {
-				ballFactory.addNewStone();
-			}
-			if (input.isKeyPressed(Input.KEY_F)) {
-				container.setShowFPS(!container.isShowingFPS());
-			}
-			if (input.isKeyPressed(Input.KEY_S)) {
-				//shrinkGame(game);
-			}
-			if (input.isKeyPressed(Input.KEY_H)) {
-				highScore.setVisible(!highScore.isVisible());
-			}
-			if (input.isKeyPressed(Input.KEY_1)) {
-				canon.getBall().setNr(0);
-			}
-			if (input.isKeyPressed(Input.KEY_2)) {
-				canon.getBall().setNr(1);
-			}
-			if (input.isKeyPressed(Input.KEY_2)) {
-				canon.getBall().setNr(2);
-			}
-			if (input.isKeyPressed(Input.KEY_3)) {
-				canon.getBall().setNr(3);
-			}
-			if (input.isKeyPressed(Input.KEY_4)) {
-				canon.getBall().setNr(4); 
-			}
-			if (input.isKeyPressed(Input.KEY_5)) {
-				canon.getBall().setNr(5); 
-			}
-			if (input.isKeyPressed(Input.KEY_F2)) {
-				try {
-					container.setFullscreen(!container.isFullscreen());
-				} catch (SlickException e) {
-					e.printStackTrace();
+			if (!container.isPaused()) { // no Input while game is paused
+				if (input.isKeyPressed(keyLeft)) {
+					notifyListener(new XSwingEvent(this, GameEventType.CANNON_MOVED_LEFT));
+				}
+				if (input.isKeyPressed(keyRight)) {
+					notifyListener(new XSwingEvent(this, GameEventType.CANNON_MOVED_RIGHT));
+				}
+				if (input.isKeyPressed(keyDown)) {
+					notifyListener(new XSwingEvent(this, GameEventType.PRESSED_DOWN));
+				}
+				if (input.isKeyPressed(Input.KEY_J)) {
+					ballFactory.addNewJoker();
+				}
+				if (input.isKeyPressed(Input.KEY_K)) {
+					if (ballDropSimulator == null)
+						ballDropSimulator = new BallDropSimulator();
+					ballDropSimulator.setBallTable(ballTable.clone());
+				}
+				if (input.isKeyPressed(Input.KEY_E)) {
+					effectCatalog.setShowParticles(!effectCatalog.isShowParticles());
+				}
+				if (input.isKeyPressed(Input.KEY_B)) {
+					ballFactory.toggleSpriteSheet();
+				}
+				if (input.isKeyPressed(Input.KEY_M)) {
+					ballFactory.addNewStone();
+				}
+				if (input.isKeyPressed(Input.KEY_F)) {
+					container.setShowFPS(!container.isShowingFPS());
+				}
+				if (input.isKeyPressed(Input.KEY_S)) {
+					// shrinkGame(game);
+				}
+				if (input.isKeyPressed(Input.KEY_H)) {
+					highScore.setVisible(!highScore.isVisible());
+				}
+				if (input.isKeyPressed(Input.KEY_1)) {
+					canon.getBall().setNr(0);
+				}
+				if (input.isKeyPressed(Input.KEY_2)) {
+					canon.getBall().setNr(1);
+				}
+				if (input.isKeyPressed(Input.KEY_2)) {
+					canon.getBall().setNr(2);
+				}
+				if (input.isKeyPressed(Input.KEY_3)) {
+					canon.getBall().setNr(3);
+				}
+				if (input.isKeyPressed(Input.KEY_4)) {
+					canon.getBall().setNr(4);
+				}
+				if (input.isKeyPressed(Input.KEY_5)) {
+					canon.getBall().setNr(5);
+				}
+				if (input.isKeyPressed(Input.KEY_F2)) {
+					try {
+						container.setFullscreen(!container.isFullscreen());
+					} catch (SlickException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
 	}
+
 	int scale = 1;
-	int[] scales = new int[]{1024, 800, 640};
-	/** Changes screensize beteen available screen sizes
+	int[] scales = new int[] { 1024, 800, 640 };
+
+	/**
+	 * Changes screensize beteen available screen sizes
+	 * 
 	 * @param game game with <code>DisplayMode</code>
 	 */
-	
+
 	public float getGraphicsScale() {
 		return graphicsScale;
 	}
-	
+
 	@SuppressWarnings("unused")
 	private void shrinkGame(StateBasedGame game) {
-		scale = scale == scales.length-1 ? 0 : scale + 1; 
-		graphicsScale = scales[scale]/1024f;
+		scale = scale == scales.length - 1 ? 0 : scale + 1;
+		graphicsScale = scales[scale] / 1024f;
 		try {
-			((AppGameContainer)container).setDisplayMode((int) (widht * graphicsScale),
+			((AppGameContainer) container).setDisplayMode((int) (widht * graphicsScale),
 					(int) (height * graphicsScale), container.isFullscreen());
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
 	}
 
-	/** Finishes the current game and swichtes to the highScoreTable
+	/**
+	 * Finishes the current game and swichtes to the highScoreTable
+	 * 
 	 * @param container
 	 * @param game
 	 */
 	private void gameOver(StateBasedGame game) {
-		System.out.println("Game Over !");
+		isGameOver = true;
+		scoreScreenController.setHighScore(highScoreCounter.getScore());
+		highScoreState.fromXml(RES + "gui/high_score.xml", scoreScreenController);
 		container.setPaused(true);
-		NiftyGameState highScoreState = new NiftyGameState(XSwing.GAME_OVER);
-		highScoreState.fromXml(RES + "gui/HighScore.xml", new ScoreScreenController(game,
-				highScoreCounter.getScore(), highScore));
-		game.addState(highScoreState);
-		game.enterState(XSwing.GAME_OVER);
-		//game.addState(new EmptyState(getID()+1));
-		//game.enterState(getID()+1);*/
+		container.getInput().removeAllListeners();
+		container.getInput().addKeyListener(highScoreState);
+		container.getInput().addListener(highScoreState);
+		container.getInput().addPrimaryListener(highScoreState);
+		try {
+			highScoreState.enter(container, game);
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 	}
-	
-	
-	/** Clears all inputs. Useful to prevent keyEvents during pause mode. */
-	private void resetInput(){
+
+	/**
+	 * Clears all inputs. Useful to prevent keyEvents during pause mode or while entering the
+	 * HighScore.
+	 */
+	private void resetInput() {
 		container.getInput().clearControlPressedRecord();
 		container.getInput().clearKeyPressedRecord();
 		container.getInput().clearMousePressedRecord();
 	}
 
 	@Override
+	public void gameEvent(XSwingEvent e) {
+		if (e.getGameEventType() == GameEventType.CANNON_MOVED_LEFT) {
+			canon.moveLeft();
+		} else if (e.getGameEventType() == GameEventType.CANNON_MOVED_RIGHT) {
+			canon.moveRight();
+		}
+		if (e.getGameEventType() == GameEventType.PRESSED_DOWN) {
+			if (canon.isReadyToReleaseBall()) {
+				Ball ball = ballFactory.getNewBall();
+				notifyListener(new XSwingEvent(this, GameEventType.BALL_DROPPED, ball));
+			}
+		} else if (e.getGameEventType() == GameEventType.BALL_DROPPED) {
+			canon.releaseBall(e.getBall());
+		}
+	}
+
+	@Override
 	public void ballEvent(BallEvent e) {
-		if(e.getBallEventType()== BallEventType.BALL_EXPLODED){
+		if (e.getBallEventType() == BallEventType.BALL_HITS_GROUND
+				|| e.getBallEventType() == BallEventType.BALL_HITS_BALL) {
+			mechanics.checkOfFive(e.getBall());
+			mechanics.checkOfThree(e.getBall());
+		} else if (e.getBallEventType() == BallEventType.BALL_EXPLODED) {
 			scorePopups.add(new ScorePopup(fontScore, e.getBall().getX(), e.getBall().getY(),
 					highScoreCounter.getBonus() + ""));
-		}
-		if(e.getBallEventType() == BallEventType.BALL_WITH_THREE_IN_A_ROW){
+		} else if (e.getBallEventType() == BallEventType.BALL_WITH_THREE_IN_A_ROW) {
 			e.getBall().addBallEventListener(ballKiller);
 			ballKiller.addBall(e.getBall());
-		}
-		if(e.getBallEventType() == BallEventType.BALL_CAUGHT_BY_EXPLOSION){
+		} else if (e.getBallEventType() == BallEventType.BALL_CAUGHT_BY_EXPLOSION) {
 			Point field = ballTable.getField(e.getBall());
 			ballTable.setBall(field.x, field.y, null);
 			ballsToMove.remove(e.getBall());
-		}
-		if(e.getBallEventType() == BallEventType.BALL_CAUGHT_BY_SHRINC){
+		} else if (e.getBallEventType() == BallEventType.BALL_CAUGHT_BY_SHRINC) {
 			effectCatalog.addEffect(e.getBall(), particleEffects.SHRINC);
 		}
-		if(e.getBallEventType() == BallEventType.BALL_HITS_GROUND ||
-				e.getBallEventType() == BallEventType.BALL_HITS_BALL){
-				mechanics.checkOfFive(e.getBall());
-				mechanics.checkOfThree(e.getBall());
-		}
-		
 	}
+
 	/**
 	 * Adds an {@code BallEventListener} to the Ball.
+	 * 
 	 * @param listener the {@code BallEventListener} to be added
 	 */
-	public void addBallEventListener(XSwingListener listener) {
+	public void addXSwingListener(XSwingListener listener) {
 		gameEventListeners.add(XSwingListener.class, listener);
 	}
 
 	/**
 	 * Removes an {@code BallEventListener} from the Ball
+	 * 
 	 * @param listener to be removed
 	 */
 	public void removeBallEventListener(XSwingListener listener) {
@@ -430,44 +469,29 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 
 	/**
 	 * Notifies all {@code BallEventListener}s about a {@code BallEvent}
+	 * 
 	 * @param event the {@code BallEvent} object
 	 * @see EventListenerList
 	 */
 	protected synchronized void notifyListener(XSwingEvent event) {
-		for (XSwingListener l : gameEventListeners.getListeners(XSwingListener.class))
-			l.gameEvent(event);
+		for (XSwingListener listener : gameEventListeners.getListeners(XSwingListener.class)) {
+			listener.gameEvent(event);
+		}
 	}
-	
-	public void fireXSwingEvent(XSwingEvent event){
+
+	public void fireXSwingEvent(XSwingEvent event) {
 		notifyListener(event);
 	}
 
-	@Override
-	public void gameEvent(XSwingEvent e) {
-		if(e.getGameEventType() == GameEventType.CANNON_MOVED_LEFT)
-			canon.moveLeft();
-		if(e.getGameEventType() == GameEventType.CANNON_MOVED_RIGHT)
-			canon.moveRight();
-		if(e.getGameEventType() == GameEventType.PRESSED_DOWN){
-			if(canon.isReadyToReleaseBall()){
-				Ball ball = ballFactory.getNewBall();
-				notifyListener(new XSwingEvent(this,GameEventType.BALL_DROPPED, ball));
-			}
-		}
-		if(e.getGameEventType() == GameEventType.BALL_DROPPED){
-			canon.releaseBall(e.getBall());
-		}
-	}
-	
-	public int getScore(){
+	public int getScore() {
 		return highScoreCounter.getScore();
 	}
-	
-	public void addJoker(){
+
+	public void addJoker() {
 		ballFactory.addNewJoker();
 	}
-	
-	public void addStone(){
+
+	public void addStone() {
 		ballFactory.addNewStone();
 	}
 

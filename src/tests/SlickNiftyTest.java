@@ -4,11 +4,8 @@
  */
 package tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
-
 import de.lessvoid.nifty.slick.NiftyGameState;
 
 public class SlickNiftyTest extends StateBasedGame {

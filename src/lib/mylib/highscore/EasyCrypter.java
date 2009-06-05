@@ -4,27 +4,28 @@
  */
 package lib.mylib.highscore;
 
-
 /**
  * Provides methods to encrypt and decrypt Strings. Strings are crypted in a sequence of
- * numbers. To prevent manipulation of crypted Strings, a hash is added. If string for 
+ * numbers. To prevent manipulation of crypted Strings, a hash is added. If string for
  * decrypting contains a wrong hash, the encryped string will be empty.
+ * 
  * <pre>
  * eg.:
- * [Tim 12]==>585957761164021267912
- * [12345678]==>395557371384470916682147373
- * [@78! -,+/]==>105647161374660996862747983431
- * [0]==>645747
- * []==>435==>
+ * [Tim 12]==&gt;585957761164021267912
+ * [12345678]==&gt;395557371384470916682147373
+ * [@78! -,+/]==&gt;105647161374660996862747983431
+ * [0]==&gt;645747
+ * []==&gt;435==&gt;
  * </pre>
  * 
  * @see #enCrypt(String)
  * @see #deCrypt(String)
  */
 public class EasyCrypter {
+
 	/**
 	 * String which is used for en- & deCrypting. Strings can only deCrypted with the same
-	 * phrase theiy're enCrypted. 
+	 * phrase theiy're enCrypted.
 	 */
 	private String phrase = "435907821934120766532197433071"
 			+ "237653248195479864366339872057";
@@ -60,10 +61,10 @@ public class EasyCrypter {
 	}
 
 	/**
-	 * Decrypts a with {@link #enCrypt(String)} cypted String back.
+	 * Decrypts a with {@link #enCrypt(String)} cypted String back. If an error occours while decrypting, eg. if the hash of the given phrase was wrong, "" (an empty String) will be returned
 	 * 
-	 * @param stringToCrypt
-	 * @return uncrypted String
+	 * @param stringToCrypt 
+	 * @return uncrypted String or "" (an empty String), if there was an error while decrypting
 	 */
 	public String deCrypt(String stringToCrypt) {
 		try {

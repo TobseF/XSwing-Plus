@@ -4,12 +4,10 @@
  */
 package xswing;
 
-import lib.mylib.EffectBlinking;
+import lib.mylib.*;
 import lib.mylib.SpriteSheet;
 import lib.mylib.object.Resetable;
-
-import org.newdawn.slick.Font;
-import org.newdawn.slick.Graphics;
+import org.newdawn.slick.*;
 
 /** The ball which counts the levels. Level can be 1-45 */
 public class Level extends Ball implements Resetable {
@@ -41,6 +39,7 @@ public class Level extends Ball implements Resetable {
 
 	/**
 	 * Set the current level
+	 * 
 	 * @param level
 	 * @see #getLevel()
 	 */
@@ -74,9 +73,9 @@ public class Level extends Ball implements Resetable {
 			blinking.reset();
 		}
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Level: "+ weight;
+		return "Level: " + weight;
 	}
 }

@@ -4,15 +4,9 @@
  */
 package lib.mylib.highscore;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JTable;
-import javax.swing.RowSorter;
-import javax.swing.SortOrder;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
-
+import java.util.*;
+import javax.swing.*;
+import javax.swing.table.*;
 
 /**
  * Provied useful funtions to sort, crypt, print, store and load a ztwo dimensioned
@@ -143,7 +137,7 @@ public class HighScoreFormatter {
 		for (String[] line : higScore) {
 			if (!line[0].isEmpty() && !line[1].isEmpty()) {
 				list.add(line);
-			} 
+			}
 		}
 		return list.toArray(new String[0][0]);
 	}
@@ -158,23 +152,45 @@ public class HighScoreFormatter {
 		return cryptedScore;
 	}
 
+	/**
+	 * Decrypts the given HighScore table. Encryption errors or wrong formattet Strings (e.g.
+	 * if score is no number), an empty Table will be returned.
+	 * @param score an with {@link #cryptScore(String[][])} crypted score table
+	 * @return encrypted high score table ([score][Name]), or an epty table, if there was en
+	 *         encrypton error
+	 */
 	public String[][] decryptScore(String[][] score) {
-		if (score.length == 0) {
-			return score;
-		}
+		boolean errorWhileDecrypting = (score.length == 0 || score[0].length % 2 != 0);
+		
 		String[][] cryptedScore = new String[score.length][2];
-		for (int i = 0; i < score.length; i++) {
-			//Score
+
+		for (int i = 0; i < score.length && !errorWhileDecrypting; i++) {
+			// Score
 			cryptedScore[i][0] = easyCrypter.deCrypt(score[i][0]);
-			//Names
+			// Names
 			cryptedScore[i][1] = easyCrypter.deCrypt(score[i][1]);
+			
+			errorWhileDecrypting = cryptedScore[i][0].isEmpty()
+					|| cryptedScore[i][1].isEmpty();
+			try {
+				Integer.parseInt(cryptedScore[i][0]);
+			} catch (NumberFormatException e) {
+				errorWhileDecrypting = true;
+			}
 		}
-		return removeLinesWithEmptyFields(cryptedScore);
+
+		if (errorWhileDecrypting) {
+			return new String[0][0];
+		} else {
+			return cryptedScore;
+		}
 	}
 
 	/**
 	 * Searches for the lengest String value in score and filles score with leadig zeros.
-	 * -Useful for sorting<br> e.g.<br> st={13, 200, 1, 1333} ==> {0013, 0200, 0001, 1333}
+	 * -Useful for sorting<br>
+	 * e.g.<br>
+	 * st={13, 200, 1, 1333} ==> {0013, 0200, 0001, 1333}
 	 * 
 	 * @param highScoreTable
 	 * @return highScoreTableWithZeroedScore
@@ -196,8 +212,9 @@ public class HighScoreFormatter {
 	}
 
 	/**
-	 * Reoves all leading zeros of the score.<br> e.g.<br> st={0013, 0200, 0001, 1333} ==> {13,
-	 * 200, 1, 1333}
+	 * Reoves all leading zeros of the score.<br>
+	 * e.g.<br>
+	 * st={0013, 0200, 0001, 1333} ==> {13, 200, 1, 1333}
 	 * 
 	 * @param highScoreTableWithZeroedScore
 	 * @return highScoreTableWithoutZeroedScore

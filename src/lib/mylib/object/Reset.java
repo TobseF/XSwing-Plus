@@ -4,8 +4,7 @@
  */
 package lib.mylib.object;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Holds resetable objects.
@@ -13,6 +12,7 @@ import java.util.List;
  * @author Tobse
  */
 public class Reset implements Resetable {
+
 	List<Resetable> list = new ArrayList<Resetable>();
 
 	public void add(Resetable resetableObject) {
@@ -21,7 +21,7 @@ public class Reset implements Resetable {
 
 	/** Resets all Elements */
 	public void reset() {
-		for(Resetable resetable : list){
+		for (Resetable resetable : list) {
 			resetable.reset();
 		}
 	}

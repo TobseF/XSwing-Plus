@@ -5,21 +5,13 @@
 package tests;
 
 import lib.mylib.SpriteSheet;
-
-import org.newdawn.slick.AngelCodeFont;
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheetFont;
+import org.newdawn.slick.*;
 
 /**
  * Speed Test: AngelCodeFont vs SpriteSheetFont The difference are only 5fps -1094fps max
  */
 public class FontBenchmark extends BasicGame {
+
 	private static AppGameContainer container;
 	private Image h;
 	private int fontNr = 3;

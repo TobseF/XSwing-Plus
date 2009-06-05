@@ -5,15 +5,19 @@
 package xswing.start;
 
 import lib.mylib.util.LoadingScreen;
-
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
+import xswing.*;
 
-import xswing.GamePanel;
-
+/** Starts XSwing Plus immediately in <b>single player mode</b></br>
+ * <ul> 
+ * <li>No Options on start</li>
+ * <li>No Loading Scrren</li>
+ * <li>No Main manu</li>
+ * </ul>
+ * @author Tobse
+ */
 public class XSwingFastStart extends StateBasedGame {
 
 	public XSwingFastStart() {
@@ -47,6 +51,7 @@ public class XSwingFastStart extends StateBasedGame {
 
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
+		LocationController.setMultiplayer(false);
 		addState(new LoadingScreen(0));
 		addState(new GamePanel(1));
 	}

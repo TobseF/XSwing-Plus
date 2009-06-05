@@ -1,17 +1,14 @@
 /*
  * @version 0.0 25.02.2009
- * @author 	Tobse F
+ * @author Tobse F
  */
 package xswing.extras;
 
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
-
+import org.newdawn.slick.*;
 import xswing.Ball;
 
-public class Stone extends Ball{
-	
+public class Stone extends Ball {
+
 	public Stone(int level, int x, int y) {
 		super(level, x, y);
 		nr = 100;

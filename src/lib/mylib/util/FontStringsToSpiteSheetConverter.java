@@ -5,15 +5,11 @@
 package lib.mylib.util;
 
 import java.awt.Dimension;
-
 import lib.mylib.SpriteSheet;
-
-import org.newdawn.slick.Font;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
 public class FontStringsToSpiteSheetConverter {
+
 	private SpriteSheet spriteSheet;
 	private String[] strings;
 	private Font font;

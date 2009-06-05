@@ -1,19 +1,17 @@
 /*
  * @version 0.0 25.02.2009
- * @author 	Tobse F
+ * @author Tobse F
  */
 package xswing;
 
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
-
 import lib.mylib.object.SObject;
+import org.newdawn.slick.*;
 
-public class Background extends SObject{
-	private Image singlePlayerBackground, 
-		multiPlayerBackground;
+public class Background extends SObject {
+
+	private Image singlePlayerBackground, multiPlayerBackground;
 	private Image background;
+
 	public Background(boolean multiplayer) {
 		try {
 			singlePlayerBackground = new Image("res/" + "swing_background_b.jpg");
@@ -21,9 +19,9 @@ public class Background extends SObject{
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
-		background = multiplayer? multiPlayerBackground : singlePlayerBackground;
+		background = multiplayer ? multiPlayerBackground : singlePlayerBackground;
 	}
-	
+
 	@Override
 	public void render(Graphics g) {
 		background.draw();

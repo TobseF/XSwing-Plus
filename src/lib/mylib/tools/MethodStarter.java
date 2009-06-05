@@ -4,17 +4,17 @@
  */
 package lib.mylib.tools;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 public class MethodStarter {
+
 	private MethodLauchncher lauchncher = null;
 
 	public MethodStarter(Class<?> classToInvoke, String methodName, Object[] parameters) {
 		lauchncher = new MethodLauchncher(classToInvoke, methodName, parameters);
 		lauchncher.start();
 	}
-	
+
 	public MethodStarter(String classToInvoke, String methodName, Object[] parameters) {
 		Class<?> theClass = null;
 		try {
@@ -25,12 +25,13 @@ public class MethodStarter {
 		lauchncher = new MethodLauchncher(theClass, methodName, parameters);
 		lauchncher.start();
 	}
-	
+
 	public boolean isMothodStarted() {
 		return lauchncher.isMothodStarted();
 	}
 
 	private class MethodLauchncher extends Thread {
+
 		private final Object[] parameters;
 		private final Class<?> classToInvoke;
 		private final String methodName;

@@ -5,9 +5,7 @@
 package lib.mylib.color;
 
 import lib.mylib.MyTimer;
-import lib.mylib.object.Resetable;
-import lib.mylib.object.Updateable;
-
+import lib.mylib.object.*;
 import org.newdawn.slick.Color;
 
 /**
@@ -18,6 +16,7 @@ import org.newdawn.slick.Color;
  * @see #invert
  */
 public class TransparancySlider implements Updateable, Resetable {
+
 	private Color[] tranparency;
 	private int currentAlphaStep = 0;
 	private MyTimer timer;
@@ -28,6 +27,7 @@ public class TransparancySlider implements Updateable, Resetable {
 		tranparency = new Color[steps + 1];
 		initColors();
 		timer = new MyTimer((int) ((double) duration / steps), true) {
+
 			@Override
 			protected void timerAction() {
 				nextAplphaValue();
@@ -58,13 +58,12 @@ public class TransparancySlider implements Updateable, Resetable {
 	public Color getTranparency() {
 		return tranparency[currentAlphaStep];
 	}
-	
+
 	/**
 	 * @return currentTransparany
 	 */
 	public Color getTranparency(Color color) {
-		Color newColor = Transparency.setTransparency(color, 
-				tranparency[currentAlphaStep].a);
+		Color newColor = Transparency.setTransparency(color, tranparency[currentAlphaStep].a);
 		return newColor;
 	}
 

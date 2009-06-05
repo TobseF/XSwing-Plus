@@ -4,8 +4,7 @@
  */
 package lib.mylib;
 
-import lib.mylib.object.Resetable;
-import lib.mylib.object.Updateable;
+import lib.mylib.object.*;
 
 /**
  * Timer wich provides a {@link #timerAction()} function. It's called after the
@@ -15,6 +14,7 @@ import lib.mylib.object.Updateable;
  * @see #timerAction()
  */
 public class MyTimer implements Updateable, Resetable {
+
 	private int duration, timeSinceStart;
 	/** Whether the timer schould run consecutively (true) */
 	private boolean repeat;
@@ -77,19 +77,19 @@ public class MyTimer implements Updateable, Resetable {
 	public boolean isInPause() {
 		return !running;
 	}
-	
-	public boolean isFinsihed(){
+
+	public boolean isFinsihed() {
 		return (!running && timeSinceStart >= duration);
 	}
 
 	public void start() {
 		running = true;
 	}
-	
-	public void pause(){
+
+	public void pause() {
 		running = false;
 	}
-	
+
 	public void setDuration(int duration) {
 		this.duration = duration;
 		reset();

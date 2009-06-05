@@ -6,15 +6,10 @@ package tests;
 
 import lib.mylib.ValueSlider;
 import lib.mylib.ValueSlider.ValueSliderType;
-
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
 public class ValueSliderTest extends BasicGame {
+
 	private ValueSlider valueSlider;
 
 	public ValueSliderTest() {
@@ -29,14 +24,14 @@ public class ValueSliderTest extends BasicGame {
 	@Override
 	public void update(GameContainer container, int delta) throws SlickException {
 		valueSlider.update(delta);
-		if(container.getInput().isKeyPressed(Input.KEY_SPACE))
+		if (container.getInput().isKeyPressed(Input.KEY_SPACE))
 			valueSlider.reset();
-		if(container.getInput().isKeyPressed(Input.KEY_ENTER))
+		if (container.getInput().isKeyPressed(Input.KEY_ENTER))
 			valueSlider.invert();
 	}
 
 	public void render(GameContainer container, Graphics g) throws SlickException {
-		g.drawString(valueSlider.getValue() +"", 100, 100);
+		g.drawString(valueSlider.getValue() + "", 100, 100);
 	}
 
 	public static void main(String[] args) throws Exception {

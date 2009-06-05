@@ -1,17 +1,13 @@
 /*
  * @version 0.0 08.01.2009
- * @author 	Tobse F
+ * @author Tobse F
  */
 package xswing.ai;
 
 import java.util.LinkedList;
-
 import lib.mylib.object.Updateable;
-import xswing.Ball;
-import xswing.BallTable;
-import xswing.Cannon;
-import xswing.events.XSwingEvent;
-import xswing.events.XSwingListener;
+import xswing.*;
+import xswing.events.*;
 import xswing.events.XSwingEvent.GameEventType;
 
 public class AIInterface implements Updateable{
@@ -40,13 +36,21 @@ public class AIInterface implements Updateable{
 				return;
 			}
 			bestePositionBerechnen();
-		} else if (timeAfterLastUpdate >= minTime && zuege.getFirst() < cannon.getPos()) { // Kanone nach links bewegen
+		} else if (timeAfterLastUpdate >= minTime && zuege.getFirst() < cannon.getPos()) { // Kanone
+			// nach
+			// links
+			// bewegen
 			timeAfterLastUpdate = 0;
 			listener.gameEvent(new XSwingEvent(this, GameEventType.CANNON_MOVED_LEFT));
-		} else if (timeAfterLastUpdate >= minTime && zuege.getFirst() > cannon.getPos()) { // Kanone nach rechts bewegen
+		} else if (timeAfterLastUpdate >= minTime && zuege.getFirst() > cannon.getPos()) { // Kanone
+			// nach
+			// rechts
+			// bewegen
 			timeAfterLastUpdate = 0;
 			listener.gameEvent(new XSwingEvent(this, GameEventType.CANNON_MOVED_RIGHT));
-		} else if (timeAfterLastUpdate >= minTime && zuege.getFirst() == cannon.getPos()) { // Ball fallen lassen
+		} else if (timeAfterLastUpdate >= minTime && zuege.getFirst() == cannon.getPos()) { // Ball
+			// fallen
+			// lassen
 			timeAfterLastUpdate = 0;
 			zuege.removeFirst();
 			listener.gameEvent(new XSwingEvent(this, GameEventType.PRESSED_DOWN));
@@ -119,14 +123,14 @@ public class AIInterface implements Updateable{
 					wert -= 1;
 				if (ballUnten != null && ballUnten.isSameNr(ballMitte))
 					wert -= 1;
-				if (ballLinks != null && ballRechts != null && ballLinks.isSameNr(ballRechts) && !ballLinks.isSameNr(ballMitte))
+				if (ballLinks != null && ballRechts != null && ballLinks.isSameNr(ballRechts)
+						&& !ballLinks.isSameNr(ballMitte))
 					wert += 10;
 			}
 		}
 		wert += Math.pow(baelle - alteBallzahl, 3);
 		return wert;
 	}
-
 
 	@Override
 	public void update(int delta) {

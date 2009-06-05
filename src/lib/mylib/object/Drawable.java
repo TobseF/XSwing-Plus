@@ -12,9 +12,10 @@ import org.newdawn.slick.Graphics;
  * @author Tobse
  */
 public interface Drawable {
-	
-	
-	/** All draw actions shoulb be executed here
+
+	/**
+	 * All draw actions shoulb be executed here
+	 * 
 	 * @param g The Grahics to draw on
 	 */
 	public void render(Graphics g);

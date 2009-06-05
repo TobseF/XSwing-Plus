@@ -4,22 +4,17 @@
  */
 package lib.mylib.tools;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.File;
-
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
+import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-
 import lib.mylib.swing.SwingUtils;
-
 import org.newdawn.slick.*;
 
 /**
- * Gui where you can select PNG files which are loaded with Slick. Useful to see if they
- * are readable without warinings.
+ * Gui where you can select PNG files which are loaded with Slick. Useful to see if they are
+ * readable without warinings.
+ * 
  * @author Tobse
  */
 public class PNGCompatibilityChecker extends JFrame {
@@ -32,6 +27,7 @@ public class PNGCompatibilityChecker extends JFrame {
 		SwingUtils.setLocationToCenter(this);
 		JButton setResFolder = new JButton("Set res folder");
 		setResFolder.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				chooseFile();
@@ -46,12 +42,13 @@ public class PNGCompatibilityChecker extends JFrame {
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setMultiSelectionEnabled(true);
 		fc.setFileFilter(new FileFilter() {
+
 			@Override
 			public boolean accept(File f) {
 				return f.isDirectory() || f.getName().toLowerCase().endsWith(".png");
-				//return f.getName().toLowerCase().endsWith(".png");
+				// return f.getName().toLowerCase().endsWith(".png");
 			}
-			
+
 			@Override
 			public String getDescription() {
 				return "PNG files";
@@ -62,16 +59,16 @@ public class PNGCompatibilityChecker extends JFrame {
 
 		if (state == JFileChooser.APPROVE_OPTION) {
 			File[] files = fc.getSelectedFiles();
-			System.out.println("check images: "+ files.length);
+			System.out.println("check images: " + files.length);
 			checkImages(files);
-		}else{
+		} else {
 			System.out.println("abort file selection");
 			System.out.println(state);
 		}
 	}
 
 	private void checkImages(File[] files) {
-		
+
 		BasicGame_ImageLoading game = new BasicGame_ImageLoading(files);
 		try {
 			AppGameContainer gameStarter = new AppGameContainer(game);
@@ -82,13 +79,16 @@ public class PNGCompatibilityChecker extends JFrame {
 			System.out.println("arn");
 		}
 	}
-	
-	private class BasicGame_ImageLoading extends BasicGame{
+
+	private class BasicGame_ImageLoading extends BasicGame {
+
 		File[] files;
+
 		public BasicGame_ImageLoading(File[] files) {
 			super("Image Loader");
 			this.files = files;
 		}
+
 		@Override
 		public void init(GameContainer container) throws SlickException {
 			for (File file : files) {
@@ -108,9 +108,9 @@ public class PNGCompatibilityChecker extends JFrame {
 
 		@Override
 		public void render(GameContainer container, Graphics g) throws SlickException {}
-				
+
 	}
-	
+
 	/**
 	 * @param args
 	 */
@@ -118,7 +118,5 @@ public class PNGCompatibilityChecker extends JFrame {
 		new PNGCompatibilityChecker();
 
 	}
-	
-	
 
 }

@@ -1,10 +1,11 @@
 /*
  * @version 0.0 24.02.2009
- * @author 	Tobse F
+ * @author Tobse F
  */
 package lib.mylib.object;
 
 public interface Positionable {
+
 	/**
 	 * Sets the X-Position on the Screen
 	 * 
@@ -19,7 +20,6 @@ public interface Positionable {
 	 */
 	public void setY(int y);
 
-	
 	/**
 	 * @return x position
 	 */
@@ -29,6 +29,5 @@ public interface Positionable {
 	 * @return y position
 	 */
 	public int getY();
-
 
 }

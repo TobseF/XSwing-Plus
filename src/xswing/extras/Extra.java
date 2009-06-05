@@ -1,14 +1,12 @@
 /*
  * @version 0.0 02.03.2009
- * @author 	Tobse F
+ * @author Tobse F
  */
 package xswing.extras;
 
-import xswing.Ball;
-import xswing.BallTable;
-import xswing.EffectCatalog;
+import xswing.*;
 
-public class Extra extends Ball{
+public class Extra extends Ball {
 
 	public Extra(int nr, int x, int y, BallTable ballTable, EffectCatalog effectCatalog) {
 		super(x, y);

@@ -4,22 +4,12 @@
  */
 package xswing.tests.fun;
 
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.GridLayout;
-import java.awt.Point;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.CanvasGameContainer;
+import java.awt.*;
+import java.awt.event.*;
+import org.newdawn.slick.*;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
 
 public class BallStress4 extends BasicGame {
 
@@ -52,6 +42,7 @@ public class BallStress4 extends BasicGame {
 			frame.pack();
 			size = frame.getSize();
 			frame.addWindowListener(new WindowAdapter() {
+
 				@Override
 				public void windowClosing(WindowEvent e) {
 					System.exit(0);

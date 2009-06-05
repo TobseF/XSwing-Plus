@@ -5,19 +5,10 @@
 package tests;
 
 import lib.mylib.util.FontStringsToSpiteSheetConverter;
-
-import org.newdawn.slick.AngelCodeFont;
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Font;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.*;
 
 public class FontStringToSpriteTest extends BasicGame {
+
 	private static AppGameContainer container;
 	private Image background;
 	private FontStringsToSpiteSheetConverter converter;

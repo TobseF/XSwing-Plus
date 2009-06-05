@@ -5,16 +5,13 @@
 package xswing;
 
 import java.text.NumberFormat;
-
 import lib.mylib.EffectBlinking;
-import lib.mylib.object.Resetable;
-import lib.mylib.object.SObject;
+import lib.mylib.object.*;
+import org.newdawn.slick.*;
 
-import org.newdawn.slick.Font;
-import org.newdawn.slick.Graphics;
+/** Draws the HighScoreFormatter and the Bonus number */
+public class HighScoreCounter extends SObject implements Resetable {
 
-/** Draws the HighScoreFormatter and Bonus number */
-public class HighScoreCounter extends SObject implements Resetable{
 	private int score = 0;
 	private Font font;
 	private int bonus = 0;
@@ -39,9 +36,9 @@ public class HighScoreCounter extends SObject implements Resetable{
 
 	@Override
 	public void render(Graphics g) {
-			String scoreS = NumberFormat.getInstance().format(score);
-			font.drawString(x - (scoreS.length() - 1) * letterLenght, y, scoreS);
-		if(blinking.getBlink() && !LocationController.isMultiplayer()){
+		String scoreS = NumberFormat.getInstance().format(score);
+		font.drawString(x - (scoreS.length() - 1) * letterLenght, y, scoreS);
+		if (blinking.getBlink() && !LocationController.isMultiplayer()) {
 			String bonusS = NumberFormat.getInstance().format(bonus);
 			font.drawString(x - (bonusS.length() - 1) * letterLenght, y + 55, bonusS);
 		}
@@ -58,11 +55,11 @@ public class HighScoreCounter extends SObject implements Resetable{
 	public int getScore() {
 		return score;
 	}
-	
+
 	public int getBonus() {
 		return bonus;
 	}
-	
+
 	@Override
 	public void update(int delta) {
 		blinking.update(delta);

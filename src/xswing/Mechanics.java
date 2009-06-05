@@ -5,13 +5,9 @@
 package xswing;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.*;
 import javax.swing.event.EventListenerList;
-
-import xswing.events.BallEvent;
-import xswing.events.BallEventListener;
+import xswing.events.*;
 import xswing.events.BallEvent.BallEventType;
 
 /**
@@ -21,6 +17,7 @@ import xswing.events.BallEvent.BallEventType;
  * @see #checkOfFive()
  */
 public class Mechanics {
+
 	private Ball[][] balls;
 	private BallTable ballTable;
 	private List<Ball> ballsTemp = new ArrayList<Ball>();
@@ -56,14 +53,16 @@ public class Mechanics {
 			ballsTemp.clear();// clear every row
 		}
 	}
-	
+
 	public void checkOfThree(Ball ball) {
-		if(isInRowWithThree(ball)){
+		if (isInRowWithThree(ball)) {
 			ball.fireBallEvent(BallEventType.BALL_WITH_THREE_IN_A_ROW);
 		}
 	}
-	
-	/** Horizontal row check
+
+	/**
+	 * Horizontal row check
+	 * 
 	 * @param ball to check
 	 * @return wether given Ball lies in the middle of three in horizontal a row
 	 */
@@ -93,39 +92,41 @@ public class Mechanics {
 		}
 		return false;
 	}
-	
-	/** Vertikal row check
+
+	/**
+	 * Vertikal row check
+	 * 
 	 * @param ball to check
 	 * @return wehter the given ball lais as fifh ball in a vertikal stack
 	 */
-	public boolean isInRowWithFive(Ball ball){
+	public boolean isInRowWithFive(Ball ball) {
 		if (ball == null)
 			throw new IllegalArgumentException("ball can't be null");
 		Point position = ballTable.getField(ball);
-		for(int y = position.y -1; y >= 0; y--){
+		for (int y = position.y - 1; y >= 0; y--) {
 			Ball ballInStack = ballTable.getBall(position.x, y);
-			if(ballInStack != null && ballInStack.compare(ball)){
-				if(position.y - y == 4){
+			if (ballInStack != null && ballInStack.compare(ball)) {
+				if (position.y - y == 4) {
 					System.out.println("d");
 					return true;
 				}
-			}else{
+			} else {
 				break;
 			}
 		}
 		return false;
 	}
-	
-	
+
 	public Ball getWaitingForKill() {
-		return waitingForKill; //TODO: change to listener!
+		return waitingForKill; // TODO: change to listener!
 	}
 
 	/** Kills the saved balls if the're more than two */
 	private void checkRow(List<Ball> ballsTemp) {
 		if (ballsTemp.size() > 2) {
-			notifyListener(new BallEvent(this, ballsTemp.get(0), BallEventType.BALL_WITH_THREE_IN_A_ROW));
-		waitingForKill = ballsTemp.get(0);
+			notifyListener(new BallEvent(this, ballsTemp.get(0),
+					BallEventType.BALL_WITH_THREE_IN_A_ROW));
+			waitingForKill = ballsTemp.get(0);
 		}
 	}
 
@@ -173,7 +174,8 @@ public class Mechanics {
 						ballsT.clear();
 						ballsT.add(ball);
 					} else if (ballsT.size() > 4) {
-						notifyListener(new BallEvent(this, ballsT.get(0), BallEventType.BALL_WITH_FIVE_IN_A_ROW));
+						notifyListener(new BallEvent(this, ballsT.get(0),
+								BallEventType.BALL_WITH_FIVE_IN_A_ROW));
 						shrinkRow(ballsT);
 					}
 				}
@@ -182,22 +184,23 @@ public class Mechanics {
 		}
 	}
 
-	public void checkOfFive(Ball ball){
-		if(isInRowWithFive(ball)){
+	public void checkOfFive(Ball ball) {
+		if (isInRowWithFive(ball)) {
 			System.out.println("row with five");
-			shrincRow(ball);		
+			shrincRow(ball);
 		}
 	}
-	
-	private void shrincRow(Ball ball){
+
+	private void shrincRow(Ball ball) {
 		ball.fireBallEvent(BallEventType.BALL_WITH_FIVE_IN_A_ROW);
 		Point position = ballTable.getField(ball);
 		int weight = 0;
-		for(int y = position.y ; y > position.y - 4; y-- ){
+		for (int y = position.y; y > position.y - 4; y--) {
 			weight += ballTable.getBall(position.x, y).getWeight();
-			ballTable.getBall(position.x, y).fireBallEvent(BallEventType.BALL_CAUGHT_BY_EXPLOSION);
+			ballTable.getBall(position.x, y).fireBallEvent(
+					BallEventType.BALL_CAUGHT_BY_EXPLOSION);
 		}
-		Ball shrincedBall =ballTable.getBall(position.x, position.y - 4);
+		Ball shrincedBall = ballTable.getBall(position.x, position.y - 4);
 		shrincedBall.setWeight(weight + shrincedBall.getWeight());
 		shrincedBall.fireBallEvent(BallEventType.BALL_CAUGHT_BY_SHRINC);
 	}
@@ -213,8 +216,6 @@ public class Mechanics {
 		ballsT.get(0).setWeight(weight);
 		ballsT.get(0).fireBallEvent(BallEventType.BALL_CAUGHT_BY_SHRINC);
 	}
-	
-	
 
 	public void performWeight(int[] weights) {
 
@@ -236,7 +237,8 @@ public class Mechanics {
 	}
 
 	/**
-	 * Calculates the score of the balls to kill.<br> score = sumOfallWeigts * balls;
+	 * Calculates the score of the balls to kill.<br>
+	 * score = sumOfallWeigts * balls;
 	 */
 	public int calculateScore(List<Ball> ballsTemp) {
 		int score = 0;
@@ -248,6 +250,7 @@ public class Mechanics {
 
 	/**
 	 * Adds an {@code BallEventListener}
+	 * 
 	 * @param listener the {@code BallEventListener} to be added
 	 */
 	public void addBallEventListener(BallEventListener listener) {
@@ -256,6 +259,7 @@ public class Mechanics {
 
 	/**
 	 * Removes an {@code BallEventListener}
+	 * 
 	 * @param listener to be removed
 	 */
 	public void removeBallEventListener(BallEventListener listener) {
@@ -264,6 +268,7 @@ public class Mechanics {
 
 	/**
 	 * Notifies all {@code BallEventListener}s about a {@code BallEvent}
+	 * 
 	 * @param event the {@code BallEvent} object
 	 * @see EventListenerList
 	 */

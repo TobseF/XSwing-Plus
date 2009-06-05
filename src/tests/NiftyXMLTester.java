@@ -1,27 +1,23 @@
 /*
  * @version 0.0 09.12.2008
- * @author 	Tobse F
+ * @author Tobse F
  */
 package tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SlickException;
+import java.io.*;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
-
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
+import de.lessvoid.nifty.screen.*;
 import de.lessvoid.nifty.slick.NiftyGameState;
 
-public class NiftyXMLTester extends StateBasedGame implements ScreenController{
-	
+public class NiftyXMLTester extends StateBasedGame implements ScreenController {
+
 	public NiftyXMLTester() {
 		super("NiftyXMLTester");
 	}
-
-	private static final String  resFolder = "restest/";
-	private String niftyXMLFile = "xmlTest.xml";
 
 	/**
 	 * @param args
@@ -42,24 +38,40 @@ public class NiftyXMLTester extends StateBasedGame implements ScreenController{
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
 		NiftyGameState niftyGameState = new NiftyGameState(0);
-		niftyGameState.fromXml(resFolder + niftyXMLFile, this);
-		addState(niftyGameState);
+		
+		JFileChooser fileChooser = new JFileChooser(new File("restest/gui/"));
+		fileChooser.setFileFilter(new FileNameExtensionFilter("xml", "xml"));
+		int state = fileChooser.showOpenDialog(null);
+		File inputFile = null;
+		if (state == JFileChooser.APPROVE_OPTION) {
+			inputFile = fileChooser.getSelectedFile();
+			
+		} else {
+			try {
+				throw new IOException("Datei-Auswahl abgebrochen");
+			} catch (IOException e) {}
+		}
+		if(inputFile != null){
+			niftyGameState.fromXml(inputFile.getAbsolutePath(), this);
+			addState(niftyGameState);
+		}
 	}
 
-	public final void buttonPressed(){
+	public final void buttonPressed() {
 		System.out.println("button pressed");
 	}
 	
-	@Override
-	public void bind(Nifty nifty, Screen screen) {
+	public void quit(){
+		System.out.println("quit");
 	}
 
 	@Override
-	public void onEndScreen() {
-	}
+	public void bind(Nifty nifty, Screen screen) {}
 
 	@Override
-	public void onStartScreen() {
-	}		
+	public void onEndScreen() {}
+
+	@Override
+	public void onStartScreen() {}
 
 }

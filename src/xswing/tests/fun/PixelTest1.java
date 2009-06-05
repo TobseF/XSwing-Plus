@@ -7,14 +7,8 @@ package xswing.tests.fun;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import java.util.*;
+import org.newdawn.slick.*;
 
 public class PixelTest1 extends BasicGame {
 

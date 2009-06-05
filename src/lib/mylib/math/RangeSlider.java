@@ -5,6 +5,7 @@
 package lib.mylib.math;
 
 public class RangeSlider extends Range {
+
 	private boolean inverted = false;
 	private double step = 0.1;
 	private boolean infinite = false; // TODO: implement

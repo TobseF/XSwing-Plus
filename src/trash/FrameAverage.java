@@ -4,15 +4,12 @@
  */
 package trash;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import lib.mylib.object.Resetable;
-import lib.mylib.object.Updateable;
-
+import java.util.*;
+import lib.mylib.object.*;
 import org.newdawn.slick.GameContainer;
 
 public class FrameAverage implements Resetable, Updateable {
+
 	private GameContainer container;
 	private List<Integer> revordedFrameRates = new ArrayList<Integer>();
 

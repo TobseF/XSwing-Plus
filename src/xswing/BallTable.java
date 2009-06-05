@@ -6,14 +6,13 @@ package xswing;
 
 import java.awt.Point;
 import java.util.Arrays;
-
-import lib.mylib.object.Resetable;
-import lib.mylib.object.SObject;
+import lib.mylib.object.*;
 
 /**
  * Saves the Balls in a table and links them to the table positions on the screen
  */
 public class BallTable extends SObject implements Resetable, Cloneable {
+
 	/** Ball side lenght */
 	private int ballA;
 	/** gab between the balls */
@@ -21,11 +20,11 @@ public class BallTable extends SObject implements Resetable, Cloneable {
 	/** Hight and Weight of the Ball Table in pixels */
 	private int height;
 	private Ball[][] balls = new Ball[8][13];
-	/** The last Ball wich was insert into the <code>BallTable</code>*/
+	/** The last Ball wich was insert into the <code>BallTable</code> */
 	private Ball lastInsertBall;
 
-	//TODO: add ballTablechangedEvent
-	
+	// TODO: add ballTablechangedEvent
+
 	public BallTable() {
 		ballA = Ball.A;
 		height = ballA * 8;
@@ -75,7 +74,7 @@ public class BallTable extends SObject implements Resetable, Cloneable {
 			BallTable balltable = (BallTable) super.clone();
 			balltable.balls = new Ball[8][13];
 			for (int y = 0; y < balls[0].length; y++) {
-				for (int x = 0; x < 8; x++) { //TODO: change to System.arraycopy -faster!
+				for (int x = 0; x < 8; x++) { // TODO: change to System.arraycopy -faster!
 					Ball b = balls[x][y];
 					if (b != null) {
 						balltable.balls[x][y] = (Ball) balls[x][y].clone();
@@ -90,7 +89,8 @@ public class BallTable extends SObject implements Resetable, Cloneable {
 	}
 
 	/**
-	 * Returns the field in which the ball resides. <br> E.g.: (3/2)
+	 * Returns the field in which the ball resides. <br>
+	 * E.g.: (3/2)
 	 */
 	public Point getField(int x, int y) {
 		int posX = (int) ((x - this.x + gab_between_balls) / (double) (ballA + gab_between_balls));
@@ -99,23 +99,23 @@ public class BallTable extends SObject implements Resetable, Cloneable {
 		if (posYTemp % 1 == 0) {// if it's exacly on the grid
 			posY -= 1;
 		}
-		return new Point (posX, posY );
+		return new Point(posX, posY);
 	}
 
 	/**
-	 * Returns the field in which the ball resides. <br> E.g.: (3/2)
-	 
-	public int[] getField(SObject ball) {
-		return getField(ball.getX(), ball.getY());
-	}*/
-	
+	 * Returns the field in which the ball resides. <br>
+	 * E.g.: (3/2) public int[] getField(SObject ball) { return getField(ball.getX(),
+	 * ball.getY()); }
+	 */
+
 	/**
-	 * Returns the field in which the ball resides. <br> E.g.: (3/2)
+	 * Returns the field in which the ball resides. <br>
+	 * E.g.: (3/2)
 	 */
 	public Point getField(SObject ball) {
 		return getField(ball.getX(), ball.getY());
 	}
-	
+
 	/** Returns the last Ball which was insert into the BallTable */
 	public Ball getLastInsertBall() {
 		return lastInsertBall;
@@ -177,7 +177,8 @@ public class BallTable extends SObject implements Resetable, Cloneable {
 
 	/** Returns the coordinates of a given BallTable cell on the display */
 	public int[] getFieldPosOnScreen(int posX, int posY) {
-		return new int[] { x + gab_between_balls + posX * (ballA + gab_between_balls), y + height - ((posY + 1) * ballA) };
+		return new int[] { x + gab_between_balls + posX * (ballA + gab_between_balls),
+				y + height - ((posY + 1) * ballA) };
 	}
 
 	/** Returns the coordinates of a given BallTable cell on the display */
@@ -187,7 +188,8 @@ public class BallTable extends SObject implements Resetable, Cloneable {
 
 	/** Returns the coordinates of fields in the BallTable */
 	public int[] getFieldPos(int posX, int posY) {
-		return new int[] { gab_between_balls + posX * (ballA + gab_between_balls), height - posY * ballA };
+		return new int[] { gab_between_balls + posX * (ballA + gab_between_balls),
+				height - posY * ballA };
 	}
 
 	/** Removes the given balls from the BallTable */

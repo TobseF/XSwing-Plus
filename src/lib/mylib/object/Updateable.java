@@ -5,11 +5,15 @@
 package lib.mylib.object;
 
 /**
- * @author Tobse For thnings that should be updated
+ * For thnings that should be updated
+ * 
+ * @author Tobse
  */
 public interface Updateable {
-	
-	/** Performs all logic which should be updated 
+
+	/**
+	 * Performs all logic which should be updated
+	 * 
 	 * @param delta time in ms since the last time updateded was called
 	 */
 	public void update(int delta);

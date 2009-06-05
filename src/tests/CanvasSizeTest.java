@@ -1,15 +1,9 @@
 package tests;
 
-import java.awt.Frame;
-import java.awt.GridLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.CanvasGameContainer;
-import org.newdawn.slick.GameContainer;
+import java.awt.*;
+import java.awt.event.*;
+import org.newdawn.slick.*;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -62,6 +56,7 @@ public class CanvasSizeTest extends BasicGame {
 			frame.add(container);
 			frame.pack();
 			frame.addWindowListener(new WindowAdapter() {
+
 				@Override
 				public void windowClosing(WindowEvent e) {
 					System.exit(0);

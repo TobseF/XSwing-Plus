@@ -4,13 +4,10 @@
  */
 package trash;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class ThawteCleaner {
+
 	public final static int LINE_LENGTH = 76;
 	public final static String START = "BEGIN PKCS";
 	public final static String END = "END PKCS";

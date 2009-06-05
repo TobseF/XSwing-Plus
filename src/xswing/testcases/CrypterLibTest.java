@@ -5,14 +5,12 @@
 package xswing.testcases;
 
 import static org.junit.Assert.*;
-
 import java.util.Random;
-
 import lib.mylib.highscore.CryptLib;
-
 import org.junit.Test;
 
-public class CrypterLibTest{
+public class CrypterLibTest {
+
 	private CryptLib cryptLib;
 
 	public CrypterLibTest() {
@@ -31,26 +29,28 @@ public class CrypterLibTest{
 	public void addHash() {
 		String testSTring = "0123";
 		String hashedString = cryptLib.addHash(testSTring);
-		assertEquals(hashedString, "0123006");
+		assertEquals(hashedString, "01230006");
 	}
 
 	@Test
 	public void removeHash() {
-		String testString = "0123006";
+		String testString = "01230006";
 		String stringWithOutHash = cryptLib.removeHash(testString);
 		assertEquals(stringWithOutHash, "0123");
-
-		// test Number with wrong Hash
-		stringWithOutHash = cryptLib.removeHash("0123016");
-		assertEquals(stringWithOutHash, "");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testRemoveHashtWithIllegalArgument(){
+	public void testRemoveHashtWithWrongHash1() {
 		// test text with wrong Hash
 		cryptLib.removeHash(" 012abc@");
-	}	
+	}
 	
+	@Test(expected = IllegalArgumentException.class)
+	public void testRemoveHashtWithWrongHash2() {
+		// test text with wrong Hash
+		cryptLib.removeHash("0123016");
+	}
+
 	@Test
 	public void reserveString() {
 		String testString = "XSwing Plus";
@@ -73,16 +73,16 @@ public class CrypterLibTest{
 		assertFalse(cryptLib.isStringWithNumbers(notAStringWithNumbers));
 
 	}
-	
+
 	@Test
-	public void convertStringOrASCISequence(){
+	public void convertStringOrASCISequence() {
 		String plainText = "Tobse #+123-.§";
 		String cryptedText = cryptLib.convertStringToASCISequence(plainText);
 		String enCryptedText = cryptLib.convertASCISequenceToString(cryptedText);
-		
+
 		assertEquals(cryptedText, "084111098115101032035043049050051045046167");
 		assertEquals(plainText, enCryptedText);
-		assertEquals(plainText, "Tobse #+123-.§"); //String stays unchanged
+		assertEquals(plainText, "Tobse #+123-.§"); // String stays unchanged
 	}
 
 	/**

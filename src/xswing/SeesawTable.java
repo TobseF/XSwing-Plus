@@ -5,17 +5,16 @@
 package xswing;
 
 import lib.mylib.object.SObject;
-
-import org.newdawn.slick.Font;
-import org.newdawn.slick.Graphics;
+import org.newdawn.slick.*;
 
 /** Draws the weight sum per column on the screen */
 public class SeesawTable extends SObject {
+
 	private final Font font;
 	private BallTable ballTable;
 	private int[] weights = new int[8];
 	private int gapBetweenBalls;
-	
+
 	public SeesawTable(Font font, BallTable ballTable) {
 		this.font = font;
 		this.ballTable = ballTable;
@@ -25,8 +24,8 @@ public class SeesawTable extends SObject {
 	@Override
 	public void render(Graphics g) {
 		for (int i = 0; i < 8; i++) {
-            font.drawString(x + (gapBetweenBalls + Ball.A) * (i + 1)
-            		- font.getWidth(weights[i] + "") / 2, y, weights[i] + "");
+			font.drawString(x + (gapBetweenBalls + Ball.A) * (i + 1)
+					- font.getWidth(weights[i] + "") / 2, y, weights[i] + "");
 		}
 	}
 

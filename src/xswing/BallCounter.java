@@ -4,17 +4,14 @@
  */
 package xswing;
 
-import lib.mylib.object.Countable;
-import lib.mylib.object.Resetable;
-import lib.mylib.object.SObject;
-
-import org.newdawn.slick.Font;
-import org.newdawn.slick.Graphics;
+import lib.mylib.object.*;
+import org.newdawn.slick.*;
 
 /**
  * @author Tobse GUI class which draws the number of already released balls
  */
-public class BallCounter extends SObject implements Resetable, Countable{
+public class BallCounter extends SObject implements Resetable, Countable {
+
 	private Font font;
 	private int balls = 0;
 	private Level level;
@@ -45,7 +42,7 @@ public class BallCounter extends SObject implements Resetable, Countable{
 
 	@Override
 	public void render(Graphics g) {
-		if(isVisible)
+		if (isVisible)
 			font.drawString(x - ((balls + "").length() - 1) * letterLenght / 2, y, "" + balls);
 	}
 }

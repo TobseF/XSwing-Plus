@@ -5,20 +5,11 @@
 package tests;
 
 import java.io.IOException;
-
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.particles.ConfigurableEmitter;
-import org.newdawn.slick.particles.ParticleEmitter;
-import org.newdawn.slick.particles.ParticleIO;
-import org.newdawn.slick.particles.ParticleSystem;
+import org.newdawn.slick.*;
+import org.newdawn.slick.particles.*;
 
 public class ParticleScoreTest extends BasicGame {
+
 	private Image background;
 	private ParticleSystem paticles;
 	private ParticleEmitter emitter;
@@ -47,24 +38,25 @@ public class ParticleScoreTest extends BasicGame {
 		try {
 			paticles = ParticleIO.loadConfiguredSystem("res/emptysystem.xml");
 			emitter = ParticleIO.loadEmitter("res/score.xml");
-			scoreEmitter= (ConfigurableEmitter) emitter;
+			scoreEmitter = (ConfigurableEmitter) emitter;
 		} catch (IOException e) {
 			throw new SlickException("Failed to load particle systems", e);
 		}
-		//paticles.addEmitter(emitter);
+		// paticles.addEmitter(emitter);
 		paticles.addEmitter(scoreEmitter);
 		scoreEmitter.setImageName("res/48.png");
 	}
 
 	int i;
+
 	@Override
 	public void update(GameContainer container, int delta) throws SlickException {
 		paticles.update(delta);
-		if(container.getInput().isKeyPressed(Input.KEY_SPACE)){
+		if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
 			i++;
-			Image image = new Image(100,20);
-			image.getGraphics().drawString(""+i, 0, 0);
-			//TODO: is it possible to give a image instead of settin the path
+			Image image = new Image(100, 20);
+			image.getGraphics().drawString("" + i, 0, 0);
+			// TODO: is it possible to give a image instead of settin the path
 			paticles.reset();
 		}
 	}

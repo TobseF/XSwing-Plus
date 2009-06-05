@@ -4,16 +4,10 @@
  */
 package trash;
 
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
-
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.ARBFragmentShader;
-import org.lwjgl.opengl.ARBShaderObjects;
-import org.lwjgl.opengl.ARBVertexShader;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.*;
 import org.newdawn.slick.Image;
 
 public class Shader {

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty>
+
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<!-- load default styles and controls -->
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<useStyles filename="nifty-default-styles.xml" />
+	<useControls filename="nifty-default-controls.xml" />
+
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<!-- start screen -->
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<screen id="start" controller="xswing.gui.ScoreScreenController">
+		<layer id="layer" childLayout="center">
+			<panel id="dialog" style="nifty-panel" padding="18px,28px,28px,16px" childLayout="center"
+				width="50%" height="160px" align="center" valign="center">
+				<effect>
+					<onStartScreen name="move" timeType="exp" factor="3.5" direction="top"
+						mode="in" length="500" inherit="true" />
+					<onEndScreen name="move" timeType="exp" factor="3.5" direction="bottom"
+						mode="out" length="500" inherit="true" />
+				</effect>
+
+				<panel childLayout="vertical" align="center" valign="center">
+
+					<panel childLayout="horizontal">
+						<label text="Your Score: " width="150px" align="left" textVAlign="center"
+							textHAlign="left" />
+						<label  id="labelScore" text="1300" width="50px" align="left" textVAlign="center" textHAlign="left" />
+					</panel>
+
+					<panel childLayout="horizontal" height="8px" />
+
+					<panel id="namePanel" childLayout="horizontal">
+						<label id="labelName" text="Your Name: " width="150px" align="left"
+							textVAlign="center" textHAlign="left" />
+						<control id="name" name="textfield" text="" />
+					</panel>
+
+					<panel childLayout="horizontal" height="8px" />
+
+					<panel childLayout="vertical" width="100%">
+						<control id="backButton" name="button" label="Press Enter" align="center">
+							<interact onClick="enterHighScore()" />
+						</control>
+					</panel>
+
+				</panel>
+			</panel>
+		</layer>
+	</screen>
+</nifty>

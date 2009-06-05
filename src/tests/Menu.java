@@ -4,20 +4,14 @@
  */
 package tests;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Font;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import java.util.*;
+import org.newdawn.slick.*;
 import org.newdawn.slick.opengl.TextureImpl;
-import org.newdawn.slick.opengl.renderer.Renderer;
-import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.opengl.renderer.*;
 import org.newdawn.slick.util.InputAdapter;
 
 public class Menu {
+
 	private static SGL GL = Renderer.get();
 
 	private Input input;
@@ -47,6 +41,7 @@ public class Menu {
 		this.listener = listener;
 
 		input.addListener(new InputAdapter() {
+
 			@Override
 			public void keyPressed(int key, char c) {
 				switch (key) {
@@ -338,6 +333,7 @@ public class Menu {
 	}
 
 	static public interface MenuListener {
+
 		public void entryChanged(Object entry);
 
 		public void entrySelected();

@@ -9,10 +9,12 @@ package lib.mylib.highscore;
  * routine, use the methods in the <b>EasyCrypter</b> class.<br>
  */
 public class CryptLib {
-
+	/** Max. number of digits for the hash*/
+	private static final int HASH_LENGHT = 4;
+	
 	/**
-	 * Crypts a given string which contains only figures, by rotating each digit. The 
-	 * rotation amount is given by the phrase (also only digits).<br>
+	 * Crypts a given string which contains only figures, by rotating each digit. The rotation
+	 * amount is given by the phrase (also only digits).<br>
 	 * 
 	 * @param stringToCrypt
 	 * @return cryptedString
@@ -22,8 +24,8 @@ public class CryptLib {
 	}
 
 	/**
-	 * Enrypts a given string which contains only figures, by rotating each digit. 
-	 * The rotation amount is given by the phrase (also only digits).<br>
+	 * Enrypts a given string which contains only figures, by rotating each digit. The rotation
+	 * amount is given by the phrase (also only digits).<br>
 	 * 
 	 * @param cryptedString
 	 * @return encryptedString
@@ -36,7 +38,8 @@ public class CryptLib {
 	}
 
 	/**
-	 * Returns a reversed String.<br> e.g. "Hallo" ==> "ollaH"
+	 * Returns a reversed String.<br>
+	 * e.g. "Hallo" ==> "ollaH"
 	 * 
 	 * @param string
 	 * @return reversedString
@@ -46,8 +49,12 @@ public class CryptLib {
 	}
 
 	/**
-	 * Adds the number of digits of the given string at the end. This Hash is always three
-	 * digits long. <br>eg. "01234" ==> "01234010"
+	 * Adds the sum of all digits of the given (number)string at the end. This Hash is always {@link #HASH_LENGHT}
+	 * digits long. It's no problem if the sum has more digits than {@link #HASH_LENGHT}.<br>
+	 * eg. HASH_LENGHT = 2<br>
+	 * "01234" ==> "01234010"<br>
+	 * eg. HASH_LENGHT = 3<br>
+	 * "01234" ==> "012340010"<br>
 	 * 
 	 * @param stringWithNumbers String which contains only figures.
 	 * @return stringWithHash
@@ -57,45 +64,50 @@ public class CryptLib {
 		if (!isStringWithNumbers(stringWithNumbers)) {
 			throw new IllegalArgumentException("Every character have to be a digit");
 		}
-		if (stringWithNumbers.length() > 111) {
-				throw new IllegalArgumentException(
-					"Strings greater than 111 digits can't be hashed");
-		}
 		String hashedString = stringWithNumbers;
-		return hashedString += String.format("%03d", getHash(hashedString));
+		int hash = getHash(hashedString);
+		if((""+hash).length() > HASH_LENGHT){
+			while(hash > Math.pow(10, HASH_LENGHT)){
+				hash -= Math.pow(10, HASH_LENGHT);
+			}
+		}
+		return hashedString += String.format("%0"+HASH_LENGHT+"d", hash);
 	}
 
 	/**
-	 * Removes a with {@link #addHash(String)} added number hash. If the hash of the 
-	 * given string is wrong, an empty string will be returned. 
-	 * is wrong<br>
-	 * eg.<br>"01234010" ==> "01234"
-	 * <br>"01234015" ==> ""
+	 * Removes a with {@link #addHash(String)} added number hash.
+	 * eg. HASH_LENGHT = 2<br>
+	 * "0123410" ==> "01234" <br>
+	 * eg. HASH_LENGHT = 3<br>
+	 * "01234010" ==> "01234" <br>
+	 * 
 	 * @param stringWithHash
 	 * @return checkedStringWithoutHash
 	 * @see #addHash(String)
+	 * @throws IllegalArgumentException if the hash of the given string was wrong
 	 */
 	public String removeHash(String stringWithHash) {
 		String stringWithoutHash = stringWithHash;
 		if (!isStringWithNumbers(stringWithHash)) {
-			throw new IllegalArgumentException("Every character have to be a digit");
+			throw new IllegalArgumentException("Every character has to be a digit");
 		}
 		int hash = Integer.parseInt(stringWithoutHash
-				.substring(stringWithoutHash.length() - 3));
-		stringWithoutHash = stringWithoutHash.substring(0, stringWithoutHash.length() - 3);
+				.substring(stringWithoutHash.length() - HASH_LENGHT));
+		stringWithoutHash = stringWithoutHash.substring(0, stringWithoutHash.length() - HASH_LENGHT);
 		int checkedHash = getHash(stringWithoutHash);
+		while(checkedHash > Math.pow(10, HASH_LENGHT)){
+			checkedHash -= Math.pow(10, HASH_LENGHT);
+		}
 		if (hash != checkedHash) {
-			stringWithoutHash = "";
+			throw new IllegalArgumentException("Hash doesn't math the String");
 		}
 		return stringWithoutHash;
 	}
 
 	/**
-	 * Converts a text into a consequence of ASCII values. Each new value has three 
-	 * digits.
-	 * eg.<br>
-	 * <br> "A" ==> "065"<br>
-	 * <br> "Tim12 ==> "084105109049050"<br>
+	 * Converts a text into a consequence of ASCII values. Each new value has three digits. eg.<br>
+	 * "A" ==> "065"<br>
+	 * "Tim12 ==> "084105109049050"
 	 * 
 	 * @param stringToCrypt
 	 * @return sequenceOfASCIIValues
@@ -104,17 +116,17 @@ public class CryptLib {
 		String covertedString = "";
 		for (char i : stringToCrypt.toCharArray()) {
 			covertedString += String.format("%03d", (int) i);
-			;
 		}
 		return covertedString;
 	}
 
 	/**
 	 * Converts a sequence of ASCI values back to a String. Every value have to fill three
-	 * digits. <br> 
+	 * digits. <br>
 	 * eg.<br>
-	 * <br> "065" ==> "A"<br>
-	 * <br> "084105109049050 ==> "Tim12"<br>
+	 * "065" ==> "A"<br>
+	 * "084105109049050 ==> "Tim12"
+	 * 
 	 * @param cryptedString String with ASCI values
 	 * @return String enCryptedText
 	 * @see #convertStringToASCISequence(String)
@@ -150,8 +162,10 @@ public class CryptLib {
 	/**
 	 * Adds a random <code>numberOfDigits</code> long number sequence to a string. The first
 	 * wich is added, contains <code>numberOfDigits</code>. If the String is longer than
-	 * <code>numberOfDigits</code> nothing will be added.<br> eg.:<br> addRandom("16",4)==>
-	 * "22116" <br> addRandom("16",4)==> "23316"
+	 * <code>numberOfDigits</code> nothing will be added.<br>
+	 * eg.:<br>
+	 * addRandom("16",4)==> "22116" <br>
+	 * addRandom("16",4)==> "23316"
 	 * 
 	 * @param string
 	 * @param numberOfDigits
@@ -173,8 +187,10 @@ public class CryptLib {
 	}
 
 	/**
-	 * Checks wether a given string is only a sequence of numbers (true).<br> e.g.<br>
-	 * "01349823"==> true <br> "0S349823"==> false <br>
+	 * Checks wether a given string is only a sequence of numbers (true).<br>
+	 * e.g.<br>
+	 * "01349823"==> true <br>
+	 * "0S349823"==> false <br>
 	 * 
 	 * @param string
 	 * @return containsOnlyNumbers
@@ -190,35 +206,41 @@ public class CryptLib {
 	}
 
 	/**
-	 * Crypts a given string which contains only figures, by rotating each digit. The rotation
-	 * amount is given by the phrase (also only digits).<br> Wether the string will be en- or.
-	 * deCypted is controlled by <code>isCrypting</code>.
+	 * Crypts or encrypts a given String which contains only figures, by rotating each digit. The rotation
+	 * amount is given by the phrase (also only digits).<br>
+	 * Wether the string will be en- or. deCypted is controlled by <code>isCrypting</code>.
 	 * 
 	 * @param stringToCrypt (contains only figures)
 	 * @param phrase follwing of digits which regulates the number rotation
-	 * @param isCrypting if true: string will be deCrypted with phrase <br> if false: string
-	 *            will be enCrypted with phrase
+	 * @param isCrypting if true: string will be deCrypted with phrase <br>
+	 *            if false: string will be enCrypted with phrase
 	 * @return enCrypted or deCrypted string (relying on <code>isCrypting</code>)
 	 * @see #enCryptString(String, String)
 	 * @see #deCryptString(String, String)
 	 */
 	private String cryptString(String stringToCrypt, String phrase, boolean isCrypting) {
 		if (!isStringWithNumbers(stringToCrypt) || !isStringWithNumbers(phrase)) {
-			throw new IllegalArgumentException("Every character have to be a digit");
+			throw new IllegalArgumentException("Every character has to be a digit");
 		}
 		StringBuffer cryptedString = new StringBuffer(stringToCrypt);
+		int rotationIndex = 0;
 		for (int i = 0; i < stringToCrypt.length(); i++) {
-			int a = Integer.parseInt(cryptedString.substring(i, i + 1));
-			// strings greater than the phrase are also excepted
-			int b = i < phrase.length() ? Integer.parseInt(phrase.substring(i, i + 1)) : 0;
-			cryptedString.replace(i, i + 1, rotateDigit(a, b, isCrypting) + "");
+			int digit = Integer.parseInt(cryptedString.substring(i, i + 1));
+			rotationIndex++;
+			if(rotationIndex >= phrase.length()){
+				rotationIndex =0;
+			}
+			int rotation = Integer.parseInt(phrase.substring(rotationIndex, rotationIndex + 1));
+			cryptedString.replace(i, i + 1, rotateDigit(digit, rotation, isCrypting) + "");
 		}
 		return cryptedString.toString();
 	}
 
 	/**
-	 * Rotates a given one digit number with the ammount of b.<br> e.g.:<br> (8, 4, true) ==> 2
-	 * (upWise)<br> (8, 4, false) ==> 4 (downWise)<br>
+	 * Rotates a given one digit number with the ammount of b.<br>
+	 * e.g.:<br>
+	 * (8, 4, true) ==> 2 (upWise)<br>
+	 * (8, 4, false) ==> 4 (downWise)<br>
 	 * 
 	 * @param a figure to rotate
 	 * @param b amount of rotation (0 <= b <= 9)
@@ -240,7 +262,8 @@ public class CryptLib {
 
 	/**
 	 * Returns the sum of the digits of a given String (which have to consits only out of
-	 * numbers). <br> eg. "01234" ==> "10"
+	 * numbers). <br>
+	 * eg. "01234" ==> "10"
 	 * 
 	 * @param stringWithNumbers
 	 * @return sumOfTheDigits

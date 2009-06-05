@@ -5,26 +5,21 @@
 package tests;
 
 import java.util.List;
-
-import org.newdawn.slick.AngelCodeFont;
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
 public class MenuTest extends BasicGame {
+
 	private Menu menu;
-	private static final String  resFolder = "restest/";
+	private static final String resFolder = "restest/";
+
 	public MenuTest() {
 		super("MenuTest");
 	}
 
 	@Override
 	public void init(GameContainer container) throws SlickException {
-		menu = new Menu(new AngelCodeFont(resFolder + "font.fnt",resFolder + "font.tga"), container
-				.getInput(), null);
+		menu = new Menu(new AngelCodeFont(resFolder + "font.fnt", resFolder + "font.tga"),
+				container.getInput(), null);
 		menu.setBounds(100, 40, 300, 400);
 
 		List<String> entries = menu.getEntries();

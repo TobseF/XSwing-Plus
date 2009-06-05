@@ -5,18 +5,9 @@
 package tests;
 
 import lib.mylib.object.BasicGameState;
-
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.GameState;
-import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.state.transition.CrossStateTransition;
-import org.newdawn.slick.state.transition.EmptyTransition;
-import org.newdawn.slick.state.transition.FadeInTransition;
-import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.*;
+import org.newdawn.slick.state.*;
+import org.newdawn.slick.state.transition.*;
 
 public class EmptyState extends BasicGameState {
 
@@ -53,6 +44,7 @@ public class EmptyState extends BasicGameState {
 
 			final long start = System.currentTimeMillis();
 			CrossStateTransition t = new CrossStateTransition(target) {
+
 				@Override
 				public boolean isComplete() {
 					return (System.currentTimeMillis() - start) > 2000;
