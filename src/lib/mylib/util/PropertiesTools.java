@@ -9,12 +9,23 @@ import java.util.*;
 
 public class PropertiesTools {
 
-	public static Properties convertArgsToLinkedHashMap(String[] args) {
+	/**
+	 * Converts an args list into a property table, provided it's in the follwing syntax:
+	 * </br>[key1=value1][key2=value2][...] </br> Useful to evaluate the
+	 * <code>void main(String[] args)</code> properties. If <code>args==null</code> an empty
+	 * {@link Properties} list will be returned.
+	 * 
+	 * @param args which are converted in a {@link Properties} table
+	 * @return {@link Properties} table out of the given args list
+	 */
+	public static Properties convertArgsToProperties(String[] args) {
 		Properties properties = new Properties();
-		for (String string : args) {
-			String[] keyAndValue = string.split("=");
-			if (keyAndValue.length == 2) {
-				properties.setProperty(keyAndValue[0], keyAndValue[1]);
+		if (args != null) {
+			for (String string : args) {
+				String[] keyAndValue = string.split("=");
+				if (keyAndValue.length == 2) {
+					properties.setProperty(keyAndValue[0], keyAndValue[1]);
+				}
 			}
 		}
 		return properties;

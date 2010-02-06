@@ -44,8 +44,9 @@ public class RangeSlider extends Range {
 			setValue(getValue() + step);
 		}
 		if (infinite) {
-			if (isAtMinimum() || isAtMaximum())
+			if (isAtMinimum() || isAtMaximum()) {
 				reset();
+			}
 		}
 		return getValue();
 	}
@@ -64,10 +65,11 @@ public class RangeSlider extends Range {
 
 	@Override
 	public void reset() {
-		if (!inverted)
+		if (!inverted) {
 			setValue(minValue);
-		else
+		} else {
 			setValue(maxValue);
+		}
 	}
 
 	public boolean isAtMinimum() {
@@ -89,16 +91,19 @@ public class RangeSlider extends Range {
 	@Override
 	public void setValue(double value) {
 
-		if (value < minValue)
+		if (value < minValue) {
 			value = minValue;
-		if (value > maxValue)
+		}
+		if (value > maxValue) {
 			value = maxValue;
+		}
 
 		if (infinite) {
-			if (value <= minValue)
+			if (value <= minValue) {
 				value = maxValue;
-			else if (value >= maxValue)
+			} else if (value >= maxValue) {
 				value = minValue;
+			}
 		}
 		this.value = value;
 	}
@@ -108,8 +113,9 @@ public class RangeSlider extends Range {
 	}
 
 	public void setStep(double step) {
-		if (step <= 0) // fixme <=
+		if (step <= 0) {
 			throw new IllegalArgumentException("step < 0 is not allowed");
+		}
 		this.step = step;
 	}
 

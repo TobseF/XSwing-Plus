@@ -26,7 +26,7 @@ public class MethodStarter {
 		lauchncher.start();
 	}
 
-	public boolean isMothodStarted() {
+	public boolean isMethodStarted() {
 		return lauchncher.isMothodStarted();
 	}
 
@@ -39,6 +39,9 @@ public class MethodStarter {
 		private boolean isMothodStarted = true;
 
 		public MethodLauchncher(Class<?> classToInvoke, String methodName, Object[] parameters) {
+			if (classToInvoke == null || methodName == null || methodName.isEmpty()) {
+				throw new IllegalArgumentException("Class or mehod to start can't be empty");
+			}
 			this.classToInvoke = classToInvoke;
 			this.parameters = parameters;
 			this.methodName = methodName;

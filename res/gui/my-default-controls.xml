@@ -4,7 +4,7 @@
   <!-- +++++++++++++++++++++++++++++++++++++++ -->  
   <!-- textfield control -->
   <!-- +++++++++++++++++++++++++++++++++++++++ -->  
-  <controlDefinition style="nifty-textfield" name="textfield" controller="de.lessvoid.nifty.controls.textfield.TextFieldControl" inputMapping="de.lessvoid.nifty.input.mapping.StandardTextField">
+  <controlDefinition style="nifty-textfield" name="textfield" controller="de.lessvoid.nifty.controls.textfield.controller.TextFieldControl" inputMapping="de.lessvoid.nifty.input.mapping.StandardTextField">
     <panel id="textfield-panel" style="#panel">
       <panel id="textfield-field" style="#field" focusable="true">
         <interact onClick="onClick()" onClickMouseMove="onClickMouseMove()" />
@@ -21,7 +21,7 @@
   <!-- +++++++++++++++++++++++++++++++++++++++ -->  
   <!-- button control -->
   <!-- +++++++++++++++++++++++++++++++++++++++ -->  
-  <controlDefinition style="nifty-button" name="button" controller="de.lessvoid.nifty.controls.button.ButtonControl">
+  <controlDefinition style="nifty-button" name="button" controller="de.lessvoid.nifty.controls.button.controller.ButtonControl">
     <panel id="button-panel" style="#panel" focusable="true">
       <label id="button-text" style="#text" text="$label" />
     </panel>
@@ -30,7 +30,7 @@
   <!-- +++++++++++++++++++++++++++++++++++++++ -->  
   <!-- nifty ImageSelect control -->
   <!-- +++++++++++++++++++++++++++++++++++++++ -->
-  <controlDefinition name="imageSelect" controller="de.lessvoid.nifty.controls.imageSelect.ImageSelectControl">
+  <controlDefinition name="imageSelect" controller="de.lessvoid.nifty.controls.imageSelect.controller.ImageSelectControl">
     <panel align="center" valign="center" childLayout="horizontal" imageList="$imageList">
       <panel width="32px" align="center" valign="center" childLayout="center">
         <image id="back" filename="imageSelect/imageSelectArrowLeft.png" align="center" valign="center">
@@ -57,7 +57,7 @@
   <!-- +++++++++++++++++++++++++++++++++++++++ -->  
   <!-- console control -->
   <!-- +++++++++++++++++++++++++++++++++++++++ -->  
-  <controlDefinition name="nifty-console" controller="de.lessvoid.nifty.controls.console.ConsoleControl" inputMapping="de.lessvoid.nifty.input.mapping.StandardTextField">
+  <controlDefinition name="nifty-console" controller="de.lessvoid.nifty.controls.console.controller.ConsoleControl" inputMapping="de.lessvoid.nifty.input.mapping.StandardTextField">
     <panel style="nifty-console-panel" lines="$lines" focusable="true">
       <interact/>
     </panel>

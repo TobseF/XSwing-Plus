@@ -4,6 +4,7 @@
  */
 package xswing.tests.fun;
 
+import static lib.mylib.options.Paths.RES_TEST_DIR;
 import java.io.IOException;
 import org.newdawn.slick.*;
 import org.newdawn.slick.particles.*;
@@ -38,8 +39,8 @@ public class ParticleStripes extends BasicGame {
 	public void init(GameContainer container) throws SlickException {
 		background = new Image("restest/swing_background.jpg");
 		try {
-			configurableEmitter = ParticleIO.loadEmitter("restest/explosion2.xml");
-			paticleSystem = ParticleIO.loadConfiguredSystem("restest/emptySystem.xml");
+			configurableEmitter = ParticleIO.loadEmitter(RES_TEST_DIR + "explosion2.xml");
+			paticleSystem = ParticleIO.loadConfiguredSystem(RES_TEST_DIR + "emptySystem.xml");
 			paticleSystem.setRemoveCompletedEmitters(true);
 			// paticles2 =
 			// ParticleIO.loadConfiguredSystem("res/balls_system2.xml");

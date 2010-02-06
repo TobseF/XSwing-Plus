@@ -9,12 +9,13 @@ import java.net.*;
 import lib.http.MultiPartFormOutputStream;
 
 /**
- * Utility Class for connecting to a Server and send a <code>String</code> via HTTP POP Protocol and recieving its response.
+ * Utility Class for connecting to a Server and send a <code>String</code> via HTTP POP
+ * Protocol and recieving its response.
+ * 
  * @author Tobse
  */
 public final class EasyPostString {
-	
-	
+
 	private EasyPostString() {}
 
 	/**

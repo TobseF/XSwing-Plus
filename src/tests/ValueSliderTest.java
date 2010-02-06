@@ -24,10 +24,12 @@ public class ValueSliderTest extends BasicGame {
 	@Override
 	public void update(GameContainer container, int delta) throws SlickException {
 		valueSlider.update(delta);
-		if (container.getInput().isKeyPressed(Input.KEY_SPACE))
+		if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
 			valueSlider.reset();
-		if (container.getInput().isKeyPressed(Input.KEY_ENTER))
+		}
+		if (container.getInput().isKeyPressed(Input.KEY_ENTER)) {
 			valueSlider.invert();
+		}
 	}
 
 	public void render(GameContainer container, Graphics g) throws SlickException {

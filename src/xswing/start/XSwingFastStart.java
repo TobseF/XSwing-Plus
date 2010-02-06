@@ -4,18 +4,21 @@
  */
 package xswing.start;
 
-import lib.mylib.util.LoadingScreen;
+import static lib.mylib.options.Paths.RES_DIR;
+import lib.mylib.gamestates.LoadingScreen;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 import xswing.*;
 
-/** Starts XSwing Plus immediately in <b>single player mode</b></br>
- * <ul> 
+/**
+ * Starts XSwing Plus immediately in <b>single player mode</b></br>
+ * <ul>
  * <li>No Options on start</li>
  * <li>No Loading Scrren</li>
  * <li>No Main manu</li>
  * </ul>
+ * 
  * @author Tobse
  */
 public class XSwingFastStart extends StateBasedGame {
@@ -41,7 +44,7 @@ public class XSwingFastStart extends StateBasedGame {
 			game.setDisplayMode(1024, 768, fullsceen);
 			// game.setDisplayMode(460,390,fullsceen);
 			game.setClearEachFrame(true);
-			game.setIcons(new String[] { "res/16.png", "res/32.png" });
+			game.setIcons(new String[] { RES_DIR + "16.png", RES_DIR + "32.png" });
 			game.setMouseGrabbed(!debug);
 			game.start();
 		} catch (SlickException e) {

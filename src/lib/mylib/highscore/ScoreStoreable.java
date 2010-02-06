@@ -4,11 +4,7 @@
  */
 package lib.mylib.highscore;
 
-import java.util.Hashtable;
-
 public interface ScoreStoreable {
-	
-	
 
 	public void addScore(int score, String name);
 }

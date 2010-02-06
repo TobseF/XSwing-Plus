@@ -55,7 +55,7 @@ public class MultiPartFormOutputStream {
 		if (boundary == null || boundary.length() == 0) {
 			throw new IllegalArgumentException("Boundary stream is required.");
 		}
-		this.out = new DataOutputStream(os);
+		out = new DataOutputStream(os);
 		this.boundary = boundary;
 	}
 
@@ -314,7 +314,7 @@ public class MultiPartFormOutputStream {
 	 * @return the boundary
 	 */
 	public String getBoundary() {
-		return this.boundary;
+		return boundary;
 	}
 
 	/**

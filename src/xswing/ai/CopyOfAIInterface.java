@@ -50,24 +50,27 @@ public class CopyOfAIInterface implements Updateable {
 		if (isLeftPressed) {
 			isLeftPressed = false; // reset nach abfragen
 			return true;
-		} else
+		} else {
 			return false;
+		}
 	}
 
 	public boolean isRightPressed() {
 		if (isRightPressed) {
 			isRightPressed = false; // reset nach abfragen
 			return true;
-		} else
+		} else {
 			return false;
+		}
 	}
 
 	public boolean isDownPressed() {
 		if (isDownPressed) {
 			isDownPressed = false; // reset nach abfragen
 			return true;
-		} else
+		} else {
 			return false;
+		}
 	}
 
 	@Override

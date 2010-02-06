@@ -155,13 +155,14 @@ public class HighScoreFormatter {
 	/**
 	 * Decrypts the given HighScore table. Encryption errors or wrong formattet Strings (e.g.
 	 * if score is no number), an empty Table will be returned.
+	 * 
 	 * @param score an with {@link #cryptScore(String[][])} crypted score table
 	 * @return encrypted high score table ([score][Name]), or an epty table, if there was en
 	 *         encrypton error
 	 */
 	public String[][] decryptScore(String[][] score) {
 		boolean errorWhileDecrypting = (score.length == 0 || score[0].length % 2 != 0);
-		
+
 		String[][] cryptedScore = new String[score.length][2];
 
 		for (int i = 0; i < score.length && !errorWhileDecrypting; i++) {
@@ -169,7 +170,7 @@ public class HighScoreFormatter {
 			cryptedScore[i][0] = easyCrypter.deCrypt(score[i][0]);
 			// Names
 			cryptedScore[i][1] = easyCrypter.deCrypt(score[i][1]);
-			
+
 			errorWhileDecrypting = cryptedScore[i][0].isEmpty()
 					|| cryptedScore[i][1].isEmpty();
 			try {

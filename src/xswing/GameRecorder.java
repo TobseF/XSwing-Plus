@@ -4,7 +4,7 @@
  */
 package xswing;
 
-import java.util.*;
+import java.util.LinkedList;
 import lib.mylib.object.*;
 import xswing.events.*;
 
@@ -27,7 +27,7 @@ public class GameRecorder implements XSwingListener, Updateable, Resetable {
 	public void gameEvent(XSwingEvent e) {
 		if (recording && !pause) {
 			timeLine.add(new TimedXSwingEvent(e, timeStamp));
-			//System.out.println(timeLine.size());
+			// System.out.println(timeLine.size());
 		}
 	}
 
@@ -73,7 +73,7 @@ public class GameRecorder implements XSwingListener, Updateable, Resetable {
 	}
 
 	public void setXSwingListener(XSwingListener listener) {
-		this.makro = listener;
+		makro = listener;
 	}
 
 	private class TimedXSwingEvent {

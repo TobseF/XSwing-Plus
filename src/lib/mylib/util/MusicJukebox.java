@@ -60,9 +60,6 @@ public class MusicJukebox implements MusicListener, Resetable {
 	@Override
 	public void reset() {
 		musicIndex = 0;
-		// TODO: implement music reset
-		// getCurrentTitle().stop();
-		// getCurrentTitle().play();
 	}
 
 }

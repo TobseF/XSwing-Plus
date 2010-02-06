@@ -38,20 +38,20 @@ public class NiftyXMLTester extends StateBasedGame implements ScreenController {
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
 		NiftyGameState niftyGameState = new NiftyGameState(0);
-		
+
 		JFileChooser fileChooser = new JFileChooser(new File("restest/gui/"));
 		fileChooser.setFileFilter(new FileNameExtensionFilter("xml", "xml"));
 		int state = fileChooser.showOpenDialog(null);
 		File inputFile = null;
 		if (state == JFileChooser.APPROVE_OPTION) {
 			inputFile = fileChooser.getSelectedFile();
-			
+
 		} else {
 			try {
 				throw new IOException("Datei-Auswahl abgebrochen");
 			} catch (IOException e) {}
 		}
-		if(inputFile != null){
+		if (inputFile != null) {
 			niftyGameState.fromXml(inputFile.getAbsolutePath(), this);
 			addState(niftyGameState);
 		}
@@ -60,8 +60,8 @@ public class NiftyXMLTester extends StateBasedGame implements ScreenController {
 	public final void buttonPressed() {
 		System.out.println("button pressed");
 	}
-	
-	public void quit(){
+
+	public void quit() {
 		System.out.println("quit");
 	}
 

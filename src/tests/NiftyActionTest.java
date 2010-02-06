@@ -6,15 +6,16 @@ package tests;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
-import de.lessvoid.nifty.*;
+import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.*;
 import de.lessvoid.nifty.slick.NiftyGameState;
 
 public class NiftyActionTest extends StateBasedGame implements ScreenController {
+
 	private static final int ID_MAIN_MENU = 0;
 	private static final int ID_IN_GAME = 1;
 
-	/** Counts how often the start button was pressed	 */
+	/** Counts how often the start button was pressed */
 	public static int callingCounter = 0;
 
 	public NiftyActionTest() {
@@ -34,9 +35,9 @@ public class NiftyActionTest extends StateBasedGame implements ScreenController 
 			e.printStackTrace();
 		}
 	}
-	
-	/** Called by pressing start in	 main_menu_test.xml*/
-	public void enterGame(){
+
+	/** Called by pressing start in main_menu_test.xml */
+	public void enterGame() {
 		callingCounter++;
 		System.out.println("enterGame() " + callingCounter);
 		test.enterState(1);
@@ -54,8 +55,8 @@ public class NiftyActionTest extends StateBasedGame implements ScreenController 
 		@Override
 		public void update(GameContainer container, StateBasedGame game, int delta)
 				throws SlickException {
-		 if(container.getInput().isKeyPressed(Input.KEY_ESCAPE)){
-			 	//Go back to Main Menu
+			if (container.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
+				// Go back to Main Menu
 				game.enterState(ID_MAIN_MENU);
 			}
 		}
@@ -66,8 +67,7 @@ public class NiftyActionTest extends StateBasedGame implements ScreenController 
 		}
 
 		@Override
-		public void init(GameContainer container, StateBasedGame game) throws SlickException {		
-		}
+		public void init(GameContainer container, StateBasedGame game) throws SlickException {}
 	}
 
 	@Override
@@ -84,8 +84,8 @@ public class NiftyActionTest extends StateBasedGame implements ScreenController 
 		NiftyGameState mainMenu = new NiftyGameState(ID_MAIN_MENU);
 		mainMenu.fromXml("tests/main_menu_test.xml", test);
 		addState(mainMenu);
-		
+
 		BasicGameState inGame = new InGame();
-		addState( inGame);
+		addState(inGame);
 	}
 }

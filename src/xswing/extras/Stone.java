@@ -4,6 +4,7 @@
  */
 package xswing.extras;
 
+import static lib.mylib.options.Paths.RES_DIR;
 import org.newdawn.slick.*;
 import xswing.Ball;
 
@@ -14,7 +15,7 @@ public class Stone extends Ball {
 		nr = 100;
 		weight = 0;
 		try {
-			setImage(new Image("res/stone.png"));
+			setImage(new Image(RES_DIR + "stone.png"));
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}

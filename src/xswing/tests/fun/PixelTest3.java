@@ -95,10 +95,11 @@ public class PixelTest3 extends BasicGame {
 	@Override
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		imgage.get(j).draw();
-		if (b < 200)
+		if (b < 200) {
 			g.drawString("Calculating Animation: frame " + b + " of 200", 10, 25);
-		else
+		} else {
 			g.drawString("playing", 10, 25);
+		}
 	}
 
 }

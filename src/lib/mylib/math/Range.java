@@ -29,10 +29,11 @@ public class Range implements Resetable {
 		// if(value <=0)
 		// throw new IllegalArgumentException("value ");
 		// FIXME: 0 is never reched on inverted
-		if (value < minValue)
+		if (value < minValue) {
 			value = minValue;
-		else if (value > maxValue)
+		} else if (value > maxValue) {
 			value = maxValue;
+		}
 		this.value = value;
 	}
 

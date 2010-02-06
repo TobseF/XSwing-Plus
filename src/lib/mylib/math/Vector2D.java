@@ -91,7 +91,7 @@ public class Vector2D {
 	}
 
 	public Vector2D vectorLength(double l) {
-		Vector2D v = this.copy();
+		Vector2D v = copy();
 		v.setLength(l);
 		return v;
 	}
@@ -102,10 +102,11 @@ public class Vector2D {
 			x = y;
 			y = temp;
 			// Fixed rotation bug on //
-			if (degree < 0)
+			if (degree < 0) {
 				y = -y;
-			else
+			} else {
 				x = -x;
+			}
 		} else {
 			double angle = Math.toRadians(degree);
 
@@ -120,10 +121,11 @@ public class Vector2D {
 
 	public Vector2D normalize() {
 		double r = length();
-		if (r == 0)
+		if (r == 0) {
 			return new Vector2D();
-		else
+		} else {
 			return new Vector2D(x / r, y / r);
+		}
 	}
 
 	public Vector2D add(Vector2D v2) {
@@ -144,10 +146,11 @@ public class Vector2D {
 
 	public int crossSign(Vector2D v2) {
 		double cross = cross(v2);
-		if (cross == 0)
+		if (cross == 0) {
 			return 0;
-		else
+		} else {
 			return cross < 0 ? -1 : 1;
+		}
 	}
 
 	public Point toPoint() {

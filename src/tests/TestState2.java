@@ -1,0 +1,98 @@
+package tests;
+
+import org.newdawn.slick.*;
+import org.newdawn.slick.state.*;
+import de.lessvoid.nifty.*;
+import de.lessvoid.nifty.effects.EffectEventId;
+import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.screen.*;
+import de.lessvoid.nifty.slick.NiftyGameState;
+
+/**
+ * This is the original TestState1 from slick tests extended to a nifty gui overlay. This only
+ * implements from ScreenController because we have a quit() onClick action definied in the
+ * nifty xml file that is handled in here to quit the demo.
+ * 
+ * @author void
+ */
+public class TestState2 extends BasicGameState implements ScreenController {
+
+	public static final int ID = 1;
+	private GameContainer container;
+	private Font font;
+	private Color currentColor;
+	private Nifty nifty;
+	private NiftyGameState niftyGameState;
+
+	@Override
+	public int getID() {
+		return ID;
+	}
+
+	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+		this.container = container;
+		font = new AngelCodeFont("menu.fnt", "menu.png");
+		currentColor = Color.white;
+		niftyGameState = new NiftyGameState(2);
+		niftyGameState.fromXml("tests/overlay.xml", this);
+		container.getInput().addListener(niftyGameState);
+		niftyGameState.init(container, game);
+		// nifty = niftyGameState.getNifty();
+	}
+
+	public void render(GameContainer container, StateBasedGame game, Graphics g)
+			throws SlickException {
+		g.setFont(font);
+		g.setColor(currentColor);
+		g.drawString("State Based Game Test", 100, 100);
+		g.drawString("1-3 will switch between colors", 100, 300);
+		g.drawString("(this is all slick rendering!)", 100, 400);
+		g.drawString("and this is more slick text", 360, 650);
+		g.drawString("below (!) a nifty-gui overlay", 360, 700);
+
+		niftyGameState.render(container, game, g);
+	}
+
+	public void update(GameContainer container, StateBasedGame game, int delta)
+			throws SlickException {}
+
+	@Override
+	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+		niftyGameState.enter(container, game);
+	}
+
+	@Override
+	public void keyReleased(int key, char c) {
+		if (key == Input.KEY_1) {
+			currentColor = Color.red;
+			getElement("red").startEffect(EffectEventId.onCustom);
+		}
+		if (key == Input.KEY_2) {
+			currentColor = Color.green;
+			getElement("green").startEffect(EffectEventId.onCustom);
+		}
+		if (key == Input.KEY_3) {
+			currentColor = Color.blue;
+			getElement("blue").startEffect(EffectEventId.onCustom);
+		}
+	}
+
+	private Element getElement(final String id) {
+		return nifty.getCurrentScreen().findElementByName(id);
+	}
+
+	public void bind(Nifty nifty, Screen screen) {}
+
+	public void onEndScreen() {}
+
+	public void onStartScreen() {}
+
+	public void quit() {
+		nifty.getCurrentScreen().endScreen(new EndNotify() {
+
+			public void perform() {
+				container.exit();
+			}
+		});
+	}
+}

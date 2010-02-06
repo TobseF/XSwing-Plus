@@ -17,12 +17,12 @@ public class GamePanel extends BasicGameState implements Resetable {
 	private Background background;
 	private boolean multiplayer = false;
 
-	private boolean coopertive = false; // TODO: implement meue entry
+	private boolean coopertive = false; // TODO: implement meue entry for coopertive mode
 	private final int scoreStep = 1000;
 	private int scorePlayer1 = scoreStep, scorePlayer2 = scoreStep;
 	private GameRecorder gameRecorder;
 	private GameStatistics statistics;
-	
+
 	public GamePanel(int id) {
 		super(id);
 	}
@@ -47,9 +47,9 @@ public class GamePanel extends BasicGameState implements Resetable {
 			throws SlickException {
 		background.render(g);
 
-		if (!multiplayer)
+		if (!multiplayer) {
 			singlePlayer.render(container, game, g);
-		else {
+		} else {
 			multiPlayer1.render(container, game, g);
 			multiPlayer2.render(container, game, g);
 		}
@@ -59,9 +59,9 @@ public class GamePanel extends BasicGameState implements Resetable {
 	public void update(GameContainer container, StateBasedGame game, int delta)
 			throws SlickException {
 		gameRecorder.update(delta);
-		if (!multiplayer)
+		if (!multiplayer) {
 			singlePlayer.update(container, game, delta);
-		else {
+		} else {
 			multiPlayer1.update(container, game, delta);
 			multiPlayer2.update(container, game, delta);
 
@@ -120,9 +120,9 @@ public class GamePanel extends BasicGameState implements Resetable {
 
 	@Override
 	public void reset() {
-	 singlePlayer.reset();
-	// multiPlayer1.reset();
-	// multiPlayer2.reset();
+		singlePlayer.reset();
+		// multiPlayer1.reset();
+		// multiPlayer2.reset();
 	}
 
 }

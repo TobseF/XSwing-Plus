@@ -1,101 +1,125 @@
 /*
  * @version 0.0 03.05.2009
- * @author 	Tobse F
+ * @author Tobse F
  */
 package xswing;
 
-import java.io.IOException;
+import lib.mylib.ident.*;
 import lib.mylib.object.Resetable;
-import org.newdawn.slick.*;
+import lib.mylib.options.DefaultArgs.Args;
+import lib.mylib.util.MyOptions;
+import org.newdawn.slick.util.Log;
 import xswing.events.*;
 import xswing.events.XSwingEvent.GameEventType;
-import xswing.start.XSwing;
 
+public class GameStatistics implements XSwingListener, Resetable {
 
-public class GameStatistics implements XSwingListener, Resetable{
 	private long timeStampGameStarted;
 	private long timePlayingCurrentGame;
-	private SavedState savedState; 
-	
-	private double playedGames;
+
 	/** Number of played games */
-	private double stoppedGames;
+	private int playedGames;
+	/** Number canceled/ aborted games */
+	private int canceledGames;
 	/** Time of all played games together in ms */
 	private double timePlayedAllGames;
+
+	/** Serperates values in the {@link #getScoreInOneHTTPLine()} Server Request */
+	private static final String SEPERATOR = ";";
 	
+	private Identable identable = new TimeIdent();
+
 	public GameStatistics() {
-		try {
-			savedState = new SavedState(XSwing.class.getName());
-			savedState.load();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if(savedState != null){
-			playedGames = savedState.getNumber(SavedStateOptions.PLAYED_GAMES);
-			stoppedGames = savedState.getNumber(SavedStateOptions.STOPPED_GAMES);
-			timePlayedAllGames = 
-				savedState.getNumber(SavedStateOptions.TIME_PLAYED_ALL_GAMES);
-		}
+		load();
 	}
-	
+
 	@Override
 	public void gameEvent(XSwingEvent e) {
-		if(e.getGameEventType() == GameEventType.GAME_SARTED){
+		if (e.getGameEventType() == GameEventType.GAME_SARTED) {
 			timeStampGameStarted = System.currentTimeMillis();
-		}else if(e.getGameEventType() == GameEventType.GAME_PAUSED){
+
+		} else if (e.getGameEventType() == GameEventType.GAME_PAUSED) {
+
 			timePlayingCurrentGame += (System.currentTimeMillis() - timeStampGameStarted);
-		}else if(e.getGameEventType() == GameEventType.GAME_RESUMED){
+
+		} else if (e.getGameEventType() == GameEventType.GAME_RESUMED) {
+
 			timeStampGameStarted = System.currentTimeMillis();
-		}else if(e.getGameEventType() == GameEventType.GAME_OVER || 
-				e.getGameEventType() == GameEventType.GAME_STOPPED){
+
+		} else if (e.getGameEventType() == GameEventType.GAME_OVER
+				|| e.getGameEventType() == GameEventType.GAME_STOPPED) {
+
 			timePlayingCurrentGame += (System.currentTimeMillis() - timeStampGameStarted);
 			timePlayedAllGames += (timePlayingCurrentGame);
-			playedGames++;
-			if(e.getGameEventType() == GameEventType.GAME_STOPPED){
-				stoppedGames ++;
+
+			if (e.getGameEventType() == GameEventType.GAME_OVER) {
+				playedGames++;
+				Log.debug("Played Games: " + playedGames);
+			} else if (e.getGameEventType() == GameEventType.GAME_STOPPED) {
+				canceledGames++;
+				Log.debug("Clanceled Games: " + canceledGames);
 			}
 			timeStampGameStarted = 0;
-			saveState();
 			timePlayingCurrentGame = 0;
+			save();
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		double min = (timePlayedAllGames / 60 / 1000);
-		int sec = (int)((min % 1) * 60);
-		return "playedGames: "+ (int)playedGames + 
-				" TimeOfAllGames: " + (int)min + ":"+sec;
+		int sec = (int) ((min % 1) * 60);
+		return "playedGames: " + playedGames + " TimeOfAllGames: " + min + ":"
+				+ sec;
 	}
-	
-	
+
+	public String getScoreInOneHTTPLine(){
+		return playedGames + SEPERATOR + canceledGames + SEPERATOR
+				+ (int) timePlayedAllGames
+				+ SEPERATOR + identable.getIdentity();
+	}
+
+	/**
+	 * @return {@link #timePlayedAllGames}
+	 */
 	public double getTimePlayedAllGames() {
 		return timePlayedAllGames;
 	}
-	
+
+	/**
+	 * @return {@link #playedGames}
+	 */
 	public double getPlayedGames() {
 		return playedGames;
+	}
+
+	/**
+	 * @return {@link #canceledGames}
+	 */
+	public double getCanceledGames() {
+		return canceledGames;
 	}
 
 	@Override
 	public void reset() {
 		timePlayedAllGames = 0;
 		playedGames = 0;
-		stoppedGames = 0;
-		saveState();
+		canceledGames = 0;
+		save();
 	}
-	
-	private void saveState(){
-		savedState.setNumber(SavedStateOptions.PLAYED_GAMES, playedGames);
-		savedState.setNumber(SavedStateOptions.TIME_PLAYED_ALL_GAMES, timePlayedAllGames);
-		savedState.setNumber(SavedStateOptions.STOPPED_GAMES, stoppedGames);
-		try {
-			savedState.save();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+	private void load() {
+		Log.debug("Loaded Statistic");
+		playedGames = (int) MyOptions.getNumber(Args.playedGames);
+		canceledGames = (int) MyOptions.getNumber(Args.canceledGames);
+		timePlayedAllGames = MyOptions.getNumber(Args.totalTime);
+	}
+
+	private void save() {
+		Log.debug("Saved Statistic");
+		MyOptions.setNumber(Args.playedGames, playedGames);
+		MyOptions.setNumber(Args.canceledGames, canceledGames);
+		MyOptions.setNumber(Args.totalTime, timePlayedAllGames);
 	}
 
 }

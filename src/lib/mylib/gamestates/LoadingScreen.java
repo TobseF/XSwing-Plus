@@ -2,10 +2,11 @@
  * @version 0.0 29.04.2008
  * @author Tobse F
  */
-package lib.mylib.util;
+package lib.mylib.gamestates;
 
 import java.io.IOException;
 import lib.mylib.object.BasicGameState;
+import lib.mylib.util.LanguageSelector;
 import org.newdawn.slick.*;
 import org.newdawn.slick.fills.GradientFill;
 import org.newdawn.slick.geom.RoundedRectangle;
@@ -13,17 +14,17 @@ import org.newdawn.slick.loading.*;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.*;
 
-/** The loading screen, which is shwon until all resources have been loaded.
- * To use it, you have to set <code>LoadingList.setDeferredLoading(true);</code> before
- * the init methods are executed.*/
+/**
+ * The loading screen, which is shwon until all resources have been loaded. To use it, you have
+ * to set <code>LoadingList.setDeferredLoading(true);</code> before the init methods are
+ * executed.
+ */
 public class LoadingScreen extends BasicGameState {
 
 	public static final String RES = "res/";
 
 	private Image loading = null;
 	private Transition transitionLeave, transitionEnter;
-
-	// TODO: extend from splash screen
 
 	private int loadedResources;
 
@@ -32,7 +33,7 @@ public class LoadingScreen extends BasicGameState {
 	private DeferredResource nextResource;
 
 	public LoadingScreen(int id, Transition transitionLeave, Transition transitionEnter) {
-		super(id);		
+		super(id);
 		this.transitionLeave = transitionLeave;
 		this.transitionEnter = transitionEnter;
 	}

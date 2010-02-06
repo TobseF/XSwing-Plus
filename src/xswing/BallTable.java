@@ -74,12 +74,13 @@ public class BallTable extends SObject implements Resetable, Cloneable {
 			BallTable balltable = (BallTable) super.clone();
 			balltable.balls = new Ball[8][13];
 			for (int y = 0; y < balls[0].length; y++) {
-				for (int x = 0; x < 8; x++) { // TODO: change to System.arraycopy -faster!
+				for (int x = 0; x < 8; x++) {
 					Ball b = balls[x][y];
 					if (b != null) {
-						balltable.balls[x][y] = (Ball) balls[x][y].clone();
+						balltable.balls[x][y] = balls[x][y].clone();
 					}
 				}
+
 			}
 			return balltable;
 		} catch (CloneNotSupportedException e) {

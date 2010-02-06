@@ -8,34 +8,35 @@ import java.util.EventObject;
 import xswing.Ball;
 
 public class XSwingEvent extends EventObject implements Comparable<XSwingEvent> {
+
 	/** Ball which comes along with this Event. (Only for Ball dropped) */
 	private Ball ball = null;
 	/** Time when this Event was triggered */
 	private final long timeStamp;
 
-	/** Type of GameEvent*/
+	/** Type of GameEvent */
 	public enum GameEventType {
-		/** Ball was dropped*/
+		/** Ball was dropped */
 		BALL_DROPPED,
-		/** Cannon moved left*/
+		/** Cannon moved left */
 		CANNON_MOVED_LEFT,
-		/** Cannon moved right*/
+		/** Cannon moved right */
 		CANNON_MOVED_RIGHT,
-		/** Key left was pressed*/
+		/** Key left was pressed */
 		PRESSED_LEFT,
-		/** Key right was pressed*/
+		/** Key right was pressed */
 		PRESSED_RIGHT,
-		/** Key down was pressed*/
+		/** Key down was pressed */
 		PRESSED_DOWN,
-		/** Game was started (is now running)*/
+		/** Game was started (is now running) */
 		GAME_SARTED,
-		/** Game was paused (is now in pause)*/
-		GAME_PAUSED, 
-		/** Game was resumed from Pause (is now playing)*/
+		/** Game was paused (is now in pause) */
+		GAME_PAUSED,
+		/** Game was resumed from Pause (is now playing) */
 		GAME_RESUMED,
-		/** Game was stopped before Game Over, eg. by ESC*/
+		/** Game was stopped before Game Over, eg. by ESC */
 		GAME_STOPPED,
-		/** Game was finished by Game Over*/
+		/** Game was finished by Game Over */
 		GAME_OVER,
 		/** Score changed */
 		NEW_SCORE,
@@ -56,7 +57,6 @@ public class XSwingEvent extends EventObject implements Comparable<XSwingEvent> 
 		this(source, gameEventType);
 		this.ball = ball;
 	}
-
 
 	/**
 	 * @return {@link #ball}

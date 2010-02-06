@@ -174,7 +174,7 @@ public class Ball extends SObject implements Cloneable {
 	}
 
 	public void setSpiteSheet(SpriteSheet spriteSheet) {
-		this.ballsSpriteSheet = spriteSheet;
+		ballsSpriteSheet = spriteSheet;
 		setNr(nr);
 	}
 
@@ -193,8 +193,9 @@ public class Ball extends SObject implements Cloneable {
 			if (ballsSpriteSheet != null) {
 				image = ballsSpriteSheet.getSprite(nr);
 			}
-		} else
+		} else {
 			throw new IllegalArgumentException("0>= nr <= 44 !");
+		}
 	}
 
 	/** Returns the current sped of the ball */
@@ -260,10 +261,12 @@ public class Ball extends SObject implements Cloneable {
 	private void collide() {
 		toggleMoving();
 		ballTable.addBall(this);
-		if (isCollidingWithSoil())
+		if (isCollidingWithSoil()) {
 			notifyListener(new BallEvent(this, this, BallEventType.BALL_HITS_GROUND));
-		if (isCollidingWithBall())
+		}
+		if (isCollidingWithBall()) {
 			notifyListener(new BallEvent(this, this, BallEventType.BALL_HITS_BALL));
+		}
 
 		if (effectCatalog != null) {
 			effectCatalog.addEffect(this, particleEffects.BOUNCING);
@@ -309,8 +312,9 @@ public class Ball extends SObject implements Cloneable {
 	 * @see EventListenerList
 	 */
 	protected synchronized void notifyListener(BallEvent event) {
-		for (BallEventListener l : eventListenerList.getListeners(BallEventListener.class))
+		for (BallEventListener l : eventListenerList.getListeners(BallEventListener.class)) {
 			l.ballEvent(event);
+		}
 	}
 
 	/**

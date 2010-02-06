@@ -21,23 +21,38 @@ package lib.mylib.highscore;
  * @see #enCrypt(String)
  * @see #deCrypt(String)
  */
-public class EasyCrypter {
+public class EasyCrypter implements Cryptable {
 
 	/**
 	 * String which is used for en- & deCrypting. Strings can only deCrypted with the same
 	 * phrase theiy're enCrypted.
 	 */
-	private String phrase = "435907821934120766532197433071"
+	private static final String DEFAULT_PHRASE = "435907821934120766532197433071"
 			+ "237653248195479864366339872057";
+
+	private String phrase;
 
 	private CryptLib cryptLib;
 
+	/**
+	 * Inits an crypter with the default #phrase
+	 * 
+	 * @see #phrase
+	 */
 	public EasyCrypter() {
+		phrase = DEFAULT_PHRASE;
 		cryptLib = new CryptLib();
 	}
 
+	/**
+	 * Inits an crypter with the given #phrase
+	 * 
+	 * @param phrase #phrase
+	 * @see #phrase
+	 */
 	public EasyCrypter(String phrase) {
 		this.phrase = phrase;
+
 	}
 
 	/**
@@ -61,21 +76,23 @@ public class EasyCrypter {
 	}
 
 	/**
-	 * Decrypts a with {@link #enCrypt(String)} cypted String back. If an error occours while decrypting, eg. if the hash of the given phrase was wrong, "" (an empty String) will be returned
+	 * Decrypts a with {@link #enCrypt(String)} cypted String back. If an error occours while
+	 * decrypting, eg. if the hash of the given phrase was wrong, "" (an empty String) will be
+	 * returned
 	 * 
-	 * @param stringToCrypt 
+	 * @param stringToDeCrypt a with {@link #enCrypt(String)} cypted String
 	 * @return uncrypted String or "" (an empty String), if there was an error while decrypting
 	 */
-	public String deCrypt(String stringToCrypt) {
+	public String deCrypt(String stringToDeCrypt) {
 		try {
-			stringToCrypt = cryptLib.deCryptString(stringToCrypt, phrase);
-			stringToCrypt = cryptLib.reverseString(stringToCrypt);
-			stringToCrypt = cryptLib.removeHash(stringToCrypt);
-			stringToCrypt = cryptLib.convertASCISequenceToString(stringToCrypt);
+			stringToDeCrypt = cryptLib.deCryptString(stringToDeCrypt, phrase);
+			stringToDeCrypt = cryptLib.reverseString(stringToDeCrypt);
+			stringToDeCrypt = cryptLib.removeHash(stringToDeCrypt);
+			stringToDeCrypt = cryptLib.convertASCISequenceToString(stringToDeCrypt);
 		} catch (IllegalArgumentException e) {
-			stringToCrypt = "";
+			stringToDeCrypt = "";
 		}
-		return stringToCrypt;
+		return stringToDeCrypt;
 	}
 
 }

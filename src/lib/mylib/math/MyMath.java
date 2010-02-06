@@ -42,7 +42,7 @@ public class MyMath {
 	}
 
 	public static int getInt(int min, int max) { // FIXME: max is never reached! , write a test
-		return (int) getFloat((float) min, (float) max);
+		return (int) getFloat(min, max);
 	}
 
 	public static float getFloat(float min, float max) {
@@ -56,14 +56,18 @@ public class MyMath {
 		double x = Math.max(x1, x2) - Math.min(x1, x2), y = Math.max(y1, y2)
 				- Math.min(y1, y2);
 		double degree = 0;
-		if (x == 0 && y == 0)
+		if (x == 0 && y == 0) {
 			return 0;
-		if (x == 0 && y1 > y2)
+		}
+		if (x == 0 && y1 > y2) {
 			return 90;
-		if (x1 > x2 && y == 0)
+		}
+		if (x1 > x2 && y == 0) {
 			return 180;
-		if (x == 0 && y1 < y2)
+		}
+		if (x == 0 && y1 < y2) {
 			return 270;
+		}
 		if (y2 < y1) {
 			degree = Math.atan(y / x);
 		} else {
@@ -95,10 +99,11 @@ public class MyMath {
 			double temp = x;
 			x = y;
 			y = temp;
-			if (degree < 0)
+			if (degree < 0) {
 				y = -y;
-			else
+			} else {
 				x = -x;
+			}
 		} else {
 			double angle = Math.toRadians(degree);
 

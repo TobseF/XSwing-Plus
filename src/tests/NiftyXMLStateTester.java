@@ -11,13 +11,13 @@ import de.lessvoid.nifty.screen.*;
 import de.lessvoid.nifty.slick.NiftyGameState;
 
 public class NiftyXMLStateTester extends StateBasedGame implements ScreenController {
-	public static final String XML_TO_START = "gui/helloworldXS1.xml"; 
+
+	public static final String XML_TO_START = "gui/high_score.xml";
 	private static final String RES_FOLDER = "restest/";
-	
+
 	public NiftyXMLStateTester() {
 		super("NiftyXMLTester");
 	}
-
 
 	/**
 	 * @param args
@@ -38,7 +38,7 @@ public class NiftyXMLStateTester extends StateBasedGame implements ScreenControl
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
 		NiftyGameState niftyGameState = new NiftyGameState(0);
-		
+
 		niftyGameState.fromXml(RES_FOLDER + XML_TO_START, this);
 		addState(niftyGameState);
 	}
@@ -55,8 +55,8 @@ public class NiftyXMLStateTester extends StateBasedGame implements ScreenControl
 
 	@Override
 	public void onStartScreen() {}
-	
-	public void quit(){
+
+	public void quit() {
 		System.out.println("quit");
 	}
 

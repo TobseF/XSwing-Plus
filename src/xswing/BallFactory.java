@@ -5,7 +5,7 @@
 package xswing;
 
 import lib.mylib.SpriteSheet;
-import lib.mylib.object.*;
+import lib.mylib.object.SObjectList;
 import org.newdawn.slick.Font;
 import xswing.EffectCatalog.particleEffects;
 import xswing.events.BallEventListener;
@@ -46,7 +46,7 @@ public class BallFactory {
 		ball.setBallTable(ballTable);
 		ball.setFont(font);
 		ball.setEffects(effectCatalog);
-		ballsToMove.add((SObject) ball);
+		ballsToMove.add(ball);
 		ball.addBallEventListener(ballEventListener);
 		return ball;
 	}
@@ -57,7 +57,7 @@ public class BallFactory {
 
 	public void addNewJoker() {
 		ExtraJoker ball = new ExtraJoker(canon.getX(), canon.getY(), ballTable, effectCatalog);
-		ballsToMove.remove((SObject) canon.getBall());
+		ballsToMove.remove(canon.getBall());
 		ballsToMove.add(ball);
 		canon.setBall(ball);
 		ball.addBallEventListener(ballEventListener);
@@ -67,7 +67,7 @@ public class BallFactory {
 	public void addNewStone() {
 		Stone ball = new Stone(1, canon.getX(), canon.getY());
 		ball.setBallTable(ballTable);
-		ballsToMove.remove((SObject) canon.getBall());
+		ballsToMove.remove(canon.getBall());
 		ballsToMove.add(ball);
 		canon.setBall(ball);
 		ball.addBallEventListener(ballEventListener);

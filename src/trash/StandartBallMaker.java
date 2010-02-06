@@ -4,6 +4,7 @@
  */
 package trash;
 
+import static lib.mylib.options.Paths.RES_DIR;
 import lib.mylib.SpriteSheet;
 import org.newdawn.slick.*;
 
@@ -20,8 +21,8 @@ public class StandartBallMaker {
 		Graphics g = null;
 		try {
 			image = new Image(ballsX * ballsA, ballsY * ballsA);
-			font = new AngelCodeFont("res/font2.fnt", "res/font2.png");
-			ballBackgrund = new Image("res/ball.png");
+			font = new AngelCodeFont(RES_DIR + "font2.fnt", RES_DIR + "font2.png");
+			ballBackgrund = new Image(RES_DIR + "ball.png");
 			g = image.getGraphics();
 		} catch (SlickException e) {
 			e.printStackTrace();

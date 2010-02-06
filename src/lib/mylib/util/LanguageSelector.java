@@ -4,15 +4,16 @@
  */
 package lib.mylib.util;
 
+import static lib.mylib.options.Paths.RES_DIR;
 import java.io.*;
 import java.util.*;
-import org.newdawn.slick.util.ResourceLoader;
+import org.newdawn.slick.util.*;
 
 public class LanguageSelector {
 
 	private static LanguageSelector selector;
 	private static String selectedLanguage = "English";
-	private static String languageFileLocation = "res/languages/";
+	private static String languageFileLocation = RES_DIR + "languages/";
 	private static String LanguageFileExtension = ".properties";
 	private static Properties langProperties;
 
@@ -53,8 +54,9 @@ public class LanguageSelector {
 	}
 
 	public static String getString(String string) {
-		if (selector == null)
+		if (selector == null) {
 			selector = new LanguageSelector("English");
+		}
 		return langProperties.getProperty(string);
 	}
 
@@ -63,6 +65,7 @@ public class LanguageSelector {
 	}
 
 	public static void setLanguage(String language) {
+		Log.info("Set Language to " + language);
 		selector = new LanguageSelector(language);
 	}
 

@@ -4,6 +4,7 @@
  */
 package tests;
 
+import static lib.mylib.options.Paths.RES_DIR;
 import org.newdawn.slick.*;
 
 public class BackSwingBigImage extends BasicGame {
@@ -41,9 +42,10 @@ public class BackSwingBigImage extends BasicGame {
 
 	@Override
 	public void init(GameContainer container) throws SlickException {
-		background = new Image("res/swing_background.jpg");
-		backgroundBig = new BigImage("res/swing_background.jpg", Image.FILTER_NEAREST, 256);
-		font = new AngelCodeFont("res/font2.fnt", "res/font2.png");
+		background = new Image(RES_DIR + "swing_background.jpg");
+		backgroundBig = new BigImage(RES_DIR + "swing_background.jpg", Image.FILTER_NEAREST,
+				256);
+		font = new AngelCodeFont(RES_DIR + "font2.fnt", "res/font2.png");
 		ttime = container.getTime();
 	}
 

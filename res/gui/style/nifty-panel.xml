@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty-styles>
+
+<!-- XSwing panel style -->
+	<style id="xswing-panel">
+		<attributes backgroundImage="res/gui/style/panel0.png" imageMode="resize:17,42,21,16,17,42,21,43,17,42,21,21" />
+	</style>
+	
+</nifty-styles>

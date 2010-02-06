@@ -5,7 +5,6 @@
 package xswing.testcases;
 
 import static org.junit.Assert.*;
-import java.util.Random;
 import lib.mylib.highscore.CryptLib;
 import org.junit.Test;
 
@@ -44,7 +43,7 @@ public class CrypterLibTest {
 		// test text with wrong Hash
 		cryptLib.removeHash(" 012abc@");
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testRemoveHashtWithWrongHash2() {
 		// test text with wrong Hash
@@ -60,18 +59,13 @@ public class CrypterLibTest {
 
 	@Test
 	public void isStringWithNumbers() {
-		Random random = new Random();
-		for (int i = 0; i < 100; i++) {
-			assertTrue(cryptLib
-					.isStringWithNumbers(getRandomNumberString(random.nextInt(8) + 1)));
-		}
+		assertTrue(cryptLib.isStringWithNumbers("1234567890"));
+		assertTrue(cryptLib.isStringWithNumbers("0"));
 
-		String notAStringWithNumbers = "31700i123123";
-		assertFalse(cryptLib.isStringWithNumbers(notAStringWithNumbers));
-
-		notAStringWithNumbers = "317000123123_";
-		assertFalse(cryptLib.isStringWithNumbers(notAStringWithNumbers));
-
+		assertFalse(cryptLib.isStringWithNumbers("12 34567890"));
+		assertFalse(cryptLib.isStringWithNumbers("1AB456789"));
+		assertFalse(cryptLib.isStringWithNumbers("123456789_"));
+		assertFalse(cryptLib.isStringWithNumbers(""));
 	}
 
 	@Test
@@ -85,19 +79,36 @@ public class CrypterLibTest {
 		assertEquals(plainText, "Tobse #+123-.§"); // String stays unchanged
 	}
 
-	/**
-	 * Help method for testing. Reruns random numbers (can also start with a 0)!
-	 * 
-	 * @param maxSize
-	 * @return randomNumberAsString
-	 */
-	private String getRandomNumberString(int maxSize) {
-		String randomNumberString = "";
-		Random random = new Random();
-		maxSize = random.nextInt(maxSize);
-		for (int j = 0; j < maxSize; j++) {
-			randomNumberString += random.nextInt(10);
-		}
-		return randomNumberString;
+	@Test
+	public void rotateDigit() {
+		assertEquals(4, cryptLib.rotateDigit(6, 2, false));
+		assertEquals(6, cryptLib.rotateDigit(9, 3, false));
+		assertEquals(1, cryptLib.rotateDigit(1, 0, false));
+		assertEquals(8, cryptLib.rotateDigit(2, 4, false));
+		assertEquals(0, cryptLib.rotateDigit(2, 2, false));
+
+		assertEquals(8, cryptLib.rotateDigit(6, 2, true));
+		assertEquals(2, cryptLib.rotateDigit(9, 3, true));
+		assertEquals(1, cryptLib.rotateDigit(1, 0, true));
+		assertEquals(6, cryptLib.rotateDigit(2, 4, true));
 	}
+
+	@Test
+	public void deCrypt() {
+		String phrase = "001100220088";
+		String crypted = "223322442244";
+		String enCrypted = "222222222266";
+		assertEquals(enCrypted, cryptLib.deCryptString(crypted, phrase));
+
+		phrase = "00112";
+		crypted = "223322442244";
+		enCrypted = "222202431044";
+		assertEquals(enCrypted, cryptLib.deCryptString(crypted, phrase));
+
+		phrase = "00112";
+		crypted = "223";
+		enCrypted = "222";
+		assertEquals(enCrypted, cryptLib.deCryptString(crypted, phrase));
+	}
+
 }

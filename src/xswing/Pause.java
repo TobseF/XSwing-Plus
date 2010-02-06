@@ -27,6 +27,7 @@ public class Pause extends SObject {
 
 	@Override
 	public void render(Graphics g) {
+
 		if (isVisible) {
 			g.setColor(colorB);
 			g.fillRect(0, 0, widht, height);

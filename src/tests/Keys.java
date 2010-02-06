@@ -4,6 +4,7 @@
  */
 package tests;
 
+import static lib.mylib.options.Paths.RES_DIR;
 import org.newdawn.slick.*;
 
 public class Keys extends BasicGame {
@@ -32,8 +33,8 @@ public class Keys extends BasicGame {
 
 	@Override
 	public void init(GameContainer container) throws SlickException {
-		background = new Image("res/swing_background.jpg");
-		ball = new Image("res/ball.png");
+		background = new Image(RES_DIR + "swing_background.jpg");
+		ball = new Image(RES_DIR + "ball.png");
 	}
 
 	int x, y;

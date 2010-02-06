@@ -9,9 +9,10 @@ package lib.mylib.highscore;
  * routine, use the methods in the <b>EasyCrypter</b> class.<br>
  */
 public class CryptLib {
-	/** Max. number of digits for the hash*/
+
+	/** Max. number of digits for the hash */
 	private static final int HASH_LENGHT = 4;
-	
+
 	/**
 	 * Crypts a given string which contains only figures, by rotating each digit. The rotation
 	 * amount is given by the phrase (also only digits).<br>
@@ -49,8 +50,9 @@ public class CryptLib {
 	}
 
 	/**
-	 * Adds the sum of all digits of the given (number)string at the end. This Hash is always {@link #HASH_LENGHT}
-	 * digits long. It's no problem if the sum has more digits than {@link #HASH_LENGHT}.<br>
+	 * Adds the sum of all digits of the given (number)string at the end. This Hash is always
+	 * {@link #HASH_LENGHT} digits long. It's no problem if the sum has more digits than
+	 * {@link #HASH_LENGHT}.<br>
 	 * eg. HASH_LENGHT = 2<br>
 	 * "01234" ==> "01234010"<br>
 	 * eg. HASH_LENGHT = 3<br>
@@ -58,6 +60,7 @@ public class CryptLib {
 	 * 
 	 * @param stringWithNumbers String which contains only figures.
 	 * @return stringWithHash
+	 * @see #HASH_LENGHT
 	 * @see #removeHash(String)
 	 */
 	public String addHash(String stringWithNumbers) {
@@ -66,16 +69,16 @@ public class CryptLib {
 		}
 		String hashedString = stringWithNumbers;
 		int hash = getHash(hashedString);
-		if((""+hash).length() > HASH_LENGHT){
-			while(hash > Math.pow(10, HASH_LENGHT)){
+		if (("" + hash).length() > HASH_LENGHT) {
+			while (hash > Math.pow(10, HASH_LENGHT)) {
 				hash -= Math.pow(10, HASH_LENGHT);
 			}
 		}
-		return hashedString += String.format("%0"+HASH_LENGHT+"d", hash);
+		return hashedString += String.format("%0" + HASH_LENGHT + "d", hash);
 	}
 
 	/**
-	 * Removes a with {@link #addHash(String)} added number hash.
+	 * Removes a with {@link #addHash(String)} added number hash and checks if it was right.<br>
 	 * eg. HASH_LENGHT = 2<br>
 	 * "0123410" ==> "01234" <br>
 	 * eg. HASH_LENGHT = 3<br>
@@ -83,6 +86,7 @@ public class CryptLib {
 	 * 
 	 * @param stringWithHash
 	 * @return checkedStringWithoutHash
+	 * @see #HASH_LENGHT
 	 * @see #addHash(String)
 	 * @throws IllegalArgumentException if the hash of the given string was wrong
 	 */
@@ -91,11 +95,12 @@ public class CryptLib {
 		if (!isStringWithNumbers(stringWithHash)) {
 			throw new IllegalArgumentException("Every character has to be a digit");
 		}
-		int hash = Integer.parseInt(stringWithoutHash
-				.substring(stringWithoutHash.length() - HASH_LENGHT));
-		stringWithoutHash = stringWithoutHash.substring(0, stringWithoutHash.length() - HASH_LENGHT);
+		int hash = Integer.parseInt(stringWithoutHash.substring(stringWithoutHash.length()
+				- HASH_LENGHT));
+		stringWithoutHash = stringWithoutHash.substring(0, stringWithoutHash.length()
+				- HASH_LENGHT);
 		int checkedHash = getHash(stringWithoutHash);
-		while(checkedHash > Math.pow(10, HASH_LENGHT)){
+		while (checkedHash > Math.pow(10, HASH_LENGHT)) {
 			checkedHash -= Math.pow(10, HASH_LENGHT);
 		}
 		if (hash != checkedHash) {
@@ -187,27 +192,30 @@ public class CryptLib {
 	}
 
 	/**
-	 * Checks wether a given string is only a sequence of numbers (true).<br>
+	 * Checks if a given string is only a sequence of numbers (true).<br>
 	 * e.g.<br>
 	 * "01349823"==> true <br>
-	 * "0S349823"==> false <br>
+	 * "0SA49823"==> false <br>
 	 * 
-	 * @param string
-	 * @return containsOnlyNumbers
+	 * @param string which shluld be checked
+	 * @return containsOnlyNumbers <code>true</code> if the given string is only a sequence of
+	 *         numbers
 	 */
 	public boolean isStringWithNumbers(String string) {
-		boolean containsOnlyNumbers = true;
+		if (string == null || string.isEmpty()) {
+			return false;
+		}
 		for (Character character : string.toCharArray()) {
 			if (!Character.isDigit(character)) {
-				containsOnlyNumbers = false;
+				return false;
 			}
 		}
-		return containsOnlyNumbers;
+		return true;
 	}
 
 	/**
-	 * Crypts or encrypts a given String which contains only figures, by rotating each digit. The rotation
-	 * amount is given by the phrase (also only digits).<br>
+	 * Crypts or encrypts a given String which contains only figures, by rotating each digit.
+	 * The rotation amount is given by the phrase (also only digits).<br>
 	 * Wether the string will be en- or. deCypted is controlled by <code>isCrypting</code>.
 	 * 
 	 * @param stringToCrypt (contains only figures)
@@ -222,16 +230,18 @@ public class CryptLib {
 		if (!isStringWithNumbers(stringToCrypt) || !isStringWithNumbers(phrase)) {
 			throw new IllegalArgumentException("Every character has to be a digit");
 		}
-		StringBuffer cryptedString = new StringBuffer(stringToCrypt);
 		int rotationIndex = 0;
-		for (int i = 0; i < stringToCrypt.length(); i++) {
-			int digit = Integer.parseInt(cryptedString.substring(i, i + 1));
-			rotationIndex++;
-			if(rotationIndex >= phrase.length()){
-				rotationIndex =0;
+		char[] phraseArray = phrase.toCharArray();
+		char[] stringToCryptArray = stringToCrypt.toCharArray();
+		StringBuffer cryptedString = new StringBuffer(stringToCryptArray.length);
+		for (char element : stringToCryptArray) {
+			if (rotationIndex >= phraseArray.length) {
+				rotationIndex = 0;
 			}
-			int rotation = Integer.parseInt(phrase.substring(rotationIndex, rotationIndex + 1));
-			cryptedString.replace(i, i + 1, rotateDigit(digit, rotation, isCrypting) + "");
+			int rotation = Integer.parseInt(phraseArray[rotationIndex] + "");
+			int digit = Integer.parseInt(element + "");
+			cryptedString.append(rotateDigit(digit, rotation, isCrypting) + "");
+			rotationIndex++;
 		}
 		return cryptedString.toString();
 	}
@@ -242,13 +252,13 @@ public class CryptLib {
 	 * (8, 4, true) ==> 2 (upWise)<br>
 	 * (8, 4, false) ==> 4 (downWise)<br>
 	 * 
-	 * @param a figure to rotate
+	 * @param a figure to rotate (0 <= a <= 9)
 	 * @param b amount of rotation (0 <= b <= 9)
 	 * @param upWise rotationDirection
 	 * @return rotatedOneDigitNumber
 	 */
-	private int rotateDigit(int a, int b, boolean upWise) {
-		if (a > 9 || b > 9) {
+	public int rotateDigit(int a, int b, boolean upWise) {
+		if (a < 0 || a > 9 || b < 0 || b > 9) {
 			throw new IllegalArgumentException("only numbers with one digit and "
 					+ "0 >= rotation <=9 can be rotated");
 		}

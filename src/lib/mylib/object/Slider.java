@@ -19,8 +19,9 @@ public class Slider extends Range {
 
 	public void setSteps(int steps) {
 		this.steps = steps;
-		if (steps <= 0)
+		if (steps <= 0) {
 			throw new IllegalArgumentException("steps <= 0 is not allowed");
+		}
 		valueStep = getRange() / steps;
 	}
 

@@ -1,15 +1,15 @@
 /*
  * @version 0.0 19.07.2009
- * @author 	Tobse F
+ * @author Tobse F
  */
 package tests;
 
+import lib.mylib.object.BasicGameState;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
-import lib.mylib.object.BasicGameState;
 
+public class TestStage1 extends BasicGameState {
 
-public class TestStage1 extends BasicGameState{
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {

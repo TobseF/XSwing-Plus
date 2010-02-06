@@ -6,43 +6,35 @@ package tools;
 
 import java.awt.Dimension;
 import java.awt.event.*;
-import java.io.IOException;
-import java.util.*;
 import javax.swing.*;
-import lib.mylib.highscore.HighScoreFormatter;
+import lib.mylib.highscore.*;
 import lib.mylib.swing.SwingUtils;
-import org.newdawn.slick.*;
-import xswing.HighScore;
+import lib.mylib.util.MyPropertys;
+import org.newdawn.slick.util.Log;
 import xswing.start.XSwing;
 
 public class HighScoreReader extends JFrame implements ActionListener {
 
-	private String HighScoreFile = XSwing.class.getSimpleName() + "_high_score.hscr";
-	private SavedState localFile;
-	private HighScoreFormatter scoreFormatter;
-	private String[][] highScoreTable;
+	private HighScoreTable highScoreTable;
 	private JButton save, load, clear, add;
 	private JTable table;
-	private JScrollPane pane;
-	private JCheckBox sorted;
-	/** Score is stored in one line of the property file. This it's Key. */
-	private static final String SCORE_LABEL = "score";
+	private JScrollPane panel;
+	private JCheckBox crypted;
 
 	public HighScoreReader() {
 		super("HighScoreReader");
+		MyPropertys.setFile(XSwing.class);
 		setSize(300, 400);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(300, 300));
 		SwingUtils.setCoolLookAndFeel();
-		try {
-			localFile = new SavedState(HighScoreFile);
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
 		initButtons();
-		scoreFormatter = new HighScoreFormatter();
-		readScore();
+		highScoreTable = new HighScoreTable();
+		if (crypted.isSelected()) {
+			highScoreTable.setCryptor(new EasyCrypter());
+		}
+		highScoreTable.load();
 		initTable();
 		setVisible(true);
 	}
@@ -52,8 +44,8 @@ public class HighScoreReader extends JFrame implements ActionListener {
 		save = new JButton("save");
 		clear = new JButton("clear");
 		add = new JButton("add");
-		sorted = new JCheckBox();
-		sorted.setToolTipText("Sort Score on loading");
+		crypted = new JCheckBox();
+		crypted.setToolTipText("Is HighScoreTable crypted");
 		load.addActionListener(this);
 		save.addActionListener(this);
 		clear.addActionListener(this);
@@ -63,60 +55,25 @@ public class HighScoreReader extends JFrame implements ActionListener {
 		panel.add(save);
 		panel.add(clear);
 		panel.add(add);
-		panel.add(sorted);
+		panel.add(crypted);
 		add(panel, "North");
 	}
 
 	private void initTable() {
-		String[] columnNames = { "Score", "Name" };
+		String[] columnNames = { "Score", "Name", "Time" };
 		if (table != null) {
-			remove(pane);
+			remove(panel);
 			remove(table);
 			table = null;
 		}
-		table = new JTable(highScoreTable, columnNames);
-		this.add(pane = new JScrollPane(table));
+		String[][] values = highScoreTable.getAsStringTable();
+		if (highScoreTable.size() <= 0) {
+			values = new String[1][columnNames.length];
+		}
+		table = new JTable(values, columnNames);
+		this.add(panel = new JScrollPane(table));
 		validate();
 		repaint();
-	}
-
-	private void saveScore() {
-		int tabelRows = table.getRowCount() ;
-		if(tabelRows != 0){
-		String[][] sortedScore = new String[tabelRows][2];
-		for (int i = 0; i < table.getRowCount(); i++) {
-			sortedScore[i][0] = (String) table.getValueAt(i, 0);
-			sortedScore[i][1] = (String) table.getValueAt(i, 1);
-		}
-		System.out.println("Data read from table");
-		scoreFormatter.printTable(highScoreTable);
-		String[][] cryptedHighScoreTable = scoreFormatter.cryptScore(highScoreTable);
-		System.out.println("crypted table");
-		scoreFormatter.printTable(cryptedHighScoreTable);
-		localFile.setString(HighScore.HIGH_SCORE_KEY, scoreFormatter
-				.shrincScoreInOneLine(cryptedHighScoreTable));
-		}else{
-			localFile.setString(HighScore.HIGH_SCORE_KEY, "");
-		}
-		try {
-			localFile.save();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void readScore() {
-		String scoreInOneLine = localFile.getString(SCORE_LABEL);
-		System.out.println("score in one line: " + scoreInOneLine);
-		if (scoreInOneLine != null && !scoreInOneLine.isEmpty()) {
-			highScoreTable = scoreFormatter.decryptScore(scoreFormatter
-					.deShrincHighScoreFromOneLine(localFile.getString(SCORE_LABEL)));
-		} else {
-			highScoreTable = new String[0][0];
-		}
-		if (sorted.isSelected()) {
-			highScoreTable = scoreFormatter.sortScore(highScoreTable);
-		}
 	}
 
 	public static void main(String[] args) {
@@ -127,34 +84,51 @@ public class HighScoreReader extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(save)) {
 			System.out.println("save");
-			saveScore();
+			save();
 		}
 		if (e.getSource().equals(load)) {
 			System.out.println("load");
-			readScore();
+			highScoreTable.load();
 			initTable();
 		}
 		if (e.getSource().equals(clear)) {
 			System.out.println("clar");
-			highScoreTable = new String[0][2];
+			highScoreTable.clear();
 			initTable();
 		}
 		if (e.getSource().equals(add)) {
 			System.out.println("add");
-			addNewLine();
+			highScoreTable.addScore(new HighScoreLine(99999, "", 0));
+			initTable();
 		}
 	}
 
-	private void addNewLine() {
-		List<String[]> newScoreTable = new ArrayList<String[]>();
-		for (String[] line : highScoreTable) {
-			newScoreTable.add(line);
+	public void save() {
+		highScoreTable = new HighScoreTable();
+		if (crypted.isSelected()) {
+			highScoreTable.setCryptor(new EasyCrypter());
 		}
-		newScoreTable.add(new String[] { "0", "--" });
-		highScoreTable = newScoreTable.toArray(new String[][] {});
-		scoreFormatter.printTable(highScoreTable);
-
-		initTable();
+		for (int i = 0; i < table.getRowCount(); i++) {
+			HighScoreLine scoreLine = new HighScoreLine(0, "");
+			String score = (String) table.getValueAt(i, 0);
+			String name = (String) table.getValueAt(i, 1);
+			String time = (String) table.getValueAt(i, 2);
+			if (score != null && !score.isEmpty() && name != null && !name.isEmpty()
+					&& time != null && !time.isEmpty()) {
+				scoreLine.setScore(Integer.parseInt(score));
+				scoreLine.setName(name);
+				scoreLine.setTime(Long.parseLong(time));
+				highScoreTable.addScore(scoreLine);
+			} else {
+				if (table.getRowCount() == 1 && score == null && name == null && time == null) {
+					highScoreTable.clear();
+					Log.info("Cleared and saved HighScore Table");
+				} else {
+					Log.warn("Could not save higscore because of wrong table data");
+				}
+			}
+		}
+		highScoreTable.save();
 	}
 
 }

@@ -4,16 +4,21 @@
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 	<!-- load default styles and controls -->
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
-	<useStyles filename="nifty-default-styles.xml" />
+	<!-- <useStyles filename="nifty-default-styles.xml" />-->
+	<!--
+		<useStyles
+		filename="libext/nifty/nifty-style-black-1.0-sources/nifty-default-styles.xml" />
+	-->
+	<useStyles filename="res/gui/xswing-default-styles.xml" />
 	<useControls filename="nifty-default-controls.xml" />
 
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 	<!-- start screen -->
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
-	<screen id="start" controller="xswing.gui.ScoreScreenController">
+	<screen id="start" controller="xswing.gui.ScreenControllerScore">
 		<layer id="layer" childLayout="center">
-			<panel id="dialog" style="nifty-panel" padding="18px,28px,28px,16px" childLayout="center"
-				width="50%" height="160px" align="center" valign="center">
+			<panel id="dialog" style="xswing-panel" padding="18px,28px,28px,16px"
+				childLayout="center" width="400px" height="210px" align="center" valign="center">
 				<effect>
 					<onStartScreen name="move" timeType="exp" factor="3.5" direction="top"
 						mode="in" length="500" inherit="true" />
@@ -24,27 +29,35 @@
 				<panel childLayout="vertical" align="center" valign="center">
 
 					<panel childLayout="horizontal">
-						<label text="Your Score: " width="150px" align="left" textVAlign="center"
+						<label text="Your Score: " width="180px" align="left" textVAlign="center"
 							textHAlign="left" />
-						<label  id="labelScore" text="1300" width="50px" align="left" textVAlign="center" textHAlign="left" />
+						<label id="labelScore" text="1300" width="50px" align="left" textVAlign="center"
+							textHAlign="left" />
 					</panel>
 
 					<panel childLayout="horizontal" height="8px" />
 
 					<panel id="namePanel" childLayout="horizontal">
-						<label id="labelName" text="Your Name: " width="150px" align="left"
+						<label id="labelName" text="Your Name: " width="180px" align="left"
 							textVAlign="center" textHAlign="left" />
 						<control id="name" name="textfield" text="" />
 					</panel>
 
 					<panel childLayout="horizontal" height="8px" />
 
+					<panel childLayout="horizontal" align="center" width="100%">
+						<label text="Upload Score: " align="center"  textVAlign="center"
+							textHAlign="center" />
+						<control id="upload-score" name="checkbox" align="center" />
+					</panel>
+					<panel childLayout="horizontal" height="8px" />
 					<panel childLayout="vertical" width="100%">
-						<control id="backButton" name="button" label="Press Enter" align="center">
+						<control id="backButton" style="my-info-button" name="button" label="Press Enter"
+							align="center">
 							<interact onClick="enterHighScore()" />
 						</control>
 					</panel>
-
+					
 				</panel>
 			</panel>
 		</layer>

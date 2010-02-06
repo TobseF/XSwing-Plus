@@ -57,8 +57,9 @@ public class BallDropSimulator extends JFrame implements ActionListener {
 				ballTableView[x][y] = new JButton("");
 				ballTableView[x][y].addActionListener(this);
 				ballTableView[x][y].setName(x + "" + y);
-				if (y >= 9 && y <= 10)
+				if (y >= 9 && y <= 10) {
 					ballTableView[x][y].setEnabled(false);
+				}
 				ballPanel.add(ballTableView[x][y]);
 			}
 		}
@@ -108,8 +109,9 @@ public class BallDropSimulator extends JFrame implements ActionListener {
 		} else if (e.getSource() instanceof JButton
 				&& ((JButton) e.getSource()).getText().equals("_")) {
 			for (int i = 0; i < 8; i++) {
-				if (((JButton) e.getSource()).equals(propButtons[i]))
+				if (((JButton) e.getSource()).equals(propButtons[i])) {
 					dropBall(ballNr, i);
+				}
 			}
 		} else if (e.getSource().equals(clear)) {
 			claerTable();
@@ -123,10 +125,11 @@ public class BallDropSimulator extends JFrame implements ActionListener {
 			String xy = ((JButton) e.getSource()).getName();
 			int x = Integer.parseInt(String.valueOf(xy.substring(0, 1)));
 			int y;
-			if (xy.length() >= 3)
+			if (xy.length() >= 3) {
 				y = Integer.parseInt(String.valueOf(xy.substring(1, 3)));
-			else
+			} else {
 				y = Integer.parseInt(String.valueOf(xy.substring(1, 2)));
+			}
 			// System.out.println(x + " " + y);
 			setBall(ballNr, x, y);
 		} else if (e.getSource().equals(clearNr)) {

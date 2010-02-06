@@ -20,8 +20,9 @@ public class Clock extends SObject implements Resetable, Updateable {
 
 	public Clock(Font font, int x, int y) {
 		super(x, y);
-		if (font == null)
+		if (font == null) {
 			throw new IllegalArgumentException("no font is set");
+		}
 		this.font = font;
 		initTimer();
 	}
@@ -61,8 +62,9 @@ public class Clock extends SObject implements Resetable, Updateable {
 
 	@Override
 	public void render(Graphics g) {
-		if (font != null && isVisible)
-			font.drawString(x, y, getFormattedTimeAsString());
+		if (font != null && isVisible) {
+			font.drawString(x, y, getFormattedTimeAsString(timeSinceStart));
+		}
 	}
 
 	@Override
@@ -74,8 +76,8 @@ public class Clock extends SObject implements Resetable, Updateable {
 	 * @return time formatted in hh:mm:ss
 	 * @see #getFormattedTime()
 	 */
-	public String getFormattedTimeAsString() {
-		String time[] = getFormattedTime();
+	public static String getFormattedTimeAsString(long timeSinceStart) {
+		String time[] = getFormattedTime(timeSinceStart);
 		String h = time[0];
 		String m = time[1];
 		String s = time[2];
@@ -89,7 +91,7 @@ public class Clock extends SObject implements Resetable, Updateable {
 	 *         array[2] = ss
 	 * @see #getFormattedTimeAsString()
 	 */
-	public String[] getFormattedTime() {
+	public static String[] getFormattedTime(long timeSinceStart) {
 		String s = String.format("%02d", (int) timeSinceStart % 60);
 		String m = String.format("%02d", (int) (timeSinceStart / 60) % 60);
 		String h = String.format("%02d", (int) ((timeSinceStart / 60) / 60) % 60);

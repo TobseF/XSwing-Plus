@@ -4,13 +4,15 @@
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 	<!-- load default styles and controls -->
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
-	<useStyles filename="nifty-default-styles.xml" />
-	<useControls filename="nifty-default-controls.xml" />
+	<!-- <useStyles filename="nifty-default-styles.xml" />-->
+	
+ 	<useStyles filename="res/gui/xswing-default-styles.xml" />
+ 	<useControls filename="nifty-default-controls.xml" />
 
 	<!--<registerSound id="popup" filename="sound/34556__Corsica_S__reverse_bass_blip_2.wav" />	-->
 	
-	<registerSound id="popup" filename="restest/BubblePo-Benjamin-8.wav" />
-	<registerSound id="click" filename="restest/Pop-J_Fairba-1725.wav" />
+	<registerSound id="popup" filename="res/sounds/BubblePo-Benjamin-8.wav" />
+	<registerSound id="click" filename="res/sounds/Pop-J_Fairba-1725.wav" />
 
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 	<!-- register effects we want to use -->
@@ -18,47 +20,19 @@
 	<registerEffect name="move" class="de.lessvoid.nifty.effects.impl.Move" />
 	<registerEffect name="myChangeFont" class="lib.mylib.hacks.MyChangeFont" />
 
-
 	<!-- Spacer between the buttons-->
 	<style id="my-spacer">
 		<attributes height="12px" />
-	</style>
-
-	<!-- style for the button panel-->
-	<style id="my-button#panel">
-		<attributes backgroundImage="restest/main_menu_button.png" imageMode="resize:20,270,22,18,20,270,22,39,20,270,22,20"
-			width="362px" height="77px" childLayout="center" visibleToMouse="true" align="center"
-			focusable="true" />
-		<effect>
-			<onHover name="focus" />
-			<onFocus name="imageOverlay" filename="restest/button-main-menu_hoover.png"
-				imageMode="resize:20,270,22,18,20,270,22,39,20,270,22,20" post="true" inset="-2px" />
-			<onFocus name="playSound" sound="popup" />
-			<onClick name="playSound" sound="click" />
-			<onFocus name="imageSize" startSize="1.0" endSize="1.04" length="40" />
-			<onLostFocus name="imageSize" startSize="1.04" endSize="1" length="400" />
-		</effect>
-	</style>
-
-	<!-- style for the button text -->
-	<style id="my-button#text">
-		<attributes font="restest/berlin_sans_sb_45_bw.fnt" align="center" valign="center"
-			textHAlign="center" textVAlign="center" visibleToMouse="true" />
-		<effect>
-			<!--  <onFocus name="textSize" startSize="1.0" endSize="1.06" length="150" /> -->
-			<onFocus name="myChangeFont" font="restest/berlin_sans_sb_45_bw_hover.fnt"></onFocus>
-			<onHover name="myChangeFont" font="restest/berlin_sans_sb_45_bw_hover.fnt"></onHover>
-		</effect>
 	</style>
 
 
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 	<!-- start screen -->
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
-	<screen id="start" controller="xswing.gui.XSwingScreenController">
+	<screen id="start" controller="xswing.gui.ScreenControllerMainMenu">
 
 		<!-- Background -->
-		<layer id="background_image" backgroundImage="restest/main_menu_background.jpg"
+		<layer id="background_image" backgroundImage="res/main_menu_background.jpg"
 			childLayout="center">
 		</layer>
 

@@ -67,8 +67,9 @@ public class Mechanics {
 	 * @return wether given Ball lies in the middle of three in horizontal a row
 	 */
 	public boolean isInRowWithThree(Ball ball) {
-		if (ball == null)
+		if (ball == null) {
 			throw new IllegalArgumentException("ball can't be null");
+		}
 		Point position = ballTable.getField(ball);
 		Ball ballLeft1 = ballTable.getBall(position.x - 1, position.y), ballLeft2, ballRight1, ballRight2;
 		if (ballLeft1 != null && ballLeft1.compare(ball)) {
@@ -100,8 +101,9 @@ public class Mechanics {
 	 * @return wehter the given ball lais as fifh ball in a vertikal stack
 	 */
 	public boolean isInRowWithFive(Ball ball) {
-		if (ball == null)
+		if (ball == null) {
 			throw new IllegalArgumentException("ball can't be null");
+		}
 		Point position = ballTable.getField(ball);
 		for (int y = position.y - 1; y >= 0; y--) {
 			Ball ballInStack = ballTable.getBall(position.x, y);
@@ -273,8 +275,9 @@ public class Mechanics {
 	 * @see EventListenerList
 	 */
 	protected synchronized void notifyListener(BallEvent event) {
-		for (BallEventListener l : eventListenerList.getListeners(BallEventListener.class))
+		for (BallEventListener l : eventListenerList.getListeners(BallEventListener.class)) {
 			l.ballEvent(event);
+		}
 	}
 
 }

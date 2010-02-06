@@ -42,7 +42,8 @@ public class BallCounter extends SObject implements Resetable, Countable {
 
 	@Override
 	public void render(Graphics g) {
-		if (isVisible)
+		if (isVisible) {
 			font.drawString(x - ((balls + "").length() - 1) * letterLenght / 2, y, "" + balls);
+		}
 	}
 }

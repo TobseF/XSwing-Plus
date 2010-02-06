@@ -4,22 +4,22 @@
  */
 package lib.mylib.tools;
 
+import static lib.mylib.options.Paths.RES_DIR;
 import java.awt.*;
-import java.awt.Image;
 import java.awt.event.*;
 import java.io.IOException;
-import java.util.Properties;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import lib.mylib.options.Paths;
+import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.swing.SwingUtils;
 import lib.mylib.util.*;
-import org.newdawn.slick.*;
 import org.newdawn.slick.util.ResourceLoader;
 
 public class OptionStarter extends JFrame implements ActionListener {
 
-	private boolean showOptionPanelOnStart, isGermanSetAsDefaultlanguage,
-			startGameInFullscreen, checkForUpdates = true;
+	private boolean showOptionPanelOnStart, showUpdateOption = true,
+			isGermanSetAsDefaultlanguage, startGameInFullscreen, checkForUpdates = true;
 	private JRadioButton selectGerman, selectEnglish, selectFullscreen, selectWindow;
 	private ButtonGroup languageButtons, windoSizeButtons;
 	private JButton startGame, exitOptions;
@@ -28,21 +28,19 @@ public class OptionStarter extends JFrame implements ActionListener {
 	private JCheckBox showOptionsOnStart, checkForUpdatesOnStart;
 	private Class<?> gameToStart;
 	private String[] resolutions = new String[] { "1024 x 768" };
-	private SavedState savedState;
 	public static boolean haveToshowOptionStarter;
 	private String[] args = new String[] { "" };
 
 	public OptionStarter() {
-		this(InfoSplash.class, null);
+		this(OptionStarter.class, null);
 	}
 
 	public OptionStarter(Class<?> gameToStart, String[] args) {
-		if (args != null) {
-			this.args = args;
-			evaluateArgs(args);
-		}
+		this.gameToStart = gameToStart;
+		MyPropertys.setFile(gameToStart);
+		loadSavedOptions();
+		MyPropertys.setStrings(args);
 
-		setGameToStart(gameToStart);
 		if (haveToshowOptionStarter || showOptionPanelOnStart) {
 			initCompoments();
 			setVisible(true);
@@ -55,37 +53,28 @@ public class OptionStarter extends JFrame implements ActionListener {
 		this(gameToStart, null);
 	}
 
-	public void setGameToStart(Class<?> gameToStart) {
-		this.gameToStart = gameToStart;
-		setSavedStateFile(gameToStart.getSimpleName());
-		/*
-		 * if(gameToStart!=null){ startGame.setEnabled(true); startGame.setSelected(true);
-		 * startGame.requestFocusInWindow(); }
-		 */
-	}
-
 	private void initCompoments() {
 		setSize(300, 350);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		SwingUtils.setCoolLookAndFeel();
-		SwingUtils.setIcons(this, "lib/mylib/res/", "preferences-system");
+		SwingUtils.setIcons(this, Paths.RES_DIR_LIB, "preferences-system");
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setLayout(new FlowLayout());
 
 		selectEnglish = new JRadioButton();
 		selectEnglish.addActionListener(this);
-		setIcon(selectEnglish, "res/flag_english.png");
+		setIcon(selectEnglish, RES_DIR + "flag_english.png");
 		selectGerman = new JRadioButton();
 		selectGerman.addActionListener(this);
-		setIcon(selectGerman, "res/flag_german.png");
+		setIcon(selectGerman, RES_DIR + "flag_german.png");
 
 		selectFullscreen = new JRadioButton();
-		setIcon(selectFullscreen, "res/option_fullscreen.png");
+		setIcon(selectFullscreen, RES_DIR + "option_fullscreen.png");
 		selectFullscreen.addActionListener(this);
 		selectFullscreen.setSelected(true);
 		selectWindow = new JRadioButton();
-		setIcon(selectWindow, "res/option_window.png");
+		setIcon(selectWindow, RES_DIR + "option_window.png");
 		selectWindow.addActionListener(this);
 
 		selectFullscreen.setSelected(startGameInFullscreen);
@@ -134,7 +123,7 @@ public class OptionStarter extends JFrame implements ActionListener {
 		add(runButtons);
 		runButtons.add(startGame);
 		runButtons.add(exitOptions);
-		setStrings();
+		setGuiStrings();
 		SwingUtils.addGlobalKeyListener(new AWTEventListener() {
 
 			@Override
@@ -148,21 +137,27 @@ public class OptionStarter extends JFrame implements ActionListener {
 		});
 	}
 
+	/**
+	 * Adds the checkForOnlineUpdatesButton if {@link #showUpdateOption} is <code>true</code>
+	 * (default)
+	 */
 	private void initUpdateCheck() {
-		if (checkForUpdates) {
+		if (showUpdateOption) {
 			checkForUpdatesOnStart = new JCheckBox();
+			checkForUpdatesOnStart.setSelected(checkForUpdates);
+			checkForUpdatesOnStart.addActionListener(this);
 			add(checkForUpdatesOnStart);
 			setSize(getWidth(), getHeight() + 25);
 		}
 	}
 
 	public boolean startGame() {
-		MainStarter mainStarter = new MainStarter(gameToStart, getGameOptions());
+		MainStarter mainStarter = new MainStarter(gameToStart, getMainArgs());
 		// MainStarter mainStarter = new MainStarter(gameToStart, new String[]{});
-		if (mainStarter.isMothodStarted()) { // TODO: Wait for isMothodStarted() in Thread
+		if (mainStarter.isMethodStarted()) { // TODO: Wait for isMothodStarted() in Thread
 			setVisible(false);
 		}
-		return mainStarter.isMothodStarted();
+		return mainStarter.isMethodStarted();
 	}
 
 	private void setIcon(JToggleButton button, String iconPath) {
@@ -170,7 +165,14 @@ public class OptionStarter extends JFrame implements ActionListener {
 		button.setIcon(getBlassIIcon(iconPath, 0.7f));
 	}
 
-	private String[] getGameOptions() {
+	/**
+	 * Reads the fullscreen option from gui converts it in a key=value pair, and adds it to the
+	 * given args
+	 * 
+	 * @return the fullscreen option from gui converted in a key=value pair, added to the given
+	 *         args
+	 */
+	private String[] getMainArgs() {
 		if (selectFullscreen != null) {
 			String[] options = new String[] { "fullscreen=" + selectFullscreen.isSelected(),
 					"language=" + LanguageSelector.getSelectedLanguage() };
@@ -178,8 +180,9 @@ public class OptionStarter extends JFrame implements ActionListener {
 			System.arraycopy(options, 0, startOptions, 0, options.length);
 			System.arraycopy(args, 0, startOptions, options.length, args.length);
 			return startOptions;
-		} else
+		} else {
 			return args;
+		}
 	}
 
 	private ImageIcon getBlassIIcon(String filename, float alpha) {
@@ -195,6 +198,9 @@ public class OptionStarter extends JFrame implements ActionListener {
 		return new ImageIcon(image);
 	}
 
+	/**
+	 * Selects the default Language or if {@link #isGermanSetAsDefaultlanguage} German
+	 */
 	private void selectLanguage() {
 		LanguageSelector.setSystemLanguage();
 		if (isGermanSetAsDefaultlanguage) {
@@ -206,7 +212,11 @@ public class OptionStarter extends JFrame implements ActionListener {
 		}
 	}
 
-	private void setStrings() {
+	/**
+	 * Sets the texts of the giu components according the selected language in the
+	 * {@link LanguageSelector}
+	 */
+	private void setGuiStrings() {
 		setTitle(LanguageSelector.getString("game") + " "
 				+ LanguageSelector.getString("options"));
 		languageSelectPanel.setBorder(BorderFactory.createTitledBorder(LanguageSelector
@@ -233,9 +243,10 @@ public class OptionStarter extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		Properties argsProperties = PropertiesTools.convertArgsToLinkedHashMap(args);
-		String gameToStartName = argsProperties.getProperty("gameToStart");
-		evaluateArgs(args);
+		MyPropertys.setCheckForDefaults(true);
+		MyPropertys.setFile(OptionStarter.class);
+		MyPropertys.setStrings(args);
+		String gameToStartName = MyOptions.getString(Args.gameToStart);
 		if (gameToStartName == null) {
 			new OptionStarter();
 		} else {
@@ -248,72 +259,48 @@ public class OptionStarter extends JFrame implements ActionListener {
 		}
 	}
 
-	private static void evaluateArgs(String[] args) {
-		Properties argsProperties = PropertiesTools.convertArgsToLinkedHashMap(args);
-		haveToshowOptionStarter = Boolean.parseBoolean(argsProperties
-				.getProperty("showOptionStarter"));
-	}
-
-	public void setSavedStateFile(String savedStateFileName) {
-		try {
-			savedState = new SavedState(savedStateFileName);
-			savedState.load();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		loadSavedOptions();
-	}
-
 	private void loadSavedOptions() {
-		if (savedState != null) {
-			showOptionPanelOnStart = Boolean.parseBoolean(savedState.getString(
-					"showOptionPanelOnStart", "true"));
-			isGermanSetAsDefaultlanguage = Boolean.parseBoolean(savedState.getString(
-					"isGermanSetAsDefaultlanguage", "false"));
-			startGameInFullscreen = Boolean.parseBoolean(savedState.getString(
-					"startGameInFullscreen", "true"));
-		}
+		showOptionPanelOnStart = MyOptions.getBoolean(Args.showOptionPanelOnStart, true);
+		isGermanSetAsDefaultlanguage = MyOptions.getBoolean(Args.isGermanSetAsDefaultLanguage,
+				false);
+		startGameInFullscreen = MyOptions.getBoolean(Args.startGameInFullscreen, false);
+		checkForUpdates = MyOptions.getBoolean(Args.checkForUpdates, true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(selectGerman)) {
 			LanguageSelector.setLanguage("German");
-			savedState.setString("isGermanSetAsDefaultlanguage", "true");
-		}
-		if (e.getSource().equals(selectEnglish)) {
+			MyOptions.setBoolean(Args.isGermanSetAsDefaultLanguage, true);
+		} else if (e.getSource().equals(selectEnglish)) {
 			LanguageSelector.setLanguage("English");
-			savedState.setString("isGermanSetAsDefaultlanguage", "false");
-		}
-		if (e.getSource().equals(exitOptions)) {
+			MyOptions.setBoolean(Args.isGermanSetAsDefaultLanguage, false);
+		} else if (e.getSource().equals(exitOptions)) {
 			System.exit(DISPOSE_ON_CLOSE);
-		}
-		if (e.getSource().equals(startGame)) {
+		} else if (e.getSource().equals(startGame)) {
 			startGame();
-		}
-		if (e.getSource().equals(showOptionsOnStart)) {
-			savedState.setString("showOptionPanelOnStart", showOptionsOnStart.isSelected()
+		} else if (e.getSource().equals(showOptionsOnStart)) {
+			MyPropertys.setString("showOptionPanelOnStart", showOptionsOnStart.isSelected()
 					+ "");
+		} else if (e.getSource().equals(selectFullscreen)) {
+			MyOptions.setString(Args.startGameInFullscreen, "true");
+		} else if (e.getSource().equals(selectWindow)) {
+			MyOptions.setString(Args.startGameInFullscreen, "false");
+		} else if (e.getSource().equals(checkForUpdatesOnStart)) {
+			System.out.println(checkForUpdatesOnStart.isSelected());
+			MyOptions.setBoolean(Args.checkForUpdates, checkForUpdatesOnStart.isSelected());
 		}
-		if (e.getSource().equals(selectFullscreen)) {
-			savedState.setString("startGameInFullscreen", "true");
-		}
-		if (e.getSource().equals(selectWindow)) {
-			savedState.setString("startGameInFullscreen", "false");
-		}
-		saveOptions();
-		setStrings();
-
+		setGuiStrings();
 	}
 
-	private void saveOptions() {
-		try {
-			savedState.save();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	/**
+	 * Sets if there should be a checkForUpdates checkBox
+	 * 
+	 * @param showUpdateOption if the checkForUpdates checkBox should be added to the gui
+	 *            (default ist <code>true</code>)
+	 */
+	public void setShowUpdateOption(boolean showUpdateOption) {
+		this.showUpdateOption = showUpdateOption;
 	}
 
 }

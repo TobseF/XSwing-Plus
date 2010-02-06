@@ -30,7 +30,7 @@ public class LocationController {
 			positions.put(SeesawTable.class, new Point(228, 723));
 			positions.put(HighScoreCounter.class, new Point(970, 106));
 			positions.put(HighScoreMultiplicator.class, new Point(59, 92));
-			positions.put(HighScore.class, new Point(980, 30));
+			positions.put(HighScorePanel.class, new Point(980, 30));
 			positions.put(BallCounter.class, new Point(160, 22));
 			positions.put(Clock.class, new Point(85, 718));
 			break;

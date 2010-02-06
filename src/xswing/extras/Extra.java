@@ -11,7 +11,7 @@ public class Extra extends Ball {
 	public Extra(int nr, int x, int y, BallTable ballTable, EffectCatalog effectCatalog) {
 		super(x, y);
 		this.nr = nr;
-		this.weight = 0;
+		weight = 0;
 		this.ballTable = ballTable;
 		this.effectCatalog = effectCatalog;
 	}

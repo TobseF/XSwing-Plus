@@ -2,7 +2,7 @@
  * @version 0.0 21.12.2008
  * @author Tobse F
  */
-package lib.mylib;
+package lib.mylib.gamestates;
 
 import lib.mylib.object.BasicGameState;
 import org.newdawn.slick.*;
@@ -47,7 +47,6 @@ public class Spashscreen extends BasicGameState {
 	 * Swichtes to the next screen
 	 */
 	protected void switchToNextScreen() {
-		// game.enterState(getID() + 1, new FadeOutTransition(), new EmptyTransition());
 		game.enterState(getID() + 1, new FadeOutTransition(), new FadeInTransition());
 	}
 

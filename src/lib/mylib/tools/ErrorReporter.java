@@ -8,12 +8,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
+import lib.mylib.options.Paths;
 import lib.mylib.swing.SwingUtils;
-import lib.mylib.util.*;
+import lib.mylib.util.MyLogSystem;
 
 /**
- * Displays a Bug warning and gives the user the ability to easily send a bug report.
- * Pressing the submit button executes the request action in the {@link #submitRequest}.  
+ * Displays a Bug warning and gives the user the ability to easily send a bug report. Pressing
+ * the submit button executes the request action in the {@link #submitRequest}.
+ * 
  * @author Tobse
  */
 public class ErrorReporter extends JFrame implements ActionListener {
@@ -22,13 +24,13 @@ public class ErrorReporter extends JFrame implements ActionListener {
 	private String stackTrace;
 	private String logFile;
 	private String systemInfo;
-	private JTextArea errorMessageField, stackTraceField, 
-					  logFileField, systemInfoField,userInput;
+	private JTextArea errorMessageField, stackTraceField, logFileField, systemInfoField,
+			userInput;
 	private JButton submit;
 	private JCheckBox includeSystemInfo;
-	/** Executeted on a submit -genreic server request*/
+	/** Executeted on a submit -genreic server request */
 	private final SubmitRequest submitRequest;
-	/** New Line */
+	/** New Line Seperator */
 	private static String NL = "\n";
 
 	public ErrorReporter(Throwable e, SubmitRequest submitRequest) {
@@ -59,14 +61,14 @@ public class ErrorReporter extends JFrame implements ActionListener {
 		setLocationRelativeTo(null);
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		SwingUtils.setCoolLookAndFeel();
-		SwingUtils.setIcons(this, "lib/mylib/res/", "dialog-warning");
+		SwingUtils.setIcons(this, Paths.RES_DIR_LIB, "dialog-warning");
 		add(new JLabel("Error:"));
 		errorMessageField = new JTextArea(errorMessage);
 		errorMessageField.setEditable(false);
 		JScrollPane errorMessagePane = new JScrollPane(errorMessageField);
 		errorMessagePane.setPreferredSize(new Dimension(width, 35));
 		add(errorMessagePane);
-		
+
 		add(new JLabel("StackTrace:"));
 		stackTraceField = new JTextArea(stackTrace);
 		stackTraceField.setEditable(false);
@@ -103,7 +105,7 @@ public class ErrorReporter extends JFrame implements ActionListener {
 
 		add(new JLabel("Your Comment:"));
 		userInput = new JTextArea(
-		"Yout Text ...eg. E-Mail and a problem description -optional");
+				"Yout Text ...eg. E-Mail and a problem description -optional");
 		JScrollPane systemInfoFieldPane = new JScrollPane(userInput);
 		systemInfoFieldPane.setPreferredSize(new Dimension(width, 85));
 		add(systemInfoFieldPane);
@@ -115,6 +117,7 @@ public class ErrorReporter extends JFrame implements ActionListener {
 		includeSystemInfo = new JCheckBox("Include System Information");
 		includeSystemInfo.setSelected(true);
 		includeSystemInfo.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				systemInfoField.setEnabled(includeSystemInfo.isSelected());
@@ -146,7 +149,7 @@ public class ErrorReporter extends JFrame implements ActionListener {
 		new ErrorReporter("Test Bug", new ServerRequest(""));
 	}
 
-	public String getReport(){
+	public String getReport() {
 		StringBuilder bugReport = new StringBuilder();
 		bugReport.append("Error: ");
 		bugReport.append(errorMessage + NL);
@@ -167,6 +170,7 @@ public class ErrorReporter extends JFrame implements ActionListener {
 		}
 		return bugReport.toString();
 	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(submit) && submitRequest != null) {

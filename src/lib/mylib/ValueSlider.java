@@ -68,14 +68,15 @@ public class ValueSlider implements Updateable, Resetable {
 			throw new IllegalArgumentException("steps have to > 0 !");
 		}
 		this.steps = steps;
-		valueByStep = (maxValue - minValue) / (double) steps;
+		valueByStep = (maxValue - minValue) / steps;
 	}
 
 	public void setValue(double value) {
-		if (value <= minValue && value >= maxValue)
-			this.currentValue = value;
-		else
+		if (value <= minValue && value >= maxValue) {
+			currentValue = value;
+		} else {
 			throw new IllegalArgumentException("minValue <= value <= maxValue");
+		}
 	}
 
 	/**
@@ -87,8 +88,9 @@ public class ValueSlider implements Updateable, Resetable {
 
 	@Override
 	public void update(int delta) {
-		if (!pause)
+		if (!pause) {
 			timer.update(delta);
+		}
 	}
 
 	public boolean isPause() {

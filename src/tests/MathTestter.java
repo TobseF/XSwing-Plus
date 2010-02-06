@@ -62,10 +62,11 @@ public class MathTestter extends JFrame implements MouseMotionListener, KeyListe
 	@Override
 	public void keyPressed(KeyEvent e) {
 
-		if (e.getKeyCode() == KeyEvent.VK_LEFT)
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			pointDegree += 5;
-		else
+		} else {
 			pointDegree -= 5;
+		}
 		pP = MyMath.rotate(0, rP, pointDegree);
 		repaint();
 	}

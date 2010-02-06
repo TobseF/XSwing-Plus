@@ -4,6 +4,7 @@
  */
 package xswing;
 
+import static lib.mylib.options.Paths.RES_DIR;
 import java.io.IOException;
 import java.util.*;
 import lib.mylib.Sound;
@@ -15,6 +16,7 @@ import org.newdawn.slick.particles.*;
 public class EffectCatalog implements Resetable, Updateable, Drawable {
 
 	private ParticleSystem paticleSystem = null;
+	private static final String EFFECT_EXTENSION = ".xml";
 
 	public enum particleEffects {
 		BOUNCING, EXPLOSION, FLASH, SHRINC, SHRINC1, SHRINC2, SHRINC3, SHRINC4
@@ -33,18 +35,20 @@ public class EffectCatalog implements Resetable, Updateable, Drawable {
 	public EffectCatalog() {
 		if (paticleSystem == null) {
 			try {
-				paticleSystem = ParticleIO.loadConfiguredSystem("res/emptySystem.xml");
+				paticleSystem = ParticleIO.loadConfiguredSystem(RES_DIR + "emptySystem"
+						+ EFFECT_EXTENSION);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
 			for (particleEffects particleEffect : particleEffects.values()) {
 				ConfigurableEmitter emitter = null;
-				if (particleEffect != particleEffects.SHRINC)
+				if (particleEffect != particleEffects.SHRINC) {
 					try {
-						emitter = ParticleIO.loadEmitter("res/"
-								+ particleEffect.toString().toLowerCase() + ".xml");
+						emitter = ParticleIO.loadEmitter(RES_DIR
+								+ particleEffect.toString().toLowerCase() + EFFECT_EXTENSION);
 					} catch (IOException e) {}
+				}
 				if (emitter != null) {
 					emitterList.put(particleEffect, emitter);
 				}

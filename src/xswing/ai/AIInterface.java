@@ -10,7 +10,7 @@ import xswing.*;
 import xswing.events.*;
 import xswing.events.XSwingEvent.GameEventType;
 
-public class AIInterface implements Updateable{
+public class AIInterface implements Updateable {
 
 	private final BallTable ballTable;
 	private final Cannon cannon;
@@ -115,17 +115,22 @@ public class AIInterface implements Updateable{
 				if (ballMitte == null) {
 					continue;
 				}
-				if (ballLinks != null && ballLinks.isSameNr(ballMitte))
+				if (ballLinks != null && ballLinks.isSameNr(ballMitte)) {
 					wert -= 1;
-				if (ballRechts != null && ballRechts.isSameNr(ballMitte))
+				}
+				if (ballRechts != null && ballRechts.isSameNr(ballMitte)) {
 					wert -= 1;
-				if (ballOben != null && ballOben.isSameNr(ballMitte))
+				}
+				if (ballOben != null && ballOben.isSameNr(ballMitte)) {
 					wert -= 1;
-				if (ballUnten != null && ballUnten.isSameNr(ballMitte))
+				}
+				if (ballUnten != null && ballUnten.isSameNr(ballMitte)) {
 					wert -= 1;
+				}
 				if (ballLinks != null && ballRechts != null && ballLinks.isSameNr(ballRechts)
-						&& !ballLinks.isSameNr(ballMitte))
+						&& !ballLinks.isSameNr(ballMitte)) {
 					wert += 10;
+				}
 			}
 		}
 		wert += Math.pow(baelle - alteBallzahl, 3);
