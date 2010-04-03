@@ -13,6 +13,8 @@ import org.junit.*;
 public class HighScoreTableTest {
 
 	private HighScoreTable scoreTable;
+	private final static String SCORE_SERVER = "http://localhost/xswing/lib/highscore/";
+	private final static String SCORE_SUBMIT_FILE = "submit_high_score_line.php";
 
 	@Before
 	public void setUp() throws Exception {
@@ -53,8 +55,6 @@ public class HighScoreTableTest {
 		assertEquals(scoreTable, newScoreTable);
 	}
 
-	private final static String SCORE_SUBMIT_URL = "http://localhost/submit_for_junit.php";
-
 	@Test
 	public final void testSubmitHighScore() {
 		scoreTable.clear();
@@ -65,8 +65,10 @@ public class HighScoreTableTest {
 		String scoreTableInOneLine = scoreTable.toString();
 		EasyCrypter easyCrypter = new EasyCrypter();
 		String cryptedScoreTable = easyCrypter.enCrypt(scoreTableInOneLine);
+		System.out.println("end");
 		System.out.println(cryptedScoreTable);
-		String request = EasyPostString.send(SCORE_SUBMIT_URL, Args.highScore.toString(),
+		System.out.println("end");
+		String request = EasyPostString.send(SCORE_SERVER + SCORE_SUBMIT_FILE, Args.highScore.toString(),
 				cryptedScoreTable);
 		assertEquals(scoreTableInOneLine, request);
 	}

@@ -4,11 +4,12 @@
  */
 package xswing;
 
-import static lib.mylib.options.Paths.RES_DIR;
+import static lib.mylib.options.Paths.*;
 import java.awt.Point;
 import javax.swing.event.EventListenerList;
 import lib.mylib.Sound;
 import lib.mylib.SpriteSheet;
+import lib.mylib.hacks.NiftyGameState;
 import lib.mylib.highscore.HighScoreTable;
 import lib.mylib.object.*;
 import lib.mylib.util.Clock;
@@ -24,15 +25,13 @@ import xswing.events.BallEvent.BallEventType;
 import xswing.events.XSwingEvent.GameEventType;
 import xswing.gui.ScreenControllerScore;
 import xswing.start.XSwing;
-import de.lessvoid.nifty.slick.NiftyGameState;
 
 /**
  * The main container class, which combines all container elements
  * 
  * @author Tobse
  */
-public class MainGame extends BasicGameState implements Resetable, BallEventListener,
-		XSwingListener {
+public class MainGame extends BasicGameState implements Resetable, BallEventListener, XSwingListener {
 
 	public MainGame(GameComponentLocation gameLocation) {
 		this.gameLocation = gameLocation;
@@ -42,13 +41,9 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	private GameComponentLocation gameLocation;
 	private GameContainer container = null;
 	private StateBasedGame game = null;
-	/** Sceensize in weight height */
-	private int widht, height;
 	/** Folder with resources */
-	public static final String HIGH_SCORE_FILE = XSwing.class.getSimpleName()
-			+ "_high_score.hscr";
-	private int keyLeft = Input.KEY_LEFT, keyRight = Input.KEY_RIGHT,
-			keyDown = Input.KEY_DOWN;
+	public static final String HIGH_SCORE_FILE = XSwing.class.getSimpleName() + "_high_score.hscr";
+	private int keyLeft = Input.KEY_LEFT, keyRight = Input.KEY_RIGHT, keyDown = Input.KEY_DOWN;
 	private LocationController locationController;
 	private EffectCatalog effectCatalog;
 	private Cannon canon;
@@ -92,33 +87,27 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		this.container = container;
 		container.setSoundVolume(0.5f); // calm down the Effect Sounds
-		height = container.getHeight();
-		widht = container.getWidth();
 		// Images
 		multipl = new SpriteSheet(new Image(RES_DIR + "multiplicator_sp.jpg"), 189, 72);
 		cannons = new SpriteSheet(new Image(RES_DIR + "cannons.png"), 72, 110);
 		balls1 = new SpriteSheet(new Image(RES_DIR + "balls1.png"), Ball.A, Ball.A);
 		balls2 = new SpriteSheet(new Image(RES_DIR + "balls2.png"), Ball.A, Ball.A);
-		fontText = new AngelCodeFont(RES_DIR + "font_arial_16_bold.fnt", RES_DIR
-				+ "font_arial_16_bold.png");
-		pauseFont = new AngelCodeFont(RES_DIR + "arial_black_71.fnt", RES_DIR
-				+ "arial_black_71.png");
-		fontScore = new AngelCodeFont(RES_DIR + "berlin_sans_fb_demi_38.fnt", RES_DIR
-				+ "berlin_sans_fb_demi_38.png");
-		numberFont = new SpriteSheetFont(new SpriteSheet(new Image(RES_DIR
-				+ "numberFont_s19.png"), 15, 19), ',');
-		ballFont = new SpriteSheetFont(new SpriteSheet(new Image(RES_DIR
-				+ "spriteFontBalls2.png"), 11, 16), '.');
+		// Fonts
+		fontText = new AngelCodeFont(FONT_DIR + "font_arial_16_bold.fnt", FONT_DIR + "font_arial_16_bold.png");
+		pauseFont = new AngelCodeFont(FONT_DIR + "arial_black_71.fnt", FONT_DIR + "arial_black_71.png");
+		fontScore = new AngelCodeFont(FONT_DIR + "berlin_sans_fb_demi_38.fnt", FONT_DIR + "berlin_sans_fb_demi_38.png");
+		numberFont = new SpriteSheetFont(new SpriteSheet(new Image(FONT_DIR + "numberFont_s19.png"), 15, 19), ',');
+		ballFont = new SpriteSheetFont(new SpriteSheet(new Image(FONT_DIR + "spriteFontBalls2.png"), 11, 16), '.');
 		// Sounds
-		klack1 = new Sound(RES_DIR + "KLACK4.WAV");
+		klack1 = new Sound(SOUND_DIR + "KLACK4.WAV");
 		klack1.setMaxPlyingTime(5);
-		kran1 = new Sound(RES_DIR + "KRAN1.WAV");
-		wup = new Sound(RES_DIR + "DREIER.WAV");
+		kran1 = new Sound(SOUND_DIR + "KRAN1.WAV");
+		wup = new Sound(SOUND_DIR + "DREIER.WAV");
 		wup.setMaxPlyingTime(1000);
-		shrinc = new Sound(RES_DIR + "SPRATZ2.WAV");
+		shrinc = new Sound(SOUND_DIR + "SPRATZ2.WAV");
 		shrinc.setMaxPlyingTime(5);
-		warning = new Sound(RES_DIR + "ALARM1.WAV");
-		music = new Music(RES_DIR + "music.mod", true);
+		warning = new Sound(SOUND_DIR + "ALARM1.WAV");
+		music = new Music(MUSIC_DIR + "music.mod", true);
 		// Objects
 		addXSwingListener(this);
 		locationController = new LocationController(gameLocation);
@@ -137,8 +126,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		levelBall = new Level(4, balls1, ballFont);
 		locationController.setLocationToObject(levelBall);
 		ballCounter.setLevel(levelBall);
-		canon = new Cannon(cannons, new Sound[] { kran1, warning }, ballTable, ballCounter,
-				effectCatalog);
+		canon = new Cannon(cannons, new Sound[] { kran1, warning }, ballTable, ballCounter, effectCatalog);
 		locationController.setLocationToObject(canon);
 		multiplicator = new HighScoreMultiplicator(multipl);
 		locationController.setLocationToObject(multiplicator);
@@ -150,17 +138,16 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		locationController.setLocationToObject(highScore);
 		statistics = new GameStatistics();
 		addXSwingListener(statistics);
-		scoreScreenController = new ScreenControllerScore(game, scoreTable, statistics, clock);
+		scoreScreenController = new ScreenControllerScore(game, scoreTable, clock);
 		seesawTable = new SeesawTable(numberFont, ballTable);
 		locationController.setLocationToObject(seesawTable);
 		effectCatalog.setSound(wup, particleEffects.EXPLOSION);
 		effectCatalog.setSound(shrinc, particleEffects.SHRINC);
 		effectCatalog.setSound(klack1, particleEffects.BOUNCING);
 		ballKiller = new BallKiller(mechanics, highScoreCounter, effectCatalog);
-		ballFactory = new BallFactory(this, ballTable, ballsToMove, ballFont,
-				new SpriteSheet[] { balls1, balls2 }, effectCatalog, canon, levelBall);
+		ballFactory = new BallFactory(this, ballTable, ballsToMove, ballFont, new SpriteSheet[] { balls1, balls2 },
+				effectCatalog, canon, levelBall);
 		scorePopups = new SObjectList();
-
 
 		pause = new Pause(pauseFont, container.getWidth(), container.getHeight());
 		pause.setVisible(false);
@@ -183,8 +170,11 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		if (activateAI && gameLocation == GameComponentLocation.CENTER) {
 			ai = new AIInterface(this, ballTable, canon);
 		}
+		Log.warn("MainGame..............");
 		highScoreState = new NiftyGameState(XSwing.GAME_OVER);
 		highScoreState.init(container, game);
+		highScoreState.enableMouseImage(new Image("res/cursor.png"), 2, 2);
+		// highScoreState.setInput(game.getContainer().getInput());
 		container.getInput().removeListener(highScoreState);
 		container.getInput().addListener(highScoreState);
 	}
@@ -202,16 +192,17 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		this.game = game;
 		this.container = container;
 		music.loop();
+		// container.setMouseGrabbed(false);
 	}
 
 	/** Resets all values and starts a new game */
 	public void newGame() {
 		Log.info("New Game");
+		resetInput();
 		reset.reset();
 		ballsToMove.clear();
 		ballFactory.addTopBalls();
 		container.setPaused(false);
-		resetInput();
 		fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_SARTED));
 	}
 
@@ -227,21 +218,19 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	}
 
 	@Override
-	public void render(GameContainer container, StateBasedGame game, Graphics g)
-			throws SlickException {
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		gui.render(g);
 		ballsToMove.render(g);
 		effectCatalog.render(g);
 		scorePopups.render(g);
 		pause.render(g);
-		if (isGameOver) {
+		if (highScoreState != null && isGameOver) {
 			highScoreState.render(container, game, g);
 		}
 	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame game, int delta)
-			throws SlickException {
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		Input input = container.getInput();
 		checkKeys(input);
 
@@ -258,7 +247,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 				ai.update(delta);
 			}
 		}
-		if (highScoreState != null) {
+		if (highScoreState != null && isGameOver) {
 			highScoreState.update(container, game, delta);
 		}
 	}
@@ -307,7 +296,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 					notifyListener(new XSwingEvent(this, GameEventType.PRESSED_DOWN));
 				}
 				if (input.isKeyPressed(Input.KEY_J)) {
-					ballFactory.addNewJoker();
+					//ballFactory.addNewJoker();
 				}
 				if (input.isKeyPressed(Input.KEY_K)) {
 					if (ballDropSimulator == null) {
@@ -333,24 +322,24 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 				if (input.isKeyPressed(Input.KEY_H)) {
 					highScore.setVisible(!highScore.isVisible());
 				}
-				if (input.isKeyPressed(Input.KEY_1)) {
-					canon.getBall().setNr(0);
-				}
-				if (input.isKeyPressed(Input.KEY_2)) {
-					canon.getBall().setNr(1);
-				}
-				if (input.isKeyPressed(Input.KEY_2)) {
-					canon.getBall().setNr(2);
-				}
-				if (input.isKeyPressed(Input.KEY_3)) {
-					canon.getBall().setNr(3);
-				}
-				if (input.isKeyPressed(Input.KEY_4)) {
-					canon.getBall().setNr(4);
-				}
-				if (input.isKeyPressed(Input.KEY_5)) {
-					canon.getBall().setNr(5);
-				}
+//				if (input.isKeyPressed(Input.KEY_1)) {
+//					canon.getBall().setNr(0);
+//				}
+//				if (input.isKeyPressed(Input.KEY_2)) {
+//					canon.getBall().setNr(1);
+//				}
+//				if (input.isKeyPressed(Input.KEY_2)) {
+//					canon.getBall().setNr(2);
+//				}
+//				if (input.isKeyPressed(Input.KEY_3)) {
+//					canon.getBall().setNr(3);
+//				}
+//				if (input.isKeyPressed(Input.KEY_4)) {
+//					canon.getBall().setNr(4);
+//				}
+//				if (input.isKeyPressed(Input.KEY_5)) {
+//					canon.getBall().setNr(5);
+//				}
 				if (input.isKeyPressed(Input.KEY_F2)) {
 					try {
 						container.setFullscreen(!container.isFullscreen());
@@ -362,8 +351,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		}
 	}
 
-
-
+	private boolean firstStart = true;
 
 	/**
 	 * Finishes the current game and swichtes to the highScoreTable
@@ -377,8 +365,16 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		Log.info("Game Over");
 		scoreScreenController.setHighScore(highScoreCounter.getScore());
 		fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_OVER));
-		highScoreState.fromXml("xswing/gui/high_score.xml", scoreScreenController);
+		if (firstStart) {
+			highScoreState.fromXml("xswing/gui/high_score.xml", scoreScreenController);
+			firstStart = false;
+		}
+		// highScoreState.init(container, game);
 		highScoreState.enter(container, game);
+		// container.getInput().removeListener(highScoreState);
+		// container.getInput().addListener(highScoreState);		// FIXME: Only create one gameState instance.. every game over a new will be VOID:
+		// added!
+		// highScoreState.gotoScreenXSwing.GAME_OVER(; //VOID: ScreenID of NiftyGameState?)
 		container.setPaused(true);
 	}
 
@@ -416,8 +412,9 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 			mechanics.checkOfFive(e.getBall());
 			mechanics.checkOfThree(e.getBall());
 		} else if (e.getBallEventType() == BallEventType.BALL_EXPLODED) {
-			scorePopups.add(new ScorePopup(fontScore, e.getBall().getX(), e.getBall().getY(),
-					highScoreCounter.getBonus() + ""));
+			scorePopups.add(new ScorePopup(fontScore, e.getBall().getX(), e.getBall().getY(), highScoreCounter
+					.getBonus()
+					+ ""));
 		} else if (e.getBallEventType() == BallEventType.BALL_WITH_THREE_IN_A_ROW) {
 			e.getBall().addBallEventListener(ballKiller);
 			ballKiller.addBall(e.getBall());

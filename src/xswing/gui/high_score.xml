@@ -52,12 +52,11 @@
 					</panel>
 					<panel childLayout="horizontal" height="8px" />
 					<panel childLayout="vertical" width="100%">
-						<control id="backButton" style="my-info-button" name="button" label="Press Enter"
+						<control id="backButton" style="my-button-small" name="button" label="Next"
 							align="center">
 							<interact onClick="enterHighScore()" />
 						</control>
 					</panel>
-					
 				</panel>
 			</panel>
 		</layer>

@@ -6,6 +6,7 @@ package lib.mylib.highscore;
 
 import java.text.*;
 import java.util.Date;
+import lib.mylib.util.Clock;
 
 /**
  * @author Tobse On line in a HighScore Table with: #score, #name and #time
@@ -27,7 +28,7 @@ public class HighScoreLine implements Comparable<HighScoreLine> {
 	 * Used to seperate the values in #toString(). It's a disallowed character in the #name.
 	 * have to be different from HighScoreTable#VALUE_SEPERATOR
 	 */
-	private static char VALUE_SEPERATOR = ';';
+	public static char VALUE_SEPERATOR = ';';
 
 	/**
 	 * @param score point of this high score
@@ -56,10 +57,16 @@ public class HighScoreLine implements Comparable<HighScoreLine> {
 		this(score, name, 0);
 	}
 
+	/**
+	 * Creates a {@link HighScoreLine} out of a with {@link #wrapHighscoreLineToOneString()}
+	 * created String
+	 * 
+	 * @param scoreInOneLine a with {@link #wrapHighscoreLineToOneString()} created String
+	 * @see #wrapHighscoreLineToOneString()
+	 */
 	public HighScoreLine(String scoreInOneLine) {
 		if (scoreInOneLine == null || scoreInOneLine.split(VALUE_SEPERATOR + "").length != 4) {
-			throw new IllegalArgumentException("Scoreline '" + scoreInOneLine
-					+ "' is not formatted correctly");
+			throw new IllegalArgumentException("Scoreline '" + scoreInOneLine + "' is not formatted correctly");
 		}
 		try {
 			String[] values = scoreInOneLine.split(VALUE_SEPERATOR + "");
@@ -95,8 +102,8 @@ public class HighScoreLine implements Comparable<HighScoreLine> {
 	}
 
 	public void setName(String name) {
-		name.replace(VALUE_SEPERATOR, '_');
-		name.replace(HighScoreTable.VALUE_SEPERATOR, '_');
+		name.replace(VALUE_SEPERATOR + "", "");
+		// name.replace(HighScoreTable.VALUE_SEPERATOR + "", "");
 		this.name = name;
 	}
 
@@ -108,17 +115,39 @@ public class HighScoreLine implements Comparable<HighScoreLine> {
 		this.time = time;
 	}
 
+	/**
+	 * Creates a String which contains all ScoreLineValues seperated with
+	 * {@link #VALUE_SEPERATOR}. Can be re wrapped with {@link #HighScoreLine(String)}<br>
+	 * Syntax is:<br>
+	 * name;score;time;date<br>
+	 * eg.:<br>
+	 * Max;1200;2010-3-18 13:15:5;6554645
+	 * 
+	 * @return a String which contains all ScoreLineValues seperated with
+	 *         {@value #VALUE_SEPERATOR}.
+	 * @see {@link #HighScoreLine(String)}
+	 */
+	private String wrapHighscoreLineToOneString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(name);
+		builder.append(VALUE_SEPERATOR);
+		builder.append(score);
+		builder.append(VALUE_SEPERATOR);
+		builder.append(Clock.getFormattedTimeAsString(time));
+		builder.append(VALUE_SEPERATOR);
+		builder.append(DATE_FORMAT.format(date));
+		return builder.toString();
+	}
+
 	@Override
 	public String toString() {
-		return name + VALUE_SEPERATOR + score + VALUE_SEPERATOR + time + VALUE_SEPERATOR
-				+ DATE_FORMAT.format(date);
+		return wrapHighscoreLineToOneString();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null && obj instanceof HighScoreLine) {
-			return (score == ((HighScoreLine) obj).score
-					&& name.equals(((HighScoreLine) obj).name) && time == ((HighScoreLine) obj).time);
+			return (score == ((HighScoreLine) obj).score && name.equals(((HighScoreLine) obj).name) && time == ((HighScoreLine) obj).time);
 		}
 		return super.equals(obj);
 	}

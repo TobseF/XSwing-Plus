@@ -5,10 +5,14 @@
   </style>
 
   <style id="base-font">
-    <attributes font="res/berlin_sans_sb_26_bw.fnt" />
+    <attributes font="res/fonts/berlin_sans_sb_26_bw.fnt" />
   </style>
 
   <style id="menu-font">
-    <attributes font="aurulent-sans-36-bold-with-shadow.fnt" />
+    <attributes font="res/fonts/berlin_sans_sb_48_bw.fnt" />
+  </style>
+  
+   <style id="menu-font-hover">
+    <attributes font="res/fonts/berlin_sans_sb_49_bw_gradient.fnt" />
   </style>
 </nifty-styles>

@@ -91,7 +91,7 @@
 
 		<!-- Label: Game Version -->
 		<layer id="version" childLayout="absolute">
-			<label font="res/arial_bold_black_24.fnt" id="version_label" x="20px" y="718px"
+			<label font="res/fonts/arial_bold_black_24.fnt" id="version_label" x="20px" y="718px"
 				text="v0.35" color="#0E131Cff" hintText="Game Version">
 			</label>
 		</layer>

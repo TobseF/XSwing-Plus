@@ -5,11 +5,13 @@
 package xswing;
 
 import lib.mylib.object.*;
+import lib.mylib.tools.*;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 import xswing.LocationController.GameComponentLocation;
 import xswing.events.XSwingEvent;
 import xswing.events.XSwingEvent.GameEventType;
+import xswing.start.XSwing;
 
 public class GamePanel extends BasicGameState implements Resetable {
 
@@ -29,6 +31,7 @@ public class GamePanel extends BasicGameState implements Resetable {
 
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+		try{
 		gameRecorder = new GameRecorder();
 		statistics = new GameStatistics();
 
@@ -38,8 +41,12 @@ public class GamePanel extends BasicGameState implements Resetable {
 		singlePlayer = new MainGame(GameComponentLocation.CENTER);
 
 		multiPlayer1 = new MainGame(GameComponentLocation.LEFT);
-		singlePlayer.init(container, game);
-		multiPlayer1.init(container, game);
+			singlePlayer.init(container, game);
+			multiPlayer1.init(container, game);
+		}catch (Exception e) {
+			new ErrorReporter(e, new ServerRequest(XSwing.POST_BUG_URL));
+			e.printStackTrace();
+		}
 	}
 
 	@Override

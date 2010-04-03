@@ -6,7 +6,7 @@ import org.newdawn.slick.util.Log;
 import xswing.LocationController;
 import xswing.start.XSwing;
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.controls.button.controller.ButtonControl;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.*;
 
@@ -24,7 +24,8 @@ public class ScreenControllerMainMenu implements ScreenController {
 
 	public ScreenControllerMainMenu(StateBasedGame game) {
 		this.game = game;
-		// VOID: registerSound can't be entered behind register effect
+		//VOID: why not with base="" ?  -->
+		//<onFocus name="myChangeFont" font="res/fonts/berlin_sans_sb_49_bw_gradient.fnt"></onFocus>
 	}
 
 	/**
@@ -34,13 +35,10 @@ public class ScreenControllerMainMenu implements ScreenController {
 	 * @param screen screen
 	 */
 	public final void bind(final Nifty nifty, final Screen newScreen) {
-		System.out.println("bind XSwing Screen Controller");
-		game.getContainer().setMouseGrabbed(false);
+		game.getContainer().setMouseGrabbed(true);
 		this.nifty = nifty;
 		screen = newScreen;
-
-		screen.findElementByName("version_label").getRenderer(TextRenderer.class).setText(
-				XSwing.VERSION);
+		screen.findElementByName("version_label").getRenderer(TextRenderer.class).setText(XSwing.VERSION);
 		setLanguageStings();
 	}
 
@@ -48,7 +46,6 @@ public class ScreenControllerMainMenu implements ScreenController {
 	 * on start screen interactive.
 	 */
 	public final void onStartScreen() {
-		System.out.println("onStartScreen");
 
 		/*
 		 * screen.findElementByName("startSinglePlayer").setFocus();
@@ -82,23 +79,14 @@ public class ScreenControllerMainMenu implements ScreenController {
 	 * @param elementName name (id in xml) of the button
 	 */
 	private void setButtonText(String elementName) {
-		// VOID: why not setText in button ButtonControl -but in textfield
-		Element button = screen.findElementByName(elementName);
-		if (button != null) {
-			Element buttonLabel = screen.findElementByName(elementName).findElementByName(
-					"button-text");
-			buttonLabel.getRenderer(TextRenderer.class).setText(
-					LanguageSelector.getString(elementName));
-		} else {
-			Log.warn("Element " + elementName + " can not renamed");
-		}
+		screen.findControl(elementName, ButtonControl.class).setText(LanguageSelector.getString(elementName));
 	}
 
 	/**
 	 * on end screen.
 	 */
 	public final void onEndScreen() {
-		System.out.println("onEndScreen");
+		Log.info("Switched from MainMenu");
 
 		// screen.findElementByName("Start").setFocus();
 

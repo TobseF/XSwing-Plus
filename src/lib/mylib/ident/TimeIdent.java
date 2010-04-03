@@ -16,11 +16,13 @@ import org.newdawn.slick.util.Log;
  */
 public class TimeIdent implements Identable {
 
-	private SavedState state;
+	private static SavedState state = null;
 
 	public TimeIdent() {
 		try {
-			state = new SavedState(IDENT_NAME + IDENT_EXTENSION);
+			if (state == null) {
+				state = new SavedState(IDENT_NAME + IDENT_EXTENSION);
+			}
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}

@@ -54,7 +54,7 @@ public class OptionStarter extends JFrame implements ActionListener {
 	}
 
 	private void initCompoments() {
-		setSize(300, 350);
+		setSize(300, 320);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		SwingUtils.setCoolLookAndFeel();
 		SwingUtils.setIcons(this, Paths.RES_DIR_LIB, "preferences-system");
@@ -101,9 +101,9 @@ public class OptionStarter extends JFrame implements ActionListener {
 		windoSizePanel.add(selectFullscreen);
 		windoSizePanel.add(selectWindow);
 
-		resolution = new JComboBox(resolutions);
-		resolution.setPreferredSize(new Dimension(200, 34));
-		add(resolution);
+//		resolution = new JComboBox(resolutions);
+//		resolution.setPreferredSize(new Dimension(200, 34));
+//		add(resolution);
 
 		showOptionsOnStart = new JCheckBox();
 		showOptionsOnStart.setSelected(showOptionPanelOnStart);
@@ -125,7 +125,6 @@ public class OptionStarter extends JFrame implements ActionListener {
 		runButtons.add(exitOptions);
 		setGuiStrings();
 		SwingUtils.addGlobalKeyListener(new AWTEventListener() {
-
 			@Override
 			public void eventDispatched(AWTEvent e) {
 				if (e.getID() == KeyEvent.KEY_PRESSED) {

@@ -7,7 +7,7 @@ package lib.mylib.highscore;
 import lib.mylib.http.EasyPostString;
 import lib.mylib.ident.*;
 import lib.mylib.options.DefaultArgs.Args;
-import org.newdawn.slick.util.Log;
+import xswing.start.XSwing;
 
 /**
  * Sends the {@link HighScoreTable} to a PHP webserver per POST in the {@link Args#highScore}
@@ -21,8 +21,18 @@ public class ScoreOnlineSubmitter {
 	/** Seperates the HighScoreTable String and the pc identity */
 	public static final String gameIdSeperator = "+";
 
-	private HighScoreTable highScoreTable;
+	private HighScoreTable highScoreTable = null;
+	private HighScoreLine highScoreLine = null;
 	private String scoreSubmitURL;
+
+	private enum GameType {
+		SinglePlayer, Multiplayer
+	};
+
+	/**
+	 * Can be used in later versions
+	 */
+	private GameType gameType = GameType.SinglePlayer;
 
 	/**
 	 * * Sends the {@link HighScoreTable} to a PHP webserver per POST in the
@@ -39,15 +49,66 @@ public class ScoreOnlineSubmitter {
 	}
 
 	/**
+	 * * Sends the {@link #highScoreLine} to a PHP webserver per POST in the
+	 * {@link Args#highScore} <code>($_POST ["highScore"])</code>. The ScoreTable will be
+	 * crypted and tagged with the pc version ({@link Identable}).
+	 * 
+	 * @param highScoreTable wich schould be stored online
+	 * @param scoreSubmitURL url of the php submit page
+	 * @see #submit()
+	 */
+	public ScoreOnlineSubmitter(HighScoreLine highScoreLine, String scoreSubmitURL) {
+		this.highScoreLine = highScoreLine;
+		this.scoreSubmitURL = scoreSubmitURL;
+	}
+
+	/**
 	 * Sends the {@link HighScoreTable} to a PHP webserver per POST in the
 	 * {@link Args#highScore} <code>($_POST ["highScore"])</code>. The ScoreTable will be
 	 * crypted and tagged with the pc version ({@link Identable}).
+	 * @see #createHighScoreLineSubmitString(HighScoreLine)
 	 */
 	public String submit() {
-		String response = EasyPostString.send(scoreSubmitURL, Args.highScore.toString(),
-				toString());
-		Log.debug("Submit highscore online response: " + response);
+		
+		String submitData = highScoreTable == null ? createHighScoreLineSubmitString(highScoreLine)
+				: createHighScoreSubmitString(highScoreTable);
+
+		String response = EasyPostString.send(scoreSubmitURL, Args.highScore.toString(), submitData);
+		//Log.debug("Submit highscore online response: " + response);
 		return response;
+	}
+
+	/**
+	 * Creates one cryped HighScoreLine whic can be submitted online.<br>
+	 * [highScoreLine];Idendity;GameVersion;GameType<br>
+	 * name;score;time;date;Idendity;GameVersion;GameType<br>
+	 * e.g. Max;1200;2010-3-18 13:15:5;6554645;78822222;v0.531,0
+	 * 
+	 * @param scoreLine which should be submitted
+	 * @return cryped HighScoreLine whic can be submitted online
+	 */
+	public String createHighScoreLineSubmitString(HighScoreLine scoreLine) {
+		StringBuilder stringBuilder = new StringBuilder(scoreLine.toString());
+		stringBuilder.append(HighScoreLine.VALUE_SEPERATOR);
+
+		stringBuilder.append(new TimeIdent().getIdentity());
+		stringBuilder.append(HighScoreLine.VALUE_SEPERATOR);
+
+		stringBuilder.append(XSwing.VERSION.replace("v", "").substring(0, 5));
+
+		stringBuilder.append(HighScoreLine.VALUE_SEPERATOR);
+
+		stringBuilder.append(gameType.ordinal());
+		String submitLine = stringBuilder.toString();
+		//Log.debug("Score line to submit: " + submitLine);
+		String crypedScoreLine = new EasyCrypter().enCrypt(submitLine);
+		//Log.debug("Cryped Score line: " + crypedScoreLine);
+		return crypedScoreLine;
+	}
+
+	public String createHighScoreSubmitString(HighScoreTable highScoreTable) {
+
+		return null;
 	}
 
 	@Override
