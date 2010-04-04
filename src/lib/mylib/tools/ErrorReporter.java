@@ -10,7 +10,7 @@ import java.io.*;
 import javax.swing.*;
 import lib.mylib.options.Paths;
 import lib.mylib.swing.SwingUtils;
-import lib.mylib.util.MyLogSystem;
+import lib.mylib.util.*;
 
 /**
  * Displays a Bug warning and gives the user the ability to easily send a bug report. Pressing
@@ -24,8 +24,7 @@ public class ErrorReporter extends JFrame implements ActionListener {
 	private String stackTrace;
 	private String logFile;
 	private String systemInfo;
-	private JTextArea errorMessageField, stackTraceField, logFileField, systemInfoField,
-			userInput;
+	private JTextArea errorMessageField, stackTraceField, logFileField, systemInfoField, userInput;
 	private JButton submit;
 	private JCheckBox includeSystemInfo;
 	/** Executeted on a submit -genreic server request */
@@ -54,15 +53,16 @@ public class ErrorReporter extends JFrame implements ActionListener {
 	}
 
 	private void initComponents() {
+		LanguageSelector.setSystemLanguage();
 		setSize(800, 600);
 		int width = 780;
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setTitle("Bugreporter");
+		setTitle(LanguageSelector.getString("bugreporter"));
 		setLocationRelativeTo(null);
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		SwingUtils.setCoolLookAndFeel();
 		SwingUtils.setIcons(this, Paths.RES_DIR_LIB, "dialog-warning");
-		add(new JLabel("Error:"));
+		add(new JLabel(LanguageSelector.getString("error") + ":"));
 		errorMessageField = new JTextArea(errorMessage);
 		errorMessageField.setEditable(false);
 		JScrollPane errorMessagePane = new JScrollPane(errorMessageField);
@@ -91,9 +91,8 @@ public class ErrorReporter extends JFrame implements ActionListener {
 		panel1.add(logFileFieldPane);
 		add(panel1);
 
-		JPanel panel2 = new JPanel(flow);
-
-		panel2.add(new JLabel("System Information:"));
+		JPanel panel2 = new JPanel(flow);		
+		panel2.add(new JLabel(LanguageSelector.getString("system_information")+":"));
 		systemInfoField = new JTextArea(systemInfo);
 		systemInfoField.setEditable(false);
 		JScrollPane userInputPane = new JScrollPane(systemInfoField);
@@ -103,18 +102,17 @@ public class ErrorReporter extends JFrame implements ActionListener {
 		panel2.add(userInputPane);
 		add(panel2);
 
-		add(new JLabel("Your Comment:"));
-		userInput = new JTextArea(
-				"Yout Text ...eg. E-Mail and a problem description -optional");
+		add(new JLabel(LanguageSelector.getString("your_comment")+":"));
+		userInput = new JTextArea(LanguageSelector.getString("your_text"));
 		JScrollPane systemInfoFieldPane = new JScrollPane(userInput);
 		systemInfoFieldPane.setPreferredSize(new Dimension(width, 85));
 		add(systemInfoFieldPane);
-
-		submit = new JButton("Submit Bug Report");
+		
+		submit = new JButton(LanguageSelector.getString("submit_bug_report"));
 		submit.addActionListener(this);
 		add(submit);
 
-		includeSystemInfo = new JCheckBox("Include System Information");
+		includeSystemInfo = new JCheckBox(LanguageSelector.getString("include_system_information"));
 		includeSystemInfo.setSelected(true);
 		includeSystemInfo.addActionListener(new ActionListener() {
 
@@ -128,8 +126,7 @@ public class ErrorReporter extends JFrame implements ActionListener {
 		userInput.setSelectionStart(0);
 		userInput.setSelectionEnd(userInput.getText().length());
 		userInput.requestFocus();
-		JOptionPane.showMessageDialog(this, "A programm error occured. "
-				+ "Please send the report to help me making this app better");
+		JOptionPane.showMessageDialog(this, LanguageSelector.getString("program_error_occured"));
 
 	}
 
@@ -138,8 +135,8 @@ public class ErrorReporter extends JFrame implements ActionListener {
 		systemInfos.append("java runtime: " + System.getProperty("java.vendor") + NL);
 		systemInfos.append("java version: " + System.getProperty("java.runtime.name") + " "
 				+ System.getProperty("java.version") + NL);
-		systemInfos.append("os name: " + System.getProperty("os.name") + " "
-				+ System.getProperty("sun.os.patch.level") + NL);
+		systemInfos.append("os name: " + System.getProperty("os.name") + " " + System.getProperty("sun.os.patch.level")
+				+ NL);
 		systemInfos.append("language: " + System.getProperty("user.language") + " "
 				+ System.getProperty("user.country"));
 		return systemInfos.toString();
@@ -174,6 +171,9 @@ public class ErrorReporter extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(submit) && submitRequest != null) {
+			JOptionPane.showMessageDialog(this, LanguageSelector.getString("submitted_error_thanks"), LanguageSelector
+					.getString("submitted_error_window"), JOptionPane.INFORMATION_MESSAGE);
+			setVisible(false);
 			submitRequest.request(getReport());
 		}
 	}

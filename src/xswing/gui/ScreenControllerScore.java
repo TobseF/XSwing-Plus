@@ -2,13 +2,14 @@ package xswing.gui;
 
 import java.text.NumberFormat;
 import lib.mylib.highscore.*;
-import lib.mylib.util.Clock;
+import lib.mylib.util.*;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.util.Log;
 import xswing.GamePanel;
 import xswing.start.XSwing;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.controls.button.controller.ButtonControl;
 import de.lessvoid.nifty.controls.checkbox.CheckboxControl;
 import de.lessvoid.nifty.controls.textfield.controller.TextFieldControl;
 import de.lessvoid.nifty.elements.Element;
@@ -26,7 +27,7 @@ public class ScreenControllerScore implements ScreenController {
 	private TextFieldControl textField;
 	private Clock clock;
 
-	private final static String SCORE_SERVER_PATH = "lib/highscore/";
+	private final static String SCORE_SERVER_PATH = "";
 	private final static String SCORE_LINE_SUBMIT_FILE = "submit_high_score_line.php";
 
 	public ScreenControllerScore(StateBasedGame game, HighScoreTable highScoreList, Clock clock) {
@@ -71,6 +72,13 @@ public class ScreenControllerScore implements ScreenController {
 		setHighScore(screen);
 		textField = screen.findControl("name", TextFieldControl.class);
 		textField.setMaxLength(10);
+		screen.findElementByName("labelName").getRenderer(TextRenderer.class).setText(
+				LanguageSelector.getString("your_name")+": ");
+		screen.findElementByName("yourScore").getRenderer(TextRenderer.class).setText(
+				LanguageSelector.getString("your_score")+": ");
+		screen.findElementByName("labelUploadScore").getRenderer(TextRenderer.class).setText(
+				LanguageSelector.getString("upload_score")+": ");
+		screen.findControl("buttonNext", ButtonControl.class).setText(LanguageSelector.getString("next"));
 	}
 
 	public final void onEndScreen() {
@@ -98,7 +106,7 @@ public class ScreenControllerScore implements ScreenController {
 		String name = textField.getText();
 		Log.info("Score entered: " + highScore + " " + name);
 		newScore = new HighScoreLine(highScore, name, (int) clock.getTimeSinceStart());
-		if (!name.isEmpty()) {
+		if (name.length() > 2) {
 			highScoreList.addScore(newScore);
 			highScoreList.save();
 		}
@@ -111,6 +119,7 @@ public class ScreenControllerScore implements ScreenController {
 		((GamePanel) game.getState(XSwing.GAME_PANEL)).reset();
 		nifty.getMouseInputEventQueue().reset();
 		game.enterState(XSwing.GAME_PANEL, new EmptyTransition(), new EmptyTransition());
+		//FIXME: score isn't submit offline
 	}
 
 	private class ScoreSubmitThread extends Thread {

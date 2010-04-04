@@ -5,12 +5,14 @@
 	<!-- load default styles and controls -->
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 	<!-- <useStyles filename="nifty-default-styles.xml" />-->
-	
- 	<useStyles filename="res/gui/xswing-default-styles.xml" />
- 	<useControls filename="nifty-default-controls.xml" />
 
-	<!--<registerSound id="popup" filename="sound/34556__Corsica_S__reverse_bass_blip_2.wav" />	-->
-	
+	<useStyles filename="res/gui/xswing-default-styles.xml" />
+	<useControls filename="nifty-default-controls.xml" />
+
+	<!--
+		<registerSound id="popup" filename="sound/34556__Corsica_S__reverse_bass_blip_2.wav" />
+	-->
+
 	<registerSound id="popup" filename="res/sounds/BubblePo-Benjamin-8.wav" />
 	<registerSound id="click" filename="res/sounds/Pop-J_Fairba-1725.wav" />
 
@@ -75,11 +77,11 @@
 					</control>
 					<panel style="my-spacer" />
 					<control style="my-button" id="options" name="button" label="Options">
-						<interact onClick="XXXX()" />
+						<interact onClick="popupNotAvailable()" />
 					</control>
 					<panel style="my-spacer" />
 					<control style="my-button" id="credits" name="button" label="Credits">
-						<interact onClick="XXXX()" />
+						<interact onClick="popupNotAvailable()" />
 					</control>
 					<panel style="my-spacer" />
 					<control style="my-button" id="exit" name="button" label="Exit">
@@ -95,6 +97,91 @@
 				text="v0.35" color="#0E131Cff" hintText="Game Version">
 			</label>
 		</layer>
-
 	</screen>
+
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<!-- sure to exit popup -->
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<popup id="popupExit" childLayout="center" backgroundColor="#000a">
+		<effect>
+			<onStartScreen name="fade" startColor="#0000" endColor="#000a" length="500" />
+			<onStartScreen name="playSound" sound="popup" startDelay="600" />
+			<onEndScreen name="fade" startColor="#000a" endColor="#0000" length="500"
+				startDelay="250" />
+		</effect>
+		<panel style="xswing-panel" childLayout="center" padding="18px,28px,40px,16px"
+			width="320px" height="160px" align="center" valign="center">
+			<effect>
+				<onStartScreen name="fade" start="#0" end="#f" length="150" startDelay="500" />
+				<onStartScreen name="imageSize" timeType="exp" factor="3.5" startSize="1.5"
+					endSize="1.0" inherit="true" length="150" startDelay="500" />
+				<onEndScreen name="fade" start="#f" end="#0" length="150" startDelay="0" />
+				<onEndScreen name="imageSize" timeType="exp" factor="3.5" startSize="1.0"
+					endSize="1.5" inherit="true" length="150" startDelay="0" />
+			</effect>
+			<panel childLayout="vertical" align="center" valign="center">
+				<effect>
+					<onStartScreen name="alphaHide" length="700" inherit="true" />
+					<onEndScreen name="fade" length="10" start="#f" end="#0" inherit="true" />
+				</effect>
+				<panel childLayout="center" height="70%">
+					<text id="textRealWantToExit" text="Really want to Exit?" style="base-font"
+						align="center" valign="center" />
+				</panel>
+				<panel childLayout="horizontal" align="center" height="30%">
+					<panel childLayout="center" width="50%">
+						<control id="buttonYes" name="button" style="my-button-small" label="Yes"
+							width="100px" align="center">
+							<interact onClick="popupExit(yes)" />
+						</control>
+					</panel>
+					<panel childLayout="center" width="50%">
+						<control id="buttonNo" name="button" style="my-button-small" label="No"
+							width="100px" align="center">
+							<interact onClick="popupExit(no)" />
+						</control>
+					</panel>
+				</panel>
+			</panel>
+		</panel>
+	</popup>
+
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<!-- sure to exit popup -->
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<popup id="popupNotAvailable" childLayout="center" backgroundColor="#000a">
+		<effect>
+			<onStartScreen name="fade" startColor="#0000" endColor="#000a" length="500" />
+			<onStartScreen name="playSound" sound="popup" startDelay="600" />
+			<onEndScreen name="fade" startColor="#000a" endColor="#0000" length="500"
+				startDelay="250" />
+		</effect>
+		<panel style="xswing-panel" childLayout="center" padding="18px,28px,40px,16px"
+			width="600px" height="120px" align="center" valign="center">
+			<effect>
+				<onStartScreen name="fade" start="#0" end="#f" length="150" startDelay="500" />
+				<onStartScreen name="imageSize" timeType="exp" factor="3.5" startSize="1.5"
+					endSize="1.0" inherit="true" length="150" startDelay="500" />
+				<onEndScreen name="fade" start="#f" end="#0" length="150" startDelay="0" />
+				<onEndScreen name="imageSize" timeType="exp" factor="3.5" startSize="1.0"
+					endSize="1.5" inherit="true" length="150" startDelay="0" />
+			</effect>
+			<panel childLayout="vertical" align="center" valign="center">
+				<effect>
+					<onStartScreen name="alphaHide" length="700" inherit="true" />
+					<onEndScreen name="fade" length="10" start="#f" end="#0" inherit="true" />
+				</effect>
+				<panel childLayout="center" height="70%">
+					<label id="textNotAvailable" text="Unfortunately, this feature in't available."
+						style="base-font" align="center" valign="center" />
+				</panel>
+				<panel childLayout="horizontal" align="center" height="30%" valign="center">
+					<control id="buttonOK" name="button" style="my-button-small" label="OK"
+						width="100px" align="center">
+						<interact onClick="popupNotAvailableOK()" />
+					</control>
+				</panel>
+			</panel>
+		</panel>
+	</popup>
 </nifty>

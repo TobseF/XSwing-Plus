@@ -5,8 +5,9 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 import xswing.LocationController;
 import xswing.start.XSwing;
-import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.*;
 import de.lessvoid.nifty.controls.button.controller.ButtonControl;
+import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.*;
 
@@ -24,8 +25,9 @@ public class ScreenControllerMainMenu implements ScreenController {
 
 	public ScreenControllerMainMenu(StateBasedGame game) {
 		this.game = game;
-		//VOID: why not with base="" ?  -->
-		//<onFocus name="myChangeFont" font="res/fonts/berlin_sans_sb_49_bw_gradient.fnt"></onFocus>
+		// VOID: why not with base="" ? -->
+		// <onFocus name="myChangeFont"
+		// font="res/fonts/berlin_sans_sb_49_bw_gradient.fnt"></onFocus>
 	}
 
 	/**
@@ -47,16 +49,16 @@ public class ScreenControllerMainMenu implements ScreenController {
 	 */
 	public final void onStartScreen() {
 
-		/*
-		 * screen.findElementByName("startSinglePlayer").setFocus();
-		 * screen.addKeyboardInputHandler(new NiftyInputMapping() {
-		 * @Override public NiftyInputEvent convert(KeyboardInputEvent e) { if (e.getKey() ==
-		 * Keyboard.KEY_ESCAPE) { return NiftyInputEvent.Escape; } else { return null; } } },
-		 * new KeyInputHandler() {
-		 * @Override public boolean keyEvent(NiftyInputEvent e) { if (e != null && e ==
-		 * NiftyInputEvent.Escape) { System.out.println("pressed: ESC"); exitXSwing(); } return
-		 * false; } });
-		 */
+	/*
+	 * screen.findElementByName("startSinglePlayer").setFocus();
+	 * screen.addKeyboardInputHandler(new NiftyInputMapping() {
+	 * @Override public NiftyInputEvent convert(KeyboardInputEvent e) { if (e.getKey() ==
+	 * Keyboard.KEY_ESCAPE) { return NiftyInputEvent.Escape; } else { return null; } } }, new
+	 * KeyInputHandler() {
+	 * @Override public boolean keyEvent(NiftyInputEvent e) { if (e != null && e ==
+	 * NiftyInputEvent.Escape) { System.out.println("pressed: ESC"); exitXSwing(); } return
+	 * false; } });
+	 */
 
 	}
 
@@ -126,12 +128,49 @@ public class ScreenControllerMainMenu implements ScreenController {
 		nifty.getMouseInputEventQueue().reset();
 	}
 
+	
+	public void popupNotAvailable(){
+		Element popup =nifty.createPopup("popupNotAvailable");
+		popup.findControl("buttonOK", ButtonControl.class).setText(LanguageSelector.getString("ok"));
+		popup.findElementByName("textNotAvailable").getRenderer(TextRenderer.class).setText(
+				LanguageSelector.getString("not_available"));
+		nifty.showPopup(screen, "popupNotAvailable", null);
+	}
+	public void popupNotAvailableOK(){
+		nifty.closePopup("popupNotAvailable");
+	}
+	
+	/**
+	 * popupExit.
+	 * 
+	 * @param exit exit string
+	 */
+	public void popupExit(final String exit) {
+		nifty.closePopup("popupExit", new EndNotify() {
+
+			public void perform() {
+				if ("yes".equals(exit)) {
+					nifty.setAlternateKey("fade");
+					nifty.exit();
+					game.getContainer().exit();
+				}
+			}
+		});
+	}
+
 	/**
 	 * Exits the game -called from nifty xml gui
 	 */
 	public void exitXSwing() {
-		game.getContainer().exit();
-		nifty.exit();
+		Element popup = nifty.createPopup("popupExit");
+		popup.findControl("buttonYes", ButtonControl.class).setText(LanguageSelector.getString("yes"));
+		popup.findControl("buttonNo", ButtonControl.class).setText(LanguageSelector.getString("no"));
+		popup.findElementByName("textRealWantToExit").getRenderer(TextRenderer.class).setText(
+				LanguageSelector.getString("real_want_to_exit"));
+		//screen.findControl("buttonYes", ButtonControl.class).setText(LanguageSelector.getString("yes"));
+//		screen.findElementByName("buttonNo").getRenderer(TextRenderer.class).setText(
+//				LanguageSelector.getString("no"));
+		nifty.showPopup(screen, "popupExit", null);
 	}
 
 }

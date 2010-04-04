@@ -97,4 +97,23 @@ public class Clock extends SObject implements Resetable, Updateable {
 		String h = String.format("%02d", (int) ((timeSinceStart / 60) / 60) % 60);
 		return new String[] { h, m, s };
 	}
+
+	/** Converts a with {@link #getFormattedTimeAsString(long)} (hh:mm:ss) String back to the numerbs of seconds
+	 * @param formattedTime a with {@link #getFormattedTimeAsString(long)} (hh:mm:ss) String
+	 * @return the number of seconds for the given time period
+	 */
+	public static long getFormattedTimeAsInt(String formattedTime) {
+		String[] splitted = formattedTime.split(":");
+		if (splitted.length != 3) {
+			throw new IllegalArgumentException(formattedTime + "is not a correct formatted time");
+		}
+		try {
+			int h = Integer.parseInt(splitted[0]);
+			int m = Integer.parseInt(splitted[1]);
+			int s = Integer.parseInt(splitted[2]);
+			return (h * 60 * 60) + (m * 60) + s;
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException(formattedTime + "is not a correct formatted time");
+		}
+	}
 }

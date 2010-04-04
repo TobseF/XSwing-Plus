@@ -12,8 +12,8 @@ public class ScoreOnlineSubmitterTest {
 	private final static String SCORE_SERVER_ONLINE = "http://xswing.net/";
 
 	private final static String SCORE_SERVER_LOCAL = "http://localhost/XSwing/";
-	private final static String SCORE_SERVER_PATH = "lib/highscore/";
-	private final static String SCORE_LINE_SUBMIT_FILE = "submit_high_score_line.php";
+	private final static String SCORE_SERVER_PATH = "";
+	private final static String SCORE_LINE_SUBMIT_FILE = "submit_high_score_line_junit.php";
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {}
@@ -34,17 +34,18 @@ public class ScoreOnlineSubmitterTest {
 
 	@Test
 	public final void testScoreOnlineSubmitterOnline() {
-		submitScoreLineTest(SCORE_SERVER_ONLINE);
+		//submitScoreLineTest(SCORE_SERVER_ONLINE);
 	}
 
 	private void submitScoreLineTest(String server) {
 		long gemeTime = 1000 * 60 * 5; // 5min
 		long date = 1269187815854l; // 21.03.2010
 		HighScoreLine scoreLine = new HighScoreLine(5000, "Tom", gemeTime, date);
+		String scoreLineToSubmit = ScoreOnlineSubmitter.createHighScoreLineSubmitString(scoreLine);
 		String url = server + SCORE_SERVER_PATH + SCORE_LINE_SUBMIT_FILE;
-		System.out.println(url);
 		ScoreOnlineSubmitter submitter = new ScoreOnlineSubmitter(scoreLine, url);
 		String response = submitter.submit();
+		Assert.assertEquals(scoreLineToSubmit, response);
 	}
 
 	@Test

@@ -29,7 +29,7 @@
 				<panel childLayout="vertical" align="center" valign="center">
 
 					<panel childLayout="horizontal">
-						<label text="Your Score: " width="180px" align="left" textVAlign="center"
+						<label id="yourScore" text="Your Score: " width="180px" align="left" textVAlign="center"
 							textHAlign="left" />
 						<label id="labelScore" text="1300" width="50px" align="left" textVAlign="center"
 							textHAlign="left" />
@@ -45,14 +45,14 @@
 
 					<panel childLayout="horizontal" height="8px" />
 
-					<panel childLayout="horizontal" align="center" width="100%">
-						<label text="Upload Score: " align="center"  textVAlign="center"
-							textHAlign="center" />
+					<panel childLayout="horizontal" align="left" width="100%">
+						<label id="labelUploadScore" text="Upload Score: " align="left"  textVAlign="center"
+							textHAlign="left" />
 						<control id="upload-score" name="checkbox" align="center" />
 					</panel>
 					<panel childLayout="horizontal" height="8px" />
 					<panel childLayout="vertical" width="100%">
-						<control id="backButton" style="my-button-small" name="button" label="Next"
+						<control id="buttonNext" style="my-button-small" name="button" label="Next"
 							align="center">
 							<interact onClick="enterHighScore()" />
 						</control>

@@ -6,15 +6,12 @@ package xswing.testcases;
 
 import static org.junit.Assert.assertEquals;
 import lib.mylib.highscore.*;
-import lib.mylib.http.EasyPostString;
-import lib.mylib.options.DefaultArgs.Args;
+import lib.mylib.util.Clock;
 import org.junit.*;
 
 public class HighScoreTableTest {
 
 	private HighScoreTable scoreTable;
-	private final static String SCORE_SERVER = "http://localhost/xswing/lib/highscore/";
-	private final static String SCORE_SUBMIT_FILE = "submit_high_score_line.php";
 
 	@Before
 	public void setUp() throws Exception {
@@ -45,32 +42,33 @@ public class HighScoreTableTest {
 	}
 
 	@Test
+	public final void testConvertTime() {
+		long timeStamp = 60*60*2+60*20+20;
+		String timeFormatted = Clock.getFormattedTimeAsString(timeStamp);
+		assertEquals("02:20:20", timeFormatted);
+		assertEquals(timeStamp, Clock.getFormattedTimeAsInt(timeFormatted));
+		
+		timeStamp = 60*60*3+60*33+33;
+		timeFormatted = Clock.getFormattedTimeAsString(timeStamp);
+		assertEquals("03:33:33", timeFormatted);
+		assertEquals(timeStamp, Clock.getFormattedTimeAsInt(timeFormatted));
+	}
+	
+	@Test
 	public final void testHighScoreTable() {
 		scoreTable.clear();
 		scoreTable.addScore(new HighScoreLine(20, "Tim"));
 		scoreTable.addScore(new HighScoreLine(12, "Anna"));
-		scoreTable.addScore(new HighScoreLine(99, "Karlo"));
+		HighScoreLine scoreKarlo = new HighScoreLine(99, "Karlo"); 
+		scoreTable.addScore(scoreKarlo);		
+		System.out.println(scoreKarlo);
+		HighScoreLine readKarloFromString = new HighScoreLine(scoreKarlo.toString());
+		assertEquals(scoreKarlo, readKarloFromString);
 		String scoreTableInOneLine = scoreTable.toString();
+
 		HighScoreTable newScoreTable = new HighScoreTable(scoreTableInOneLine);
 		assertEquals(scoreTable, newScoreTable);
 	}
 
-	@Test
-	public final void testSubmitHighScore() {
-		scoreTable.clear();
-		scoreTable.addScore(new HighScoreLine(20, "Tim", 800));
-		scoreTable.addScore(new HighScoreLine(12, "Anna", 9000));
-		scoreTable.addScore(new HighScoreLine(99, "Karlo", 400));
-		scoreTable.addScore(new HighScoreLine(5, "Peter", 10));
-		String scoreTableInOneLine = scoreTable.toString();
-		EasyCrypter easyCrypter = new EasyCrypter();
-		String cryptedScoreTable = easyCrypter.enCrypt(scoreTableInOneLine);
-		System.out.println("end");
-		System.out.println(cryptedScoreTable);
-		System.out.println("end");
-		String request = EasyPostString.send(SCORE_SERVER + SCORE_SUBMIT_FILE, Args.highScore.toString(),
-				cryptedScoreTable);
-		assertEquals(scoreTableInOneLine, request);
-	}
 
 }

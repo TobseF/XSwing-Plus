@@ -92,7 +92,6 @@ public class EffectCatalog implements Resetable, Updateable, Drawable {
 				for (int i = lenght - 1; i >= (lenght - 4); i--) {
 					addEmitter(ball.getX() + a / 2, ball.getY() + a / 2, emitterList.get(
 							particleEffects.values()[i]).duplicate());
-					System.out.println("er" + i);
 				}
 				break;
 			default:

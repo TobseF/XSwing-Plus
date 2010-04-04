@@ -26,7 +26,7 @@ package lib.mylib.math;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
-public class Vector2D {
+public class Vector2D implements Cloneable{
 
 	public double x = 0;
 	public double y = 0;
@@ -91,7 +91,7 @@ public class Vector2D {
 	}
 
 	public Vector2D vectorLength(double l) {
-		Vector2D v = copy();
+		Vector2D v = clone();
 		v.setLength(l);
 		return v;
 	}
@@ -153,6 +153,26 @@ public class Vector2D {
 		}
 	}
 
+	public double getDegree(Vector2D v2) {
+		return Math.round(Math.toDegrees(Math.acos(((dot(v2)) / (length() * v2.length())))));
+	}
+
+	/** Returns the angle in degrees of this vector an Vector2D(0,1). 0 < angle < = 360. 
+	 * @return angle in degrees of this vector an Vector2D(0,1).
+	 */
+	public double getDegree() {
+		double degrees = getDegree(new Vector2D(0, 1));
+		if(degrees == 0){
+			return 360;
+		}
+		if (x < 0) {
+			return 360 -degrees;
+		} else {
+			return degrees;
+		}
+
+	}
+
 	public Point toPoint() {
 		return new Point((int) x, (int) y);
 	}
@@ -171,10 +191,9 @@ public class Vector2D {
 	public String toString() {
 		return "<Vector2D: " + x + ", " + y + " >";
 	}
-
-	// *** Cloneable
-
-	public Vector2D copy() {
+	
+	@Override
+	protected Vector2D clone(){
 		return new Vector2D(x, y);
 	}
 

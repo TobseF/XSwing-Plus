@@ -32,7 +32,7 @@ public class ScoreOnlineSubmitter {
 	/**
 	 * Can be used in later versions
 	 */
-	private GameType gameType = GameType.SinglePlayer;
+	private static GameType gameType = GameType.SinglePlayer;
 
 	/**
 	 * * Sends the {@link HighScoreTable} to a PHP webserver per POST in the
@@ -70,7 +70,7 @@ public class ScoreOnlineSubmitter {
 	 */
 	public String submit() {
 		
-		String submitData = highScoreTable == null ? createHighScoreLineSubmitString(highScoreLine)
+		String submitData = highScoreTable == null ? createCrypedHighScoreLineSubmitString(highScoreLine)
 				: createHighScoreSubmitString(highScoreTable);
 
 		String response = EasyPostString.send(scoreSubmitURL, Args.highScore.toString(), submitData);
@@ -87,8 +87,8 @@ public class ScoreOnlineSubmitter {
 	 * @param scoreLine which should be submitted
 	 * @return cryped HighScoreLine whic can be submitted online
 	 */
-	public String createHighScoreLineSubmitString(HighScoreLine scoreLine) {
-		StringBuilder stringBuilder = new StringBuilder(scoreLine.toString());
+	public static String createHighScoreLineSubmitString(HighScoreLine scoreLine) {
+		StringBuilder stringBuilder = new StringBuilder(scoreLine.toStringForOnlineSumit());
 		stringBuilder.append(HighScoreLine.VALUE_SEPERATOR);
 
 		stringBuilder.append(new TimeIdent().getIdentity());
@@ -99,11 +99,11 @@ public class ScoreOnlineSubmitter {
 		stringBuilder.append(HighScoreLine.VALUE_SEPERATOR);
 
 		stringBuilder.append(gameType.ordinal());
-		String submitLine = stringBuilder.toString();
-		//Log.debug("Score line to submit: " + submitLine);
-		String crypedScoreLine = new EasyCrypter().enCrypt(submitLine);
-		//Log.debug("Cryped Score line: " + crypedScoreLine);
-		return crypedScoreLine;
+		return stringBuilder.toString();
+	}
+	
+	public static String createCrypedHighScoreLineSubmitString(HighScoreLine scoreLine) {
+		return new EasyCrypter().enCrypt(createHighScoreLineSubmitString(scoreLine));
 	}
 
 	public String createHighScoreSubmitString(HighScoreTable highScoreTable) {

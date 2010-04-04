@@ -20,8 +20,8 @@ public class LanguageSelector {
 	private LanguageSelector(String language) {
 		langProperties = new Properties();
 		try {
-			langProperties.load(ResourceLoader.getResourceAsStream(languageFileLocation
-					+ language + LanguageFileExtension));
+			langProperties.load(ResourceLoader.getResourceAsStream(languageFileLocation + language
+					+ LanguageFileExtension));
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -42,7 +42,7 @@ public class LanguageSelector {
 
 	public static String setSystemLanguage() {
 		String language = System.getProperty("user.language"); // TODO: load mapping from
-		// property file
+																// property file
 		if (language.equals("de")) {
 			setLanguage("German");
 			Locale.setDefault(Locale.GERMAN);

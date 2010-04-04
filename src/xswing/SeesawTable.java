@@ -24,8 +24,8 @@ public class SeesawTable extends SObject {
 	@Override
 	public void render(Graphics g) {
 		for (int i = 0; i < 8; i++) {
-			font.drawString(x + (gapBetweenBalls + Ball.A) * (i + 1)
-					- font.getWidth(weights[i] + "") / 2, y, weights[i] + "");
+			font.drawString(x + (gapBetweenBalls + Ball.A) * (i + 1) - font.getWidth(weights[i] + "") / 2, y,
+					weights[i] + "");
 		}
 	}
 

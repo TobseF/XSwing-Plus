@@ -34,6 +34,7 @@ public class CanvasSizeTest extends BasicGame {
 	 */
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		g.drawString("sd", 23, 23);
+		g.fillOval(100, 100, 200, 200);
 	}
 
 	/**

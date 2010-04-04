@@ -275,13 +275,12 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 			}
 			if (input.isKeyDown(Input.KEY_ESCAPE)) {
 				fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_STOPPED));
-				if (game.getCurrentState().getID() == 2) { // Game is started with Menue
-					System.out.println("getID() == 2");
-					// input.pause(); // have to be resumed in MainMenu
-					game.enterState(1);
+				if (game.getCurrentState().getID() == XSwing.GAME_PANEL) { // Game is started with Menue
+					Log.info("ESC pressed, swiching to main menu");
+					game.enterState(XSwing.START_SCREEN);
 				} else {
 					// Game is started without Menue
-					System.out.println("container.exit();");
+					Log.info("Exit Game wit ESC -no main menu");
 					container.exit();
 				}
 			}
@@ -371,9 +370,6 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		}
 		// highScoreState.init(container, game);
 		highScoreState.enter(container, game);
-		// container.getInput().removeListener(highScoreState);
-		// container.getInput().addListener(highScoreState);		// FIXME: Only create one gameState instance.. every game over a new will be VOID:
-		// added!
 		// highScoreState.gotoScreenXSwing.GAME_OVER(; //VOID: ScreenID of NiftyGameState?)
 		container.setPaused(true);
 	}

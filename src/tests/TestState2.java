@@ -31,7 +31,7 @@ public class TestState2 extends BasicGameState implements ScreenController {
 
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		this.container = container;
-		font = new AngelCodeFont("menu.fnt", "menu.png");
+		font = new AngelCodeFont("restest/menu.fnt", "restest/menu.png");
 		currentColor = Color.white;
 		niftyGameState = new NiftyGameState(2);
 		niftyGameState.fromXml("tests/overlay.xml", this);

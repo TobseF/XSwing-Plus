@@ -74,9 +74,7 @@ public class HighScoreLine implements Comparable<HighScoreLine> {
 			score = Integer.valueOf(values[1]);
 			time = Long.parseLong(values[2]);
 			date = DATE_FORMAT.parse(values[3]);
-		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException("Scoreline is not formatted correctly");
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			throw new IllegalArgumentException("Scoreline is not formatted correctly");
 		}
 	}
@@ -127,21 +125,35 @@ public class HighScoreLine implements Comparable<HighScoreLine> {
 	 *         {@value #VALUE_SEPERATOR}.
 	 * @see {@link #HighScoreLine(String)}
 	 */
-	private String wrapHighscoreLineToOneString() {
+	private String wrapHighscoreLineToOneString(boolean forOnlineSubmit) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(name);
 		builder.append(VALUE_SEPERATOR);
 		builder.append(score);
 		builder.append(VALUE_SEPERATOR);
-		builder.append(Clock.getFormattedTimeAsString(time));
+		if (forOnlineSubmit) {
+			builder.append(Clock.getFormattedTimeAsString(time));
+		} else {
+			builder.append(time);
+		}
 		builder.append(VALUE_SEPERATOR);
 		builder.append(DATE_FORMAT.format(date));
 		return builder.toString();
 	}
 
+	/**
+	 * Same as {@link #wrapHighscoreLineToOneString(boolean)} but the time is formatted with
+	 * "hh:mm:ss" insted of an single integer.
+	 * 
+	 * @return string which can be submitted only
+	 */
+	public String toStringForOnlineSumit() {
+		return wrapHighscoreLineToOneString(true);
+	}
+
 	@Override
 	public String toString() {
-		return wrapHighscoreLineToOneString();
+		return wrapHighscoreLineToOneString(false);
 	}
 
 	@Override
