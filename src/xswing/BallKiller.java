@@ -19,6 +19,8 @@ public class BallKiller implements Resetable, Updateable, BallEventListener {
 	private HighScoreCounter score;
 	private MyTimer timer;
 	private EffectCatalog effectCatalog;
+	/** Number of disbanded balls */
+	private int ballKills = 0;
 
 	public BallKiller(Mechanics mechanics, HighScoreCounter score, EffectCatalog effectCatalog) {
 		this.mechanics = mechanics;
@@ -45,6 +47,7 @@ public class BallKiller implements Resetable, Updateable, BallEventListener {
 	@Override
 	public void reset() {
 		timer.reset();
+		ballKills = 0;
 	}
 
 	@Override
@@ -54,9 +57,7 @@ public class BallKiller implements Resetable, Updateable, BallEventListener {
 
 	private void killBalls() {
 		Ball bTemp = ballsToKill.get(0);
-		score
-				.score(mechanics.calculateScore(ballsToKill = mechanics
-						.getConnectedBalls(bTemp)));
+		score.score(mechanics.calculateScore(ballsToKill = mechanics.getConnectedBalls(bTemp)));
 		for (int i = 0; i < ballsToKill.size(); i++) {
 			Ball b = ballsToKill.get(i);
 			if (i == 0) {
@@ -64,6 +65,7 @@ public class BallKiller implements Resetable, Updateable, BallEventListener {
 			}
 			effectCatalog.addEffect(b, particleEffects.EXPLOSION); // TODO: move to EffectLib
 			b.fireBallEvent(BallEventType.BALL_CAUGHT_BY_EXPLOSION);
+			ballKills++;
 		}
 		ballsToKill.clear();
 		reset();
@@ -73,6 +75,10 @@ public class BallKiller implements Resetable, Updateable, BallEventListener {
 	// TODO: implements row exploding
 	}
 
+	
+	public int getBallKills() {
+		return ballKills;
+	}
 	@Override
 	public void ballEvent(BallEvent e) {
 	// if(e.getSource())

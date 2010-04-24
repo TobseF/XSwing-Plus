@@ -7,6 +7,7 @@ package tools;
 import java.awt.Dimension;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.table.*;
 import lib.mylib.highscore.*;
 import lib.mylib.swing.SwingUtils;
 import lib.mylib.util.MyPropertys;
@@ -60,17 +61,13 @@ public class HighScoreReader extends JFrame implements ActionListener {
 	}
 
 	private void initTable() {
-		String[] columnNames = { "Score", "Name", "Time" };
 		if (table != null) {
 			remove(panel);
 			remove(table);
 			table = null;
 		}
-		String[][] values = highScoreTable.getAsStringTable();
-		if (highScoreTable.size() <= 0) {
-			values = new String[1][columnNames.length];
-		}
-		table = new JTable(values, columnNames);
+		table = new JTable(highScoreTable);
+		table.setRowSorter(new TableRowSorter<TableModel>(highScoreTable));
 		this.add(panel = new JScrollPane(table));
 		validate();
 		repaint();
@@ -98,7 +95,7 @@ public class HighScoreReader extends JFrame implements ActionListener {
 		}
 		if (e.getSource().equals(add)) {
 			System.out.println("add");
-			highScoreTable.addScore(new HighScoreLine(99999, "", 0));
+			highScoreTable.addScore(new HighScoreLine(99999, "", 0, 0,0));
 			initTable();
 		}
 	}
@@ -113,8 +110,7 @@ public class HighScoreReader extends JFrame implements ActionListener {
 			String score = (String) table.getValueAt(i, 0);
 			String name = (String) table.getValueAt(i, 1);
 			String time = (String) table.getValueAt(i, 2);
-			if (score != null && !score.isEmpty() && name != null && !name.isEmpty()
-					&& time != null && !time.isEmpty()) {
+			if (score != null && !score.isEmpty() && name != null && !name.isEmpty() && time != null && !time.isEmpty()) {
 				scoreLine.setScore(Integer.parseInt(score));
 				scoreLine.setName(name);
 				scoreLine.setTime(Long.parseLong(time));

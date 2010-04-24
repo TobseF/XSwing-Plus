@@ -46,4 +46,8 @@ public class BallCounter extends SObject implements Resetable, Countable {
 			font.drawString(x - ((balls + "").length() - 1) * letterLenght / 2, y, "" + balls);
 		}
 	}
+
+	public int getBalls() {
+		return balls;
+	}
 }

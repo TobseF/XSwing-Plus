@@ -138,7 +138,6 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		locationController.setLocationToObject(highScore);
 		statistics = new GameStatistics();
 		addXSwingListener(statistics);
-		scoreScreenController = new ScreenControllerScore(game, scoreTable, clock);
 		seesawTable = new SeesawTable(numberFont, ballTable);
 		locationController.setLocationToObject(seesawTable);
 		effectCatalog.setSound(wup, particleEffects.EXPLOSION);
@@ -147,6 +146,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		ballKiller = new BallKiller(mechanics, highScoreCounter, effectCatalog);
 		ballFactory = new BallFactory(this, ballTable, ballsToMove, ballFont, new SpriteSheet[] { balls1, balls2 },
 				effectCatalog, canon, levelBall);
+		scoreScreenController = new ScreenControllerScore(game, scoreTable, clock, ballCounter, ballKiller);
 		scorePopups = new SObjectList();
 
 		pause = new Pause(pauseFont, container.getWidth(), container.getHeight());
@@ -275,7 +275,8 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 			}
 			if (input.isKeyDown(Input.KEY_ESCAPE)) {
 				fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_STOPPED));
-				if (game.getCurrentState().getID() == XSwing.GAME_PANEL) { // Game is started with Menue
+				if (game.getCurrentState().getID() == XSwing.GAME_PANEL) { // Game is started
+					// with Menue
 					Log.info("ESC pressed, swiching to main menu");
 					game.enterState(XSwing.START_SCREEN);
 				} else {
@@ -295,7 +296,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 					notifyListener(new XSwingEvent(this, GameEventType.PRESSED_DOWN));
 				}
 				if (input.isKeyPressed(Input.KEY_J)) {
-					//ballFactory.addNewJoker();
+					// ballFactory.addNewJoker();
 				}
 				if (input.isKeyPressed(Input.KEY_K)) {
 					if (ballDropSimulator == null) {
@@ -321,24 +322,24 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 				if (input.isKeyPressed(Input.KEY_H)) {
 					highScore.setVisible(!highScore.isVisible());
 				}
-//				if (input.isKeyPressed(Input.KEY_1)) {
-//					canon.getBall().setNr(0);
-//				}
-//				if (input.isKeyPressed(Input.KEY_2)) {
-//					canon.getBall().setNr(1);
-//				}
-//				if (input.isKeyPressed(Input.KEY_2)) {
-//					canon.getBall().setNr(2);
-//				}
-//				if (input.isKeyPressed(Input.KEY_3)) {
-//					canon.getBall().setNr(3);
-//				}
-//				if (input.isKeyPressed(Input.KEY_4)) {
-//					canon.getBall().setNr(4);
-//				}
-//				if (input.isKeyPressed(Input.KEY_5)) {
-//					canon.getBall().setNr(5);
-//				}
+				// if (input.isKeyPressed(Input.KEY_1)) {
+				// canon.getBall().setNr(0);
+				// }
+				// if (input.isKeyPressed(Input.KEY_2)) {
+				// canon.getBall().setNr(1);
+				// }
+				// if (input.isKeyPressed(Input.KEY_2)) {
+				// canon.getBall().setNr(2);
+				// }
+				// if (input.isKeyPressed(Input.KEY_3)) {
+				// canon.getBall().setNr(3);
+				// }
+				// if (input.isKeyPressed(Input.KEY_4)) {
+				// canon.getBall().setNr(4);
+				// }
+				// if (input.isKeyPressed(Input.KEY_5)) {
+				// canon.getBall().setNr(5);
+				// }
 				if (input.isKeyPressed(Input.KEY_F2)) {
 					try {
 						container.setFullscreen(!container.isFullscreen());

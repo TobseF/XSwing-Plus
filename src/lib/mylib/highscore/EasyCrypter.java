@@ -10,7 +10,7 @@ package lib.mylib.highscore;
  * decrypting contains a wrong hash, the encryped string will be empty.
  * 
  * <pre>
- * eg.:
+ * e.g.:
  * [Tim 12]==&gt;585957761164021267912
  * [12345678]==&gt;395557371384470916682147373
  * [@78! -,+/]==&gt;105647161374660996862747983431
@@ -35,7 +35,7 @@ public class EasyCrypter implements Cryptable {
 	private CryptLib cryptLib;
 
 	/**
-	 * Inits an crypter with the default #phrase
+	 * Initializes an Crypter with the default #phrase
 	 * 
 	 * @see #phrase
 	 */
@@ -45,7 +45,7 @@ public class EasyCrypter implements Cryptable {
 	}
 
 	/**
-	 * Inits an crypter with the given #phrase
+	 * Initializes an Crypter with the given #phrase
 	 * 
 	 * @param phrase #phrase
 	 * @see #phrase
@@ -56,11 +56,11 @@ public class EasyCrypter implements Cryptable {
 	}
 
 	/**
-	 * Encrypts a given String in a secence of numbers
+	 * Encrypts a given String in a sequence of numbers
 	 * 
 	 * @see EasyCrypter#deCrypt(String)
 	 * @param stringToEncrypt
-	 * @return encryptedString (eg. 01642391)
+	 * @return encryptedString (e.g. 01642391)
 	 */
 	public String enCrypt(String stringToEncrypt) {
 		String crypted = stringToEncrypt;
@@ -76,11 +76,11 @@ public class EasyCrypter implements Cryptable {
 	}
 
 	/**
-	 * Decrypts a with {@link #enCrypt(String)} cypted String back. If an error occours while
-	 * decrypting, eg. if the hash of the given phrase was wrong, "" (an empty String) will be
+	 * Decrypts a with {@link #enCrypt(String)} crypted String back. If an error occurs while
+	 * decrypting, e.g. if the hash of the given phrase was wrong, "" (an empty String) will be
 	 * returned
 	 * 
-	 * @param stringToDeCrypt a with {@link #enCrypt(String)} cypted String
+	 * @param stringToDeCrypt a with {@link #enCrypt(String)} crypted String
 	 * @return uncrypted String or "" (an empty String), if there was an error while decrypting
 	 */
 	public String deCrypt(String stringToDeCrypt) {

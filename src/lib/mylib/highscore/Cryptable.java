@@ -11,21 +11,21 @@ package lib.mylib.highscore;
 public interface Cryptable {
 
 	/**
-	 * Ecrypt the given String with it's own encryptopn algotithm. This have to be valid:
+	 * Encrypt the given String with it's own encrypt algorithm. This have to be valid:
 	 * string == deCrypt(enCrypt(string))
 	 * 
 	 * @param stringToEncrypt
-	 * @return encrypted String wich can be decypted bach with deCrypt(String stringToDeCrypt)
+	 * @return encrypted String which can be decrypted with deCrypt(String stringToDeCrypt)
 	 * @see enCrypt(String stringToEncrypt)
 	 */
 	public String enCrypt(String stringToEncrypt);
 
 	/**
-	 * Decrypts a with enCrypt crypted String back to plaintext. This have to be valid:
+	 * Decrypts a with enCrypt crypted String back to plain text. This have to be valid:
 	 * plainText == deCrypt(cryptedText)
 	 * 
 	 * @param stringToDeCrypt a with enCrypt crypted String
-	 * @return encrypted String wich can be decypted bach with deCrypt(String stringToDeCrypt)
+	 * @return encrypted String which can be decypted with deCrypt(String stringToDeCrypt)
 	 * @see deCrypt(String stringToDeCrypt)
 	 */
 	public String deCrypt(String stringToDeCrypt);

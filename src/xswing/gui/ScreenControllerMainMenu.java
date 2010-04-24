@@ -37,7 +37,7 @@ public class ScreenControllerMainMenu implements ScreenController {
 	 * @param screen screen
 	 */
 	public final void bind(final Nifty nifty, final Screen newScreen) {
-		game.getContainer().setMouseGrabbed(true);
+		//game.getContainer().setMouseGrabbed(true);
 		this.nifty = nifty;
 		screen = newScreen;
 		screen.findElementByName("version_label").getRenderer(TextRenderer.class).setText(XSwing.VERSION);
@@ -123,7 +123,7 @@ public class ScreenControllerMainMenu implements ScreenController {
 	 */
 	private void enterGame() {
 		System.out.println("enterGame");
-		game.getContainer().setMouseGrabbed(true);
+		//game.getContainer().setMouseGrabbed(true);
 		game.enterState(2);
 		nifty.getMouseInputEventQueue().reset();
 	}

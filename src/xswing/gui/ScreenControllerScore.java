@@ -2,11 +2,12 @@ package xswing.gui;
 
 import java.text.NumberFormat;
 import lib.mylib.highscore.*;
+import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.util.*;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.util.Log;
-import xswing.GamePanel;
+import xswing.*;
 import xswing.start.XSwing;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.button.controller.ButtonControl;
@@ -26,19 +27,25 @@ public class ScreenControllerScore implements ScreenController {
 	private HighScoreLine newScore;
 	private TextFieldControl textField;
 	private Clock clock;
+	private BallKiller ballsReleased;
+	private BallCounter ballsDisbanded;
+	private String playerName;
 
 	private final static String SCORE_SERVER_PATH = "";
 	private final static String SCORE_LINE_SUBMIT_FILE = "submit_high_score_line.php";
 
-	public ScreenControllerScore(StateBasedGame game, HighScoreTable highScoreList, Clock clock) {
+	public ScreenControllerScore(StateBasedGame game, HighScoreTable highScoreList, Clock clock,
+			BallCounter ballsDisbanded, BallKiller ballsReleased) {
 		this.game = game;
 		this.highScoreList = highScoreList;
 		this.clock = clock;
+		this.ballsReleased = ballsReleased;
+		this.ballsDisbanded = ballsDisbanded;
 	}
 
 	public void setHighScore(int highScore) {
 		this.highScore = highScore;
-		//VOID: no Sound and no mouse down event
+		// VOID: no Sound and no mouse down event
 	}
 
 	/**
@@ -50,17 +57,17 @@ public class ScreenControllerScore implements ScreenController {
 	public final void bind(final Nifty newNifty, final Screen newScreen) {
 		this.nifty = newNifty;
 		this.screen = newScreen;
-//		screen.findElementByName("name").addInputHandler(new KeyInputHandler() {
-//			
-//			@Override
-//			public boolean keyEvent(NiftyInputEvent e) {
-//				if (e == NiftyInputEvent.SubmitText) {
-//					enterHighScore();
-//					return true;
-//				}
-//				return false;
-//			}
-//		});
+		// screen.findElementByName("name").addInputHandler(new KeyInputHandler() {
+		//			
+		// @Override
+		// public boolean keyEvent(NiftyInputEvent e) {
+		// if (e == NiftyInputEvent.SubmitText) {
+		// enterHighScore();
+		// return true;
+		// }
+		// return false;
+		// }
+		// });
 	}
 
 	/**
@@ -72,20 +79,22 @@ public class ScreenControllerScore implements ScreenController {
 		setHighScore(screen);
 		textField = screen.findControl("name", TextFieldControl.class);
 		textField.setMaxLength(10);
+		playerName = MyOptions.getString(Args.playerName,"");
+		textField.setText(playerName);
 		screen.findElementByName("labelName").getRenderer(TextRenderer.class).setText(
-				LanguageSelector.getString("your_name")+": ");
+				LanguageSelector.getString("your_name") + ": ");
 		screen.findElementByName("yourScore").getRenderer(TextRenderer.class).setText(
-				LanguageSelector.getString("your_score")+": ");
+				LanguageSelector.getString("your_score") + ": ");
 		screen.findElementByName("labelUploadScore").getRenderer(TextRenderer.class).setText(
-				LanguageSelector.getString("upload_score")+": ");
+				LanguageSelector.getString("upload_score") + ": ");
 		screen.findControl("buttonNext", ButtonControl.class).setText(LanguageSelector.getString("next"));
 	}
 
 	public final void onEndScreen() {
-		 game.getContainer().getInput().clearControlPressedRecord();
-		 game.getContainer().getInput().clearKeyPressedRecord();
-		 game.getContainer().getInput().clearMousePressedRecord();
-		 nifty.getMouseInputEventQueue().reset();
+		game.getContainer().getInput().clearControlPressedRecord();
+		game.getContainer().getInput().clearKeyPressedRecord();
+		game.getContainer().getInput().clearMousePressedRecord();
+		nifty.getMouseInputEventQueue().reset();
 	}
 
 	private final void setHighScore(Screen screen) {
@@ -102,16 +111,18 @@ public class ScreenControllerScore implements ScreenController {
 	 * Action which is called after a name was entered.
 	 */
 	public final void enterHighScore() {
-		int minScore = 200;
 		String name = textField.getText();
-		Log.info("Score entered: " + highScore + " " + name);
-		newScore = new HighScoreLine(highScore, name, (int) clock.getTimeSinceStart());
-		if (name.length() > 2) {
-			highScoreList.addScore(newScore);
-			highScoreList.save();
+		if(!name.equals(playerName)){
+			MyOptions.setString(Args.playerName, name);
+//			MyOptions.save();
 		}
+		Log.info("Score entered: " + highScore + " " + name);
+		newScore = new HighScoreLine(highScore, name, clock.getTimeSinceStart(), ballsDisbanded.getBalls(),
+				ballsReleased.getBallKills());
+		highScoreList.addScore(newScore);
+		highScoreList.save();
 		boolean submitHighscoreOnline = screen.findControl("upload-score", CheckboxControl.class).isChecked();
-		if (submitHighscoreOnline && highScore > minScore && name.length() > 2) {
+		if (submitHighscoreOnline) {
 			Log.info("Submit score online");
 			new ScoreSubmitThread(newScore, XSwing.XSWING_HOST_URL + SCORE_SERVER_PATH + SCORE_LINE_SUBMIT_FILE);
 		}
@@ -119,14 +130,14 @@ public class ScreenControllerScore implements ScreenController {
 		((GamePanel) game.getState(XSwing.GAME_PANEL)).reset();
 		nifty.getMouseInputEventQueue().reset();
 		game.enterState(XSwing.GAME_PANEL, new EmptyTransition(), new EmptyTransition());
-		//FIXME: score isn't submit offline
+		// FIXME: score isn't submit offline
 	}
 
 	private class ScoreSubmitThread extends Thread {
-		
+
 		private final HighScoreLine score;
 		private final String url;
-		
+
 		public ScoreSubmitThread(HighScoreLine score, String url) {
 			this.score = score;
 			this.url = url;

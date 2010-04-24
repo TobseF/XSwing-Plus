@@ -27,9 +27,9 @@ public class ErrorReporter extends JFrame implements ActionListener {
 	private JTextArea errorMessageField, stackTraceField, logFileField, systemInfoField, userInput;
 	private JButton submit;
 	private JCheckBox includeSystemInfo;
-	/** Executeted on a submit -genreic server request */
+	/** Executed on a submit -generic server request */
 	private final SubmitRequest submitRequest;
-	/** New Line Seperator */
+	/** New Line Separator */
 	private static String NL = "\n";
 
 	public ErrorReporter(Throwable e, SubmitRequest submitRequest) {

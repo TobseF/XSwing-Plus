@@ -56,7 +56,7 @@ public class Clock extends SObject implements Resetable, Updateable {
 	 * 
 	 * @see #getFormattedTime()
 	 */
-	public double getTimeSinceStart() {
+	public long getTimeSinceStart() {
 		return timeSinceStart;
 	}
 
@@ -85,7 +85,7 @@ public class Clock extends SObject implements Resetable, Updateable {
 	}
 
 	/**
-	 * @return array with the curret tme.<br>
+	 * @return array with the current time.<br>
 	 *         array[0] = hh <br>
 	 *         array[1] = mm <br>
 	 *         array[2] = ss
@@ -98,7 +98,7 @@ public class Clock extends SObject implements Resetable, Updateable {
 		return new String[] { h, m, s };
 	}
 
-	/** Converts a with {@link #getFormattedTimeAsString(long)} (hh:mm:ss) String back to the numerbs of seconds
+	/** Converts a with {@link #getFormattedTimeAsString(long)} (hh:mm:ss) String back to the numbers of seconds
 	 * @param formattedTime a with {@link #getFormattedTimeAsString(long)} (hh:mm:ss) String
 	 * @return the number of seconds for the given time period
 	 */

@@ -10,7 +10,7 @@ package lib.mylib.options;
 public interface DefaultArgs {
 
 	public enum Args {
-		firstStart, debug, showOptionPanelOnStart, checkForUpdatesOnStart, uploadHighScore, startGameInFullscreen, checkForUpdates, isGermanSetAsDefaultLanguage, isEnglishSetAsDefaultLanguage, gameToStart, highScore, statistic, playedGames, canceledGames, totalTime
+		firstStart, debug, showOptionPanelOnStart, checkForUpdatesOnStart, uploadHighScore, startGameInFullscreen, checkForUpdates, isGermanSetAsDefaultLanguage, isEnglishSetAsDefaultLanguage, gameToStart, highScore, statistic, playedGames, canceledGames, totalTime, playerName
 	};
 
 }

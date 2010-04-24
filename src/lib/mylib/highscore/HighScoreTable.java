@@ -5,6 +5,7 @@
 package lib.mylib.highscore;
 
 import java.util.*;
+import javax.swing.table.AbstractTableModel;
 import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.util.MyOptions;
 
@@ -12,7 +13,7 @@ import lib.mylib.util.MyOptions;
  * @author Tobse A Highscore table which is evertime sorted by score and limited by
  *         #maximumElements
  */
-public class HighScoreTable implements Iterable<HighScoreLine> {
+public class HighScoreTable extends AbstractTableModel implements Iterable<HighScoreLine>{
 
 	/** Maximum score values which should be stored in this score table */
 	private int maximumElements = Integer.MAX_VALUE;
@@ -86,8 +87,7 @@ public class HighScoreTable implements Iterable<HighScoreLine> {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null && obj instanceof HighScoreTable) {
-			return Arrays.equals(highScores.toArray(), ((HighScoreTable) obj).highScores
-					.toArray());
+			return highScores.equals(highScores);
 		} else {
 			return false;
 		}
@@ -136,16 +136,52 @@ public class HighScoreTable implements Iterable<HighScoreLine> {
 		return highScores.iterator();
 	}
 
-	public String[][] getAsStringTable() {
-		String[][] stringTable = new String[size()][3];
-		int i = 0;
-		for (HighScoreLine score : highScores) {
-			stringTable[i][0] = score.getScore() + "";
-			stringTable[i][1] = score.getName();
-			stringTable[i][2] = score.getTime() + "";
-			i++;
+	@Override
+	public int getColumnCount() {
+		return HighScoreLine.VALUE_COUNT;
+	}
+
+	@Override
+	public int getRowCount() {
+		return highScores.size();
+	}
+	@Override
+	public String getColumnName(int column) {
+		switch (column) {
+		case 0:
+			return "Name";
+		case 1:
+			return "Score";
+		case 2:
+			return "Balls Released";
+		case 3:
+			return "Balls Disbanded";
+		case 4:
+			return "Time";
+		case 5:
+			return "Date";
+		default:
+			return null;
 		}
-		return stringTable;
+	}
+
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		HighScoreLine line = highScores.get(rowIndex);
+		switch (columnIndex) {
+		case 0:
+			return line.getName();
+		case 1:
+			return line.getScore();
+		case 2:
+			return line.getDispandedBalls();
+		case 3:
+			return line.getTime();
+		case 4:
+			return line.getDate();
+		default:
+			return null;
+		}
 	}
 
 }

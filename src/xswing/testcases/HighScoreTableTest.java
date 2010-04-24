@@ -5,6 +5,7 @@
 package xswing.testcases;
 
 import static org.junit.Assert.assertEquals;
+import java.util.*;
 import lib.mylib.highscore.*;
 import lib.mylib.util.Clock;
 import org.junit.*;
@@ -55,15 +56,20 @@ public class HighScoreTableTest {
 	}
 	
 	@Test
-	public final void testHighScoreTable() {
+	public final void testHighScoreLine() {
+		Date date = new GregorianCalendar(2010, 4, 24).getTime();
+		HighScoreLine scoreKarlo = new HighScoreLine(8500, "Karlo",60*1000*6,250,242,date); 	
+		HighScoreLine readKarloFromString = new HighScoreLine(scoreKarlo.toString());
+		assertEquals(scoreKarlo, readKarloFromString);
+		assertEquals(scoreKarlo.toString(), readKarloFromString.toString());
+	}
+	
+	@Test
+	public final void testHighScoreTableToString() {
 		scoreTable.clear();
 		scoreTable.addScore(new HighScoreLine(20, "Tim"));
 		scoreTable.addScore(new HighScoreLine(12, "Anna"));
-		HighScoreLine scoreKarlo = new HighScoreLine(99, "Karlo"); 
-		scoreTable.addScore(scoreKarlo);		
-		System.out.println(scoreKarlo);
-		HighScoreLine readKarloFromString = new HighScoreLine(scoreKarlo.toString());
-		assertEquals(scoreKarlo, readKarloFromString);
+
 		String scoreTableInOneLine = scoreTable.toString();
 
 		HighScoreTable newScoreTable = new HighScoreTable(scoreTableInOneLine);

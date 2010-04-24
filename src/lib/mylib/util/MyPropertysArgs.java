@@ -16,7 +16,7 @@ import org.newdawn.slick.util.Log;
  *         {@link #setFile(String)} is called and will be saved with every set function.
  *         Loading or saving exceptions will only trigger {@link Log} warnings.
  */
-public class MyPropertys {
+public class MyPropertysArgs <Args extends Enum<?>>{
 
 	/**
 	 * It's used to store the options local.
@@ -61,7 +61,8 @@ public class MyPropertys {
 	/**
 	 * Private static class
 	 */
-	public MyPropertys() {};
+	public MyPropertysArgs() {
+	};
 
 	/**
 	 * Sets a Class which provides the {@link File} Name in which the options should be stored
@@ -235,17 +236,8 @@ public class MyPropertys {
 	 * @param nameOfField name (key) of the value to save local
 	 * @param value to save local
 	 */
-	public static void setNumber(String nameOfField, double value) {
-		checkArg(nameOfField);
-		if (options != null) {
-			options.setNumber(nameOfField, value);
-			if (autoSave) {
-				save();
-			}
-		} else {
-			entriesBeforeSettingFile.setProperty(nameOfField, String.valueOf(value));
-			Log.warn("setValue before setting property file");
-		}
+	public void setNumber(Args args, double value) {
+		System.out.println(args +" "+ value);
 	}
 
 	/**
@@ -335,7 +327,7 @@ public class MyPropertys {
 	}
 
 	/**
-	 * Clears all options
+	 * Cleares all options
 	 */
 	public static void clear() {
 		entriesBeforeSettingFile.clear();
@@ -386,7 +378,7 @@ public class MyPropertys {
 	 * @see #isRegistredArg(String)
 	 */
 	public static void setDefaultArgs(HashSet<String> defaultArgs) {
-		MyPropertys.defaultArgs = defaultArgs;
+		MyPropertysArgs.defaultArgs = defaultArgs;
 	}
 
 	/**
@@ -396,7 +388,7 @@ public class MyPropertys {
 	 * @see #checkArg(String)
 	 */
 	public static void setCheckForDefaults(boolean checkForDefaults) {
-		MyPropertys.checkForDefaults = checkForDefaults;
+		MyPropertysArgs.checkForDefaults = checkForDefaults;
 	}
 
 	/**
@@ -407,7 +399,7 @@ public class MyPropertys {
 	 * @see #checkArg(String)
 	 */
 	public static void setThrowExeptonOnArgsCheking(boolean throwExeptonOnArgsCheking) {
-		MyPropertys.throwExeptonOnArgsCheking = throwExeptonOnArgsCheking;
+		MyPropertysArgs.throwExeptonOnArgsCheking = throwExeptonOnArgsCheking;
 	}
 
 }

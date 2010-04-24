@@ -66,10 +66,10 @@ public class OnlineSubmitterTest {
 
 	private HighScoreTable getTable() {
 		HighScoreTable scoreTable = new HighScoreTable();
-		scoreTable.addScore(new HighScoreLine(20, "Tim", 800));
-		scoreTable.addScore(new HighScoreLine(12, "Anna", 9000));
-		scoreTable.addScore(new HighScoreLine(99, "Karlo", 400));
-		scoreTable.addScore(new HighScoreLine(5, "Peter", 10));
+		scoreTable.addScore(new HighScoreLine(20, "Tim", 800,50,42));
+		scoreTable.addScore(new HighScoreLine(12, "Anna", 9000,50,42));
+		scoreTable.addScore(new HighScoreLine(99, "Karlo", 400,120,99));
+		scoreTable.addScore(new HighScoreLine(5, "Peter", 10,130, 110));
 		return scoreTable;
 	}
 

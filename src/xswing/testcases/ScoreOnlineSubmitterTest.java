@@ -4,6 +4,7 @@
  */
 package xswing.testcases;
 
+import java.util.*;
 import lib.mylib.highscore.*;
 import org.junit.*;
 
@@ -34,17 +35,18 @@ public class ScoreOnlineSubmitterTest {
 
 	@Test
 	public final void testScoreOnlineSubmitterOnline() {
-		//submitScoreLineTest(SCORE_SERVER_ONLINE);
+		submitScoreLineTest(SCORE_SERVER_ONLINE);
 	}
 
 	private void submitScoreLineTest(String server) {
 		long gemeTime = 1000 * 60 * 5; // 5min
-		long date = 1269187815854l; // 21.03.2010
-		HighScoreLine scoreLine = new HighScoreLine(5000, "Tom", gemeTime, date);
+		Date date = new GregorianCalendar(2010, 4, 21).getTime();
+		HighScoreLine scoreLine = new HighScoreLine(5000, "Tom", gemeTime, 240,221,date);
 		String scoreLineToSubmit = ScoreOnlineSubmitter.createHighScoreLineSubmitString(scoreLine);
 		String url = server + SCORE_SERVER_PATH + SCORE_LINE_SUBMIT_FILE;
 		ScoreOnlineSubmitter submitter = new ScoreOnlineSubmitter(scoreLine, url);
 		String response = submitter.submit();
+		System.out.println("Server response: "+response);
 		Assert.assertEquals(scoreLineToSubmit, response);
 	}
 

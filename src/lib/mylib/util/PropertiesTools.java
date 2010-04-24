@@ -10,7 +10,7 @@ import java.util.*;
 public class PropertiesTools {
 
 	/**
-	 * Converts an args list into a property table, provided it's in the follwing syntax:
+	 * Converts an args list into a property table, provided it's in the following syntax:
 	 * </br>[key1=value1][key2=value2][...] </br> Useful to evaluate the
 	 * <code>void main(String[] args)</code> properties. If <code>args==null</code> an empty
 	 * {@link Properties} list will be returned.

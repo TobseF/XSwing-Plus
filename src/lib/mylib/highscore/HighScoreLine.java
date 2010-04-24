@@ -22,39 +22,65 @@ public class HighScoreLine implements Comparable<HighScoreLine> {
 	/** Time of the highscore submit in ms */
 	private Date date;
 
+	/** Number of balls which were released */
+	private int ballsReleased = 0;
+	/** Number of balls which were disbanded */
+	private int ballsDisbanded = 0;
+	/** Number of values (score, name etc.) in this HighScoreLine */
+	public static final int VALUE_COUNT = 6;
+	/** MySQL Date format which is used to format {@link #date}. */
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 	/**
-	 * Used to seperate the values in #toString(). It's a disallowed character in the #name.
+	 * Used to separate the values in #toString(). It's a disallowed character in the #name.
 	 * have to be different from HighScoreTable#VALUE_SEPERATOR
 	 */
 	public static char VALUE_SEPERATOR = ';';
 
 	/**
-	 * @param score point of this high score
-	 * @param name of the player
-	 * @param gameTime time of the current game in ms
-	 * @param date time of the highscore submit in ms
+	 * @param score {@link #score}
+	 * @param name {@link #name}
+	 * @param gameTime {@link #time}
+	 * @param releasedBalls {@link #ballsReleased}
+	 * @param dispandedBalls {@link #ballsDisbanded}
+	 * @param date {@link #date}
 	 * @see #HighScoreLine(int, String, long)
 	 */
-	public HighScoreLine(int score, String name, long gameTime, long date) {
+	public HighScoreLine(int score, String name, long gameTime, int releasedBalls, int dispandedBalls, Date date) {
 		setName(name);
 		setScore(score);
 		setTime(gameTime);
-		this.date = new Date(date);
+		setReleasedBalls(releasedBalls);
+		setDispandedBalls(dispandedBalls);
+		setDate(date);
 	}
 
 	/**
-	 * @param score point of this high score
-	 * @param name of the player
-	 * @param gameTime time of the current game in ms
+	 * @param score {@link #score}
+	 * @param name {@link #name}
+	 * @param gameTime {@link #time}
+	 * @param releasedBalls {@link #ballsReleased}
+	 * @param dispandedBalls {@link #ballsDisbanded}
 	 */
-	public HighScoreLine(int score, String name, long gameTime) {
-		this(score, name, gameTime, System.currentTimeMillis());
+	public HighScoreLine(int score, String name, long gameTime, int releasedBalls, int dispandedBalls) {
+		this(score, name, gameTime, releasedBalls, dispandedBalls, new Date());
 	}
 
+	/**
+	 * @param score {@link #score}
+	 * @param name {@link #name}
+	 * @param gameTime {@link #time}
+	 */
+	public HighScoreLine(int score, String name, long gameTime) {
+		this(score, name, gameTime, 0, 0, new Date());
+	}
+
+	/**
+	 * @param score {@link #score}
+	 * @param name {@link #name}
+	 */
 	public HighScoreLine(int score, String name) {
-		this(score, name, 0);
+		this(score, name, 0, 0, 0);
 	}
 
 	/**
@@ -65,15 +91,17 @@ public class HighScoreLine implements Comparable<HighScoreLine> {
 	 * @see #wrapHighscoreLineToOneString()
 	 */
 	public HighScoreLine(String scoreInOneLine) {
-		if (scoreInOneLine == null || scoreInOneLine.split(VALUE_SEPERATOR + "").length != 4) {
+		if (scoreInOneLine == null || scoreInOneLine.split(VALUE_SEPERATOR + "").length != VALUE_COUNT) {
 			throw new IllegalArgumentException("Scoreline '" + scoreInOneLine + "' is not formatted correctly");
 		}
 		try {
 			String[] values = scoreInOneLine.split(VALUE_SEPERATOR + "");
 			name = values[0];
 			score = Integer.valueOf(values[1]);
-			time = Long.parseLong(values[2]);
-			date = DATE_FORMAT.parse(values[3]);
+			ballsReleased = Integer.valueOf(values[2]);
+			ballsDisbanded = Integer.valueOf(values[3]);
+			time = Long.parseLong(values[4]);
+			date = DATE_FORMAT.parse(values[5]);
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Scoreline is not formatted correctly");
 		}
@@ -99,6 +127,22 @@ public class HighScoreLine implements Comparable<HighScoreLine> {
 		return name;
 	}
 
+	public int getDispandedBalls() {
+		return ballsDisbanded;
+	}
+
+	public void setDispandedBalls(int dispandedBalls) {
+		this.ballsDisbanded = dispandedBalls;
+	}
+
+	public int getReleasedBalls() {
+		return ballsReleased;
+	}
+
+	public void setReleasedBalls(int releasedBalls) {
+		this.ballsReleased = releasedBalls;
+	}
+
 	public void setName(String name) {
 		name.replace(VALUE_SEPERATOR + "", "");
 		// name.replace(HighScoreTable.VALUE_SEPERATOR + "", "");
@@ -113,13 +157,21 @@ public class HighScoreLine implements Comparable<HighScoreLine> {
 		this.time = time;
 	}
 
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
 	/**
 	 * Creates a String which contains all ScoreLineValues seperated with
 	 * {@link #VALUE_SEPERATOR}. Can be re wrapped with {@link #HighScoreLine(String)}<br>
 	 * Syntax is:<br>
-	 * name;score;time;date<br>
-	 * eg.:<br>
-	 * Max;1200;2010-3-18 13:15:5;6554645
+	 * name;score;releasedBalls;dispandedBalls;time;date<br>
+	 * e.g.:<br>
+	 * Max;1200;220;208;2010-3-18 13:15:5;6554645
 	 * 
 	 * @return a String which contains all ScoreLineValues seperated with
 	 *         {@value #VALUE_SEPERATOR}.
@@ -130,6 +182,10 @@ public class HighScoreLine implements Comparable<HighScoreLine> {
 		builder.append(name);
 		builder.append(VALUE_SEPERATOR);
 		builder.append(score);
+		builder.append(VALUE_SEPERATOR);
+		builder.append(ballsReleased);
+		builder.append(VALUE_SEPERATOR);
+		builder.append(ballsDisbanded);
 		builder.append(VALUE_SEPERATOR);
 		if (forOnlineSubmit) {
 			builder.append(Clock.getFormattedTimeAsString(time));
@@ -143,7 +199,7 @@ public class HighScoreLine implements Comparable<HighScoreLine> {
 
 	/**
 	 * Same as {@link #wrapHighscoreLineToOneString(boolean)} but the time is formatted with
-	 * "hh:mm:ss" insted of an single integer.
+	 * "hh:mm:ss" instead of an single integer.
 	 * 
 	 * @return string which can be submitted only
 	 */
@@ -159,7 +215,9 @@ public class HighScoreLine implements Comparable<HighScoreLine> {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null && obj instanceof HighScoreLine) {
-			return (score == ((HighScoreLine) obj).score && name.equals(((HighScoreLine) obj).name) && time == ((HighScoreLine) obj).time);
+			HighScoreLine scoreLine = (HighScoreLine) obj;
+			return (score == scoreLine.score && name.equals(scoreLine.name) && ballsReleased == scoreLine.ballsReleased
+					&& ballsDisbanded == scoreLine.ballsDisbanded && time == scoreLine.time);
 		}
 		return super.equals(obj);
 	}

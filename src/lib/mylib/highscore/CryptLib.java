@@ -53,9 +53,9 @@ public class CryptLib {
 	 * Adds the sum of all digits of the given (number)string at the end. This Hash is always
 	 * {@link #HASH_LENGHT} digits long. It's no problem if the sum has more digits than
 	 * {@link #HASH_LENGHT}.<br>
-	 * eg. HASH_LENGHT = 2<br>
+	 * e.g. HASH_LENGHT = 2<br>
 	 * "01234" ==> "01234010"<br>
-	 * eg. HASH_LENGHT = 3<br>
+	 * e.g. HASH_LENGHT = 3<br>
 	 * "01234" ==> "012340010"<br>
 	 * 
 	 * @param stringWithNumbers String which contains only figures.
@@ -79,9 +79,9 @@ public class CryptLib {
 
 	/**
 	 * Removes a with {@link #addHash(String)} added number hash and checks if it was right.<br>
-	 * eg. HASH_LENGHT = 2<br>
+	 * e.g. HASH_LENGHT = 2<br>
 	 * "0123410" ==> "01234" <br>
-	 * eg. HASH_LENGHT = 3<br>
+	 * e.g. HASH_LENGHT = 3<br>
 	 * "01234010" ==> "01234" <br>
 	 * 
 	 * @param stringWithHash
@@ -128,7 +128,7 @@ public class CryptLib {
 	/**
 	 * Converts a sequence of ASCI values back to a String. Every value have to fill three
 	 * digits. <br>
-	 * eg.<br>
+	 * e.g.<br>
 	 * "065" ==> "A"<br>
 	 * "084105109049050 ==> "Tim12"
 	 * 
@@ -166,9 +166,9 @@ public class CryptLib {
 
 	/**
 	 * Adds a random <code>numberOfDigits</code> long number sequence to a string. The first
-	 * wich is added, contains <code>numberOfDigits</code>. If the String is longer than
+	 * which is added, contains <code>numberOfDigits</code>. If the String is longer than
 	 * <code>numberOfDigits</code> nothing will be added.<br>
-	 * eg.:<br>
+	 * e.g.:<br>
 	 * addRandom("16",4)==> "22116" <br>
 	 * addRandom("16",4)==> "23316"
 	 * 
@@ -197,7 +197,7 @@ public class CryptLib {
 	 * "01349823"==> true <br>
 	 * "0SA49823"==> false <br>
 	 * 
-	 * @param string which shluld be checked
+	 * @param string which should be checked
 	 * @return containsOnlyNumbers <code>true</code> if the given string is only a sequence of
 	 *         numbers
 	 */
@@ -216,10 +216,10 @@ public class CryptLib {
 	/**
 	 * Crypts or encrypts a given String which contains only figures, by rotating each digit.
 	 * The rotation amount is given by the phrase (also only digits).<br>
-	 * Wether the string will be en- or. deCypted is controlled by <code>isCrypting</code>.
+	 * Weather the string will be en- or. deCypted is controlled by <code>isCrypting</code>.
 	 * 
 	 * @param stringToCrypt (contains only figures)
-	 * @param phrase follwing of digits which regulates the number rotation
+	 * @param phrase following of digits which regulates the number rotation
 	 * @param isCrypting if true: string will be deCrypted with phrase <br>
 	 *            if false: string will be enCrypted with phrase
 	 * @return enCrypted or deCrypted string (relying on <code>isCrypting</code>)
@@ -271,9 +271,9 @@ public class CryptLib {
 	}
 
 	/**
-	 * Returns the sum of the digits of a given String (which have to consits only out of
+	 * Returns the sum of the digits of a given String (which have to consists only out of
 	 * numbers). <br>
-	 * eg. "01234" ==> "10"
+	 * e.g. "01234" ==> "10"
 	 * 
 	 * @param stringWithNumbers
 	 * @return sumOfTheDigits
