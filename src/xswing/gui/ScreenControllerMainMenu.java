@@ -1,6 +1,6 @@
 package xswing.gui;
 
-import lib.mylib.util.LanguageSelector;
+import lib.mylib.util.*;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 import xswing.LocationController;
@@ -48,7 +48,12 @@ public class ScreenControllerMainMenu implements ScreenController {
 	 * on start screen interactive.
 	 */
 	public final void onStartScreen() {
-
+		SlickUtils.hideMouse(game.getContainer(), false);
+//		try {
+//			game.getContainer().setMouseCursor(mouseCursor, 2, 2);
+//		} catch (SlickException e) {
+//			e.printStackTrace();
+//		}
 	/*
 	 * screen.findElementByName("startSinglePlayer").setFocus();
 	 * screen.addKeyboardInputHandler(new NiftyInputMapping() {
@@ -89,7 +94,11 @@ public class ScreenControllerMainMenu implements ScreenController {
 	 */
 	public final void onEndScreen() {
 		Log.info("Switched from MainMenu");
-
+//		try {
+//			game.getContainer().setMouseCursor(mouseCursorInvisible, 2, 2);
+//		} catch (SlickException e) {
+//			e.printStackTrace();
+//		}
 		// screen.findElementByName("Start").setFocus();
 
 		/*
@@ -124,8 +133,8 @@ public class ScreenControllerMainMenu implements ScreenController {
 	private void enterGame() {
 		System.out.println("enterGame");
 		//game.getContainer().setMouseGrabbed(true);
+		SlickUtils.hideMouse(game.getContainer(), true);
 		game.enterState(2);
-		nifty.getMouseInputEventQueue().reset();
 	}
 
 	

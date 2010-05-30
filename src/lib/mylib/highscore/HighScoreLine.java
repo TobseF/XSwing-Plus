@@ -42,16 +42,16 @@ public class HighScoreLine implements Comparable<HighScoreLine> {
 	 * @param name {@link #name}
 	 * @param gameTime {@link #time}
 	 * @param releasedBalls {@link #ballsReleased}
-	 * @param dispandedBalls {@link #ballsDisbanded}
+	 * @param disbandedBalls {@link #ballsDisbanded}
 	 * @param date {@link #date}
 	 * @see #HighScoreLine(int, String, long)
 	 */
-	public HighScoreLine(int score, String name, long gameTime, int releasedBalls, int dispandedBalls, Date date) {
+	public HighScoreLine(int score, String name, long gameTime, int releasedBalls, int disbandedBalls, Date date) {
 		setName(name);
 		setScore(score);
 		setTime(gameTime);
 		setReleasedBalls(releasedBalls);
-		setDispandedBalls(dispandedBalls);
+		setDispandedBalls(disbandedBalls);
 		setDate(date);
 	}
 
@@ -60,10 +60,10 @@ public class HighScoreLine implements Comparable<HighScoreLine> {
 	 * @param name {@link #name}
 	 * @param gameTime {@link #time}
 	 * @param releasedBalls {@link #ballsReleased}
-	 * @param dispandedBalls {@link #ballsDisbanded}
+	 * @param disbandedBalls {@link #ballsDisbanded}
 	 */
-	public HighScoreLine(int score, String name, long gameTime, int releasedBalls, int dispandedBalls) {
-		this(score, name, gameTime, releasedBalls, dispandedBalls, new Date());
+	public HighScoreLine(int score, String name, long gameTime, int releasedBalls, int disbandedBalls) {
+		this(score, name, gameTime, releasedBalls, disbandedBalls, new Date());
 	}
 
 	/**

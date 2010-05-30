@@ -110,8 +110,7 @@ public class SwingUtils {
 		int[] sizes = { 16, 22, 32, 48, 64, 128 };
 		for (int size : sizes) {
 			try {
-				URL filepaph = ResourceLoader.getResource(iconFolder + iconName + size
-						+ ".png");
+				URL filepaph = ResourceLoader.getResource(iconFolder + iconName + size + ".png");
 				imageList.add(Toolkit.getDefaultToolkit().getImage(filepaph));
 			} catch (RuntimeException e) {}
 		}
@@ -129,4 +128,36 @@ public class SwingUtils {
 	public static void setIcons(Frame frame, String iconFolder) {
 		setIcons(frame, iconFolder, "icon");
 	}
+
+	/** Returns the center of the first display.
+	 * @return  the center (displayWidht/2,diplayHight/2) of the first display.
+	 */
+	public static Point getScreenCenter() {
+		Dimension dimension = getScreenSize();
+		return new Point(dimension.width / 2, dimension.height / 2);
+	}
+
+	/** Returns the Screen resolution. If there're more than one display you might want to use: {@link #getScreenSizes()} 
+	 * @return the Screen resolution
+	 * @see #getScreenSizes()
+	 */
+	public static Dimension getScreenSize() {
+		return Toolkit.getDefaultToolkit().getScreenSize();
+	}
+
+	/** Returns the Screen resolution of all available displays. If ther's only one display you might use: {@link #getScreenSize()}
+	 * @return Screen resolution of all available displays.
+	 * @see #getScreenSize()
+	 */
+	public static Dimension[] getScreenSizes() {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice[] gs = ge.getScreenDevices(); // Get size of each screen
+		Dimension[] dimension = new Dimension[ gs.length];
+		for (int i = 0; i < gs.length; i++) {
+			DisplayMode dm = gs[i].getDisplayMode();
+			dimension[i] = new Dimension( dm.getWidth(), dm.getHeight());
+		}
+		return dimension;
+	}
+
 }

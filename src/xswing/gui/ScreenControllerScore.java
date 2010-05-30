@@ -27,20 +27,20 @@ public class ScreenControllerScore implements ScreenController {
 	private HighScoreLine newScore;
 	private TextFieldControl textField;
 	private Clock clock;
-	private BallKiller ballsReleased;
-	private BallCounter ballsDisbanded;
+	private BallKiller ballsDisbanded;
+	private BallCounter ballsReleased;
 	private String playerName;
 
 	private final static String SCORE_SERVER_PATH = "";
 	private final static String SCORE_LINE_SUBMIT_FILE = "submit_high_score_line.php";
-
+	
 	public ScreenControllerScore(StateBasedGame game, HighScoreTable highScoreList, Clock clock,
-			BallCounter ballsDisbanded, BallKiller ballsReleased) {
+			BallCounter ballsReleased, BallKiller ballsDisbanded) {
 		this.game = game;
 		this.highScoreList = highScoreList;
 		this.clock = clock;
-		this.ballsReleased = ballsReleased;
 		this.ballsDisbanded = ballsDisbanded;
+		this.ballsReleased = ballsReleased;
 	}
 
 	public void setHighScore(int highScore) {
@@ -75,6 +75,7 @@ public class ScreenControllerScore implements ScreenController {
 	 */
 	public final void onStartScreen() {
 		Screen screen = nifty.getCurrentScreen();
+		SlickUtils.hideMouse(game.getContainer(), false);
 		// nifty.toggleDebugConsole(true); //Debug text
 		setHighScore(screen);
 		textField = screen.findControl("name", TextFieldControl.class);
@@ -117,8 +118,9 @@ public class ScreenControllerScore implements ScreenController {
 //			MyOptions.save();
 		}
 		Log.info("Score entered: " + highScore + " " + name);
-		newScore = new HighScoreLine(highScore, name, clock.getTimeSinceStart(), ballsDisbanded.getBalls(),
-				ballsReleased.getBallKills());
+		newScore = new HighScoreLine(highScore, name, clock.getTimeSinceStart(), ballsReleased.getBalls(),
+				ballsDisbanded.getBallKills());
+		System.out.println(newScore);
 		highScoreList.addScore(newScore);
 		highScoreList.save();
 		boolean submitHighscoreOnline = screen.findControl("upload-score", CheckboxControl.class).isChecked();
@@ -129,6 +131,7 @@ public class ScreenControllerScore implements ScreenController {
 
 		((GamePanel) game.getState(XSwing.GAME_PANEL)).reset();
 		nifty.getMouseInputEventQueue().reset();
+		SlickUtils.hideMouse(game.getContainer(), true);
 		game.enterState(XSwing.GAME_PANEL, new EmptyTransition(), new EmptyTransition());
 		// FIXME: score isn't submit offline
 	}

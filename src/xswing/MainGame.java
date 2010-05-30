@@ -12,7 +12,7 @@ import lib.mylib.SpriteSheet;
 import lib.mylib.hacks.NiftyGameState;
 import lib.mylib.highscore.HighScoreTable;
 import lib.mylib.object.*;
-import lib.mylib.util.Clock;
+import lib.mylib.util.*;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
@@ -79,6 +79,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 
 	private EventListenerList gameEventListeners;
 
+	/** Highscore submit Panel */
 	private NiftyGameState highScoreState = null;
 
 	private ScreenControllerScore scoreScreenController;
@@ -232,7 +233,12 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		Input input = container.getInput();
-		checkKeys(input);
+		if (!isGameOver) {
+			checkKeysMain(input);
+			if (!container.isPaused()) { // no Input while game is paused
+				checkKeysDuringGamee(input);
+			}
+		}
 
 		if (!container.isPaused()) {
 			gui.update(delta);
@@ -253,102 +259,113 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	}
 
 	/**
-	 * Performs all KeyEvents
+	 * Performs KeyEvents, which should be also performed during game is paused
 	 * 
 	 * @param input GameInput
 	 */
-	private void checkKeys(Input input) {
-		if (!isGameOver) {
-			if (input.isKeyPressed(Input.KEY_P)) {
-				if (container.isPaused()) {
-					fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_PAUSED));
-				} else {
-					fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_RESUMED));
-				}
-				container.setPaused(!container.isPaused());
-				pause.setVisible(!pause.isVisible());
-				resetInput();
+	private void checkKeysMain(Input input) {
+
+		if (input.isKeyPressed(Input.KEY_P)) {
+			// || (!container.isFullscreen() && !Mouse.isInsideWindow() &&
+			// !container.isPaused())
+			if (container.isPaused()) {
+				fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_PAUSED));
+			} else {
+				fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_RESUMED));
 			}
-			if (input.isKeyPressed(Input.KEY_N)) {
-				fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_STOPPED));
-				newGame();
-			}
-			if (input.isKeyDown(Input.KEY_ESCAPE)) {
-				fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_STOPPED));
-				if (game.getCurrentState().getID() == XSwing.GAME_PANEL) { // Game is started
-					// with Menue
-					Log.info("ESC pressed, swiching to main menu");
-					game.enterState(XSwing.START_SCREEN);
-				} else {
-					// Game is started without Menue
-					Log.info("Exit Game wit ESC -no main menu");
-					container.exit();
-				}
-			}
-			if (!container.isPaused()) { // no Input while game is paused
-				if (input.isKeyPressed(keyLeft)) {
-					notifyListener(new XSwingEvent(this, GameEventType.CANNON_MOVED_LEFT));
-				}
-				if (input.isKeyPressed(keyRight)) {
-					notifyListener(new XSwingEvent(this, GameEventType.CANNON_MOVED_RIGHT));
-				}
-				if (input.isKeyPressed(keyDown)) {
-					notifyListener(new XSwingEvent(this, GameEventType.PRESSED_DOWN));
-				}
-				if (input.isKeyPressed(Input.KEY_J)) {
-					// ballFactory.addNewJoker();
-				}
-				if (input.isKeyPressed(Input.KEY_K)) {
-					if (ballDropSimulator == null) {
-						ballDropSimulator = new BallDropSimulator();
-					}
-					ballDropSimulator.setBallTable(ballTable.clone());
-				}
-				if (input.isKeyPressed(Input.KEY_E)) {
-					effectCatalog.setShowParticles(!effectCatalog.isShowParticles());
-				}
-				if (input.isKeyPressed(Input.KEY_B)) {
-					ballFactory.toggleSpriteSheet();
-				}
-				if (input.isKeyPressed(Input.KEY_M)) {
-					ballFactory.addNewStone();
-				}
-				if (input.isKeyPressed(Input.KEY_F)) {
-					container.setShowFPS(!container.isShowingFPS());
-				}
-				if (input.isKeyPressed(Input.KEY_S)) {
-					// shrinkGame(game);
-				}
-				if (input.isKeyPressed(Input.KEY_H)) {
-					highScore.setVisible(!highScore.isVisible());
-				}
-				// if (input.isKeyPressed(Input.KEY_1)) {
-				// canon.getBall().setNr(0);
-				// }
-				// if (input.isKeyPressed(Input.KEY_2)) {
-				// canon.getBall().setNr(1);
-				// }
-				// if (input.isKeyPressed(Input.KEY_2)) {
-				// canon.getBall().setNr(2);
-				// }
-				// if (input.isKeyPressed(Input.KEY_3)) {
-				// canon.getBall().setNr(3);
-				// }
-				// if (input.isKeyPressed(Input.KEY_4)) {
-				// canon.getBall().setNr(4);
-				// }
-				// if (input.isKeyPressed(Input.KEY_5)) {
-				// canon.getBall().setNr(5);
-				// }
-				if (input.isKeyPressed(Input.KEY_F2)) {
-					try {
-						container.setFullscreen(!container.isFullscreen());
-					} catch (SlickException e) {
-						e.printStackTrace();
-					}
-				}
+			container.setPaused(!container.isPaused());
+			pause.setVisible(!pause.isVisible());
+			resetInput();
+		}
+		if (input.isKeyPressed(Input.KEY_N)) {
+			fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_STOPPED));
+			newGame();
+		}
+		if (input.isKeyDown(Input.KEY_ESCAPE)) {
+			fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_STOPPED));
+			if (game.getCurrentState().getID() == XSwing.GAME_PANEL) {
+				// Game is started with Menu
+				Log.info("ESC pressed, swiching to main menu");
+				SlickUtils.hideMouse(game.getContainer(), false);
+				game.enterState(XSwing.START_SCREEN);
+			} else {
+				// Game is started without Menu
+				Log.info("Exit Game wit ESC -no main menu");
+				container.exit();
 			}
 		}
+
+	}
+
+	/**
+	 * Performs KeyEvents which should be not performed, during the game is paused
+	 * 
+	 * @param input GameInput
+	 */
+	private void checkKeysDuringGamee(Input input) {
+
+		if (input.isKeyPressed(keyLeft)) {
+			notifyListener(new XSwingEvent(this, GameEventType.CANNON_MOVED_LEFT));
+		}
+		if (input.isKeyPressed(keyRight)) {
+			notifyListener(new XSwingEvent(this, GameEventType.CANNON_MOVED_RIGHT));
+		}
+		if (input.isKeyPressed(keyDown)) {
+			notifyListener(new XSwingEvent(this, GameEventType.PRESSED_DOWN));
+		}
+		if (input.isKeyPressed(Input.KEY_J)) {
+			// ballFactory.addNewJoker();
+		}
+		if (input.isKeyPressed(Input.KEY_K)) {
+			if (ballDropSimulator == null) {
+				ballDropSimulator = new BallDropSimulator();
+			}
+			ballDropSimulator.setBallTable(ballTable.clone());
+		}
+		if (input.isKeyPressed(Input.KEY_E)) {
+			effectCatalog.setShowParticles(!effectCatalog.isShowParticles());
+		}
+		if (input.isKeyPressed(Input.KEY_B)) {
+			ballFactory.toggleSpriteSheet();
+		}
+		if (input.isKeyPressed(Input.KEY_M)) {
+			ballFactory.addNewStone();
+		}
+		if (input.isKeyPressed(Input.KEY_F)) {
+			container.setShowFPS(!container.isShowingFPS());
+		}
+		if (input.isKeyPressed(Input.KEY_S)) {
+			// shrinkGame(game);
+		}
+		if (input.isKeyPressed(Input.KEY_H)) {
+			highScore.setVisible(!highScore.isVisible());
+		}
+		// if (input.isKeyPressed(Input.KEY_1)) {
+		// canon.getBall().setNr(0);
+		// }
+		// if (input.isKeyPressed(Input.KEY_2)) {
+		// canon.getBall().setNr(1);
+		// }
+		// if (input.isKeyPressed(Input.KEY_2)) {
+		// canon.getBall().setNr(2);
+		// }
+		// if (input.isKeyPressed(Input.KEY_3)) {
+		// canon.getBall().setNr(3);
+		// }
+		// if (input.isKeyPressed(Input.KEY_4)) {
+		// canon.getBall().setNr(4);
+		// }
+		// if (input.isKeyPressed(Input.KEY_5)) {
+		// canon.getBall().setNr(5);
+		// }
+		if (input.isKeyPressed(Input.KEY_F2)) {
+			try {
+				container.setFullscreen(!container.isFullscreen());
+			} catch (SlickException e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	private boolean firstStart = true;
@@ -419,6 +436,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 			Point field = ballTable.getField(e.getBall());
 			ballTable.setBall(field.x, field.y, null);
 			ballsToMove.remove(e.getBall());
+
 		} else if (e.getBallEventType() == BallEventType.BALL_CAUGHT_BY_SHRINC) {
 			effectCatalog.addEffect(e.getBall(), particleEffects.SHRINC);
 		}

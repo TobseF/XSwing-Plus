@@ -65,7 +65,7 @@ public class Level extends Ball implements Resetable {
 		return weight;
 	}
 
-	/** Swicht to the next level */
+	/** Switch to the next level */
 	public void nextLevel() {
 		if (!(getNr() + 1 >= MAX_LEVEL)) {
 			setNr(getNr() + 1);

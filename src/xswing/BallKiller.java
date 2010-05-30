@@ -66,9 +66,10 @@ public class BallKiller implements Resetable, Updateable, BallEventListener {
 			effectCatalog.addEffect(b, particleEffects.EXPLOSION); // TODO: move to EffectLib
 			b.fireBallEvent(BallEventType.BALL_CAUGHT_BY_EXPLOSION);
 			ballKills++;
+			System.out.println(ballKills);
 		}
 		ballsToKill.clear();
-		reset();
+		timer.reset();
 	}
 
 	private void explodeRow() {
