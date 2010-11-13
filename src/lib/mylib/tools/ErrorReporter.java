@@ -30,10 +30,18 @@ public class ErrorReporter extends JFrame implements ActionListener {
 	/** Executed on a submit -generic server request */
 	private final SubmitRequest submitRequest;
 	/** New Line Separator */
-	private static String NL = "\n";
+	private static String NEW_LINE = "\n";
+	/** If the ErrorReporter should exit the VM after submitting the error.	 */
+	private final boolean exitSystemOnSubmit;
 
-	public ErrorReporter(Throwable e, SubmitRequest submitRequest) {
+	/**
+	 * @param e Error which should be reported
+	 * @param submitRequest Listener which should receive the error report
+	 * @param exitSystemOnSubmit if the ErrorReporter should exit the VM after submitting the error
+	 */
+	public ErrorReporter(Throwable e, SubmitRequest submitRequest, boolean exitSystemOnSubmit) {
 		this.submitRequest = submitRequest;
+		this.exitSystemOnSubmit = exitSystemOnSubmit;
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		PrintWriter writer = new PrintWriter(stream);
 		e.printStackTrace(writer);
@@ -45,11 +53,12 @@ public class ErrorReporter extends JFrame implements ActionListener {
 		initComponents();
 	}
 
-	public ErrorReporter(String errorMessage, SubmitRequest submitRequest) {
-		this.errorMessage = errorMessage;
-		this.submitRequest = submitRequest;
-		systemInfo = getSystemInformation();
-		initComponents();
+	public ErrorReporter(Throwable e, SubmitRequest submitRequest) {
+		this(e, submitRequest, true);
+	}
+	
+	public ErrorReporter(String errorMessage, SubmitRequest submitRequest, boolean exitSystemOnSubmit) {
+		this(new Throwable(errorMessage),submitRequest, exitSystemOnSubmit);
 	}
 
 	private void initComponents() {
@@ -132,49 +141,53 @@ public class ErrorReporter extends JFrame implements ActionListener {
 
 	private String getSystemInformation() {
 		StringBuilder systemInfos = new StringBuilder();
-		systemInfos.append("java runtime: " + System.getProperty("java.vendor") + NL);
+		systemInfos.append("java runtime: " + System.getProperty("java.vendor") + NEW_LINE);
 		systemInfos.append("java version: " + System.getProperty("java.runtime.name") + " "
-				+ System.getProperty("java.version") + NL);
+				+ System.getProperty("java.version") + NEW_LINE);
 		systemInfos.append("os name: " + System.getProperty("os.name") + " " + System.getProperty("sun.os.patch.level")
-				+ NL);
+				+ NEW_LINE);
 		systemInfos.append("language: " + System.getProperty("user.language") + " "
 				+ System.getProperty("user.country"));
 		return systemInfos.toString();
 	}
 
 	public static void main(String[] args) {
-		new ErrorReporter("Test Bug", new ServerRequest(""));
+		new ErrorReporter("Test Bug", new ServerRequest(""), true);
 	}
 
 	public String getReport() {
 		StringBuilder bugReport = new StringBuilder();
 		bugReport.append("Error: ");
-		bugReport.append(errorMessage + NL);
+		bugReport.append(errorMessage + NEW_LINE);
 		bugReport.append("StackTrace:\n");
-		bugReport.append(stackTrace + NL);
-		bugReport.append("Log File: " + NL);
-		bugReport.append(logFile + NL);
-		bugReport.append("User input: " + NL);
+		bugReport.append(stackTrace + NEW_LINE);
+		bugReport.append("Log File: " + NEW_LINE);
+		bugReport.append(logFile + NEW_LINE);
+		bugReport.append("User input: " + NEW_LINE);
 		String userText = userInput.getText();
 		if (userText.length() > 1024 * 4) {
 			userText = userText.substring(0, 1024 * 4);
 		}
 		bugReport.append(userText);
-		bugReport.append(NL);
+		bugReport.append(NEW_LINE);
 		if (includeSystemInfo.isSelected()) {
-			bugReport.append("System Info: " + NL);
+			bugReport.append("System Info: " + NEW_LINE);
 			bugReport.append(systemInfo);
 		}
 		return bugReport.toString();
 	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(submit) && submitRequest != null) {
+			submitRequest.request(getReport());
 			JOptionPane.showMessageDialog(this, LanguageSelector.getString("submitted_error_thanks"), LanguageSelector
 					.getString("submitted_error_window"), JOptionPane.INFORMATION_MESSAGE);
 			setVisible(false);
-			submitRequest.request(getReport());
+			if(exitSystemOnSubmit){
+			System.exit(NORMAL);
+			}
 		}
 	}
+
 }

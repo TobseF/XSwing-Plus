@@ -8,6 +8,7 @@ import lib.mylib.*;
 import lib.mylib.SpriteSheet;
 import lib.mylib.object.Resetable;
 import org.newdawn.slick.*;
+import xswing.ball.Ball;
 
 /** The ball which counts the levels. Level can be 1-45 */
 public class Level extends Ball implements Resetable {

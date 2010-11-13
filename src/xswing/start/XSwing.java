@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.logging.*;
 import lib.mylib.gamestates.LoadingScreen;
 import lib.mylib.hacks.NiftyGameState;
-import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.tools.*;
 import lib.mylib.util.*;
 import lib.mylib.version.Version;
@@ -19,6 +18,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.*;
 import org.newdawn.slick.util.Log;
 import xswing.GamePanel;
+import xswing.DefaultArgs.Args;
 import xswing.gui.ScreenControllerMainMenu;
 
 /**
@@ -33,7 +33,7 @@ public class XSwing extends StateBasedGame {
 	public static final int LOADING_SCREEN = 0, START_SCREEN = 1, GAME_PANEL = 2, GAME_OVER = 3;
 	public static final String XSWING_HOST_URL = "http://xswing.net/";
 	public static final String POST_BUG_URL = XSWING_HOST_URL + "postbug.php";
-
+	
 	public XSwing() {
 		super("XSwing Plus " + VERSION);
 	}
@@ -43,23 +43,22 @@ public class XSwing extends StateBasedGame {
 		try {
 			ScreenControllerMainMenu controller = new ScreenControllerMainMenu(this);
 			addState(new LoadingScreen(LOADING_SCREEN, new FadeOutTransition(Color.black), new EmptyTransition()));
-			container.getHeight();
-			container.getWidth();
 			NiftyGameState mainMenu = new NiftyGameState(START_SCREEN);
-			// VOID: how to enable mouse image without grabbed mouse
-			try {
+			if(MyOptions.getBoolean(Args.useNativeMouseCursor)){
+				Log.info("Using native mouse cursor");
 				container.setMouseCursor(new Image("res/cursor.png"), 2, 2);
-			} catch (NoSuchMethodError e) {
-				Log.warn("No native Mouse cursor supported. Now using Nifty and grabbing mouse.");
+			}else {
+				Log.warn("Using Nifty mouse cursor and grabbing mouse.");
 				mainMenu.enableMouseImage(new Image("res/cursor.png"), 2, 2); // Nifty way
-				container.setMouseGrabbed(true);
+				container.setMouseGrabbed(!MyOptions.getBoolean(Args.debug));
 			}
 			// VOID: how to catch nifty exceptions
 			mainMenu.fromXml("xswing/gui/main_menu.xml", controller);
 			addState(mainMenu);
+			container.setForceExit(false);
 			addState(new GamePanel(GAME_PANEL));
 		} catch (Throwable e) {
-			new ErrorReporter(e, new ServerRequest(POST_BUG_URL));
+			new ErrorReporter(e, new ServerRequest(POST_BUG_URL), true);
 			// e.printStackTrace();
 		}
 	}
@@ -83,9 +82,10 @@ public class XSwing extends StateBasedGame {
 		// Log.setVerbose(debug); //debug info logging
 		try {
 			AppGameContainer game = new AppGameContainer(new XSwing());
+			game.setForceExit(false);
 			game.setShowFPS(debug);
 			game.setMinimumLogicUpdateInterval(26);
-			// game.setMaximumLogicUpdateInterval(26);
+			//game.setMaximumLogicUpdateInterval(26);
 			try {
 				game.setDisplayMode(1024, 768, fullsceen);
 			} catch (SlickException e) {
@@ -112,7 +112,7 @@ public class XSwing extends StateBasedGame {
 				}
 			}
 		} catch (Throwable e) {
-			new ErrorReporter(e, new ServerRequest(POST_BUG_URL));
+			new ErrorReporter(e, new ServerRequest(POST_BUG_URL), true);
 			// e.printStackTrace();
 		}
 	}

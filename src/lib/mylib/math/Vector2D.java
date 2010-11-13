@@ -26,20 +26,21 @@ package lib.mylib.math;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
-public class Vector2D implements Cloneable{
+public class Vector2D implements Cloneable {
 
 	public double x = 0;
 	public double y = 0;
 
-	public static Vector2D vector(Point p) {
-		return new Vector2D(p.x, p.y);
+	public Vector2D(Point p) {
+		this(p.x, p.y);
 	}
 
-	public static Vector2D vector(Point2D p) {
-		return new Vector2D(p.getX(), p.getY());
+	public Vector2D(Point2D p) {
+		this(p.getX(), p.getY());
 	}
 
-	public Vector2D() {}
+	public Vector2D() {
+	}
 
 	public Vector2D(double x, double y) {
 		this.x = x;
@@ -154,19 +155,23 @@ public class Vector2D implements Cloneable{
 	}
 
 	public double getDegree(Vector2D v2) {
-		return Math.round(Math.toDegrees(Math.acos(((dot(v2)) / (length() * v2.length())))));
+		return Math.round(Math.toDegrees(Math.acos(((dot(v2)) / (length() * v2
+				.length())))));
 	}
 
-	/** Returns the angle in degrees of this vector an Vector2D(0,1). 0 < angle < = 360. 
+	/**
+	 * Returns the angle in degrees of this vector an Vector2D(0,1). 0 < angle <
+	 * = 360.
+	 * 
 	 * @return angle in degrees of this vector an Vector2D(0,1).
 	 */
 	public double getDegree() {
 		double degrees = getDegree(new Vector2D(0, 1));
-		if(degrees == 0){
+		if (degrees == 0) {
 			return 360;
 		}
 		if (x < 0) {
-			return 360 -degrees;
+			return 360 - degrees;
 		} else {
 			return degrees;
 		}
@@ -191,9 +196,9 @@ public class Vector2D implements Cloneable{
 	public String toString() {
 		return "<Vector2D: " + x + ", " + y + " >";
 	}
-	
+
 	@Override
-	protected Vector2D clone(){
+	protected Vector2D clone() {
 		return new Vector2D(x, y);
 	}
 

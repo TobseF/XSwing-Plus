@@ -22,7 +22,7 @@ public class PropertiesToolsTest {
 		System.out.println(properties);
 		System.out.println("");
 
-		String xml = PropertiesTools.propertiesToXMLString(properties);
+		String xml = PropertiesTools.propertiesToXMLString((lib.mylib.util.Properties) properties);
 		System.out.println(xml);
 
 		Properties newProperties = PropertiesTools.xmlPropertiesStringToProperties(xml);

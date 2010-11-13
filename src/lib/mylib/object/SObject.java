@@ -16,13 +16,13 @@ public class SObject implements Drawable, Updateable, Positionable {
 	protected Image image = null;
 
 	/**
-	 * Wether the <code>SObject</code> shoulb be rendered or not. Every <code>SObject</code>
-	 * has to add this behavior by it self. So it's not guaranteed that it's really invisble.
+	 * Whether the SObject should be rendered or not. Every SObject has to add this behavior by
+	 * it self. So it's not guaranteed that it's really invisible.
 	 */
 	protected boolean isVisible = true;
 	/**
-	 * Weheter liftife of the <code>SObject</code> is finished. Useful for the
-	 * <code>SObjectList</code> which can remove finshed object automatically.
+	 * Whether lifetime of the SObject is finished. Useful for the SObjectList which can remove
+	 * finished object automatically.
 	 * 
 	 * @see #isFinished()
 	 * @see #finish()
@@ -104,8 +104,8 @@ public class SObject implements Drawable, Updateable, Positionable {
 	 * 
 	 * @param pos array with x and y position (pos[0] = x, po[1] = y)
 	 */
-	public void setPos(int[] pos) {
-		setPos(pos[0], pos[1]);
+	public void setPos(Point pos) {
+		setPos(pos.x, pos.y);
 	}
 
 	/**
@@ -145,8 +145,8 @@ public class SObject implements Drawable, Updateable, Positionable {
 	}
 
 	/**
-	 * Sets wether the component should be drawn (true). It's depends on the draw()
-	 * implementation wether it would be considered.
+	 * Sets whether the component should be drawn (true). It's depends on the draw()
+	 * implementation whether it would be considered.
 	 * 
 	 * @param isVisible
 	 * @see #finish()
@@ -156,8 +156,8 @@ public class SObject implements Drawable, Updateable, Positionable {
 	}
 
 	/**
-	 * Tags the <code>SObject</code> as finshed. Useful for the <code>SObjectList</code> which
-	 * can remove finshed object automatically.
+	 * Tags the <code>SObject</code> as finished. Useful for the <code>SObjectList</code> which
+	 * can remove finished object automatically.
 	 */
 	public void finish() {
 		finished = true;
@@ -170,4 +170,27 @@ public class SObject implements Drawable, Updateable, Positionable {
 		return finished;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof SObject) {
+			SObject object = (SObject) obj;
+			return object.x == x && object.y == y && object.finished == finished && object.isVisible == isVisible;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return 3 * x + 7 * y + (finished ? 1 : 0) + (isVisible ? 2 : 0);
+	}
+
+	public Image getImage() {
+		return image;
+	}
+	
+	public void translate(int x, int y) {
+		this.x+=x;
+		this.y+=y;
+	}
 }

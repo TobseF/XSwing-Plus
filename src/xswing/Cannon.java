@@ -8,6 +8,7 @@ import lib.mylib.SpriteSheet;
 import lib.mylib.object.*;
 import org.newdawn.slick.*;
 import xswing.EffectCatalog.particleEffects;
+import xswing.ball.*;
 
 /** Provides a moveable Cannon which releses the Balls */
 public class Cannon extends SObject implements Resetable {

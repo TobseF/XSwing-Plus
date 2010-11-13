@@ -11,6 +11,7 @@ import lib.mylib.Sound;
 import lib.mylib.object.*;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.particles.*;
+import xswing.ball.Ball;
 
 /** Provides particle & sound effects */
 public class EffectCatalog implements Resetable, Updateable, Drawable {

@@ -6,6 +6,7 @@ package xswing.ai;
 
 import lib.mylib.object.Updateable;
 import xswing.*;
+import xswing.ball.BallTable;
 
 public class CopyOfAIInterface implements Updateable {
 
@@ -26,11 +27,11 @@ public class CopyOfAIInterface implements Updateable {
 
 	@SuppressWarnings("unused")
 	private void simulateABallDrop() {
-		System.out.println(ballTable.printBallTable());
+		System.out.println(ballTable);
 		BallTable newBallTable;
 		newBallTable = simulator.simulate(ballTable, cannon.getBall(), cannon.getPos());
 		int newSocre = simulator.getScore(); // getScore resets the score in Simulator
-		System.out.println(newBallTable.printBallTable());
+		System.out.println(newBallTable);
 		System.out.println(newSocre);
 		// du kannst auch ohne einen Ball ein zu schießen simulieren: newBallTable =
 		// simulator.simulate(ballTable, null, 0);
@@ -85,7 +86,7 @@ public class CopyOfAIInterface implements Updateable {
 			System.out.println(cannon.getBall().getNr()); // BallFarbe in der Kanone
 		}
 
-		System.out.println(ballTable.printBallTable()); // Spielfeld ausgeben
+		System.out.println(ballTable); // Spielfeld ausgeben
 		ballTable.getColumnHeight(0); // Stabelhöhe in Spalte 0
 
 		if (!ballTable.isEmpty(0, 0)) { // Feld könnte leer sein

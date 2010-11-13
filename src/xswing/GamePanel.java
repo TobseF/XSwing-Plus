@@ -23,7 +23,7 @@ public class GamePanel extends BasicGameState implements Resetable {
 	private final int scoreStep = 1000;
 	private int scorePlayer1 = scoreStep, scorePlayer2 = scoreStep;
 	private GameRecorder gameRecorder;
-	private GameStatistics statistics;
+	private LocalXSwingStatistics statistics;
 
 	public GamePanel(int id) {
 		super(id);
@@ -33,7 +33,7 @@ public class GamePanel extends BasicGameState implements Resetable {
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		try{
 		gameRecorder = new GameRecorder();
-		statistics = new GameStatistics();
+		statistics = new LocalXSwingStatistics();
 
 		// make sure all graphics are loaded
 		background = new Background(true);
@@ -41,8 +41,8 @@ public class GamePanel extends BasicGameState implements Resetable {
 		singlePlayer = new MainGame(GameComponentLocation.CENTER);
 
 		multiPlayer1 = new MainGame(GameComponentLocation.LEFT);
-			singlePlayer.init(container, game);
-			multiPlayer1.init(container, game);
+		singlePlayer.init(container, game);
+		multiPlayer1.init(container, game);
 		}catch (Exception e) {
 			new ErrorReporter(e, new ServerRequest(XSwing.POST_BUG_URL));
 			e.printStackTrace();
@@ -119,8 +119,6 @@ public class GamePanel extends BasicGameState implements Resetable {
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
-		container.setMinimumLogicUpdateInterval(26);
-		container.setMaximumLogicUpdateInterval(26);
 		multiplayer = LocationController.isMultiplayer();
 		initGame(multiplayer, container, game);
 	}

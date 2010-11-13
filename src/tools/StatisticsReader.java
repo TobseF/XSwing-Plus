@@ -8,10 +8,10 @@ import java.awt.GridLayout;
 import java.awt.event.*;
 import javax.swing.*;
 import lib.mylib.ident.*;
-import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.swing.SwingUtils;
 import lib.mylib.util.*;
 import org.newdawn.slick.util.Log;
+import xswing.DefaultArgs.Args;
 import xswing.start.XSwing;
 
 public class StatisticsReader extends JFrame implements ActionListener {

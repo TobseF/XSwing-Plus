@@ -5,6 +5,7 @@
 package xswing.extras;
 
 import xswing.*;
+import xswing.ball.*;
 
 public class Extra extends Ball {
 

@@ -8,18 +8,19 @@ import static lib.mylib.options.Paths.RES_DIR;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.Arrays;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import lib.mylib.options.Paths;
-import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.swing.SwingUtils;
 import lib.mylib.util.*;
-import org.newdawn.slick.util.ResourceLoader;
+import org.newdawn.slick.util.*;
+import xswing.DefaultArgs.Args;
 
 public class OptionStarter extends JFrame implements ActionListener {
 
-	private boolean showOptionPanelOnStart, showUpdateOption = true,
-			isGermanSetAsDefaultlanguage, startGameInFullscreen, checkForUpdates = true;
+	private boolean showOptionPanelOnStart, showUpdateOption = true, isGermanSetAsDefaultlanguage,
+			startGameInFullscreen, checkForUpdates = true;
 	private JRadioButton selectGerman, selectEnglish, selectFullscreen, selectWindow;
 	private ButtonGroup languageButtons, windoSizeButtons;
 	private JButton startGame, exitOptions;
@@ -28,7 +29,6 @@ public class OptionStarter extends JFrame implements ActionListener {
 	private JCheckBox showOptionsOnStart, checkForUpdatesOnStart;
 	private Class<?> gameToStart;
 	private String[] resolutions = new String[] { "1024 x 768" };
-	public static boolean haveToshowOptionStarter;
 	private String[] args = new String[] { "" };
 
 	public OptionStarter() {
@@ -37,11 +37,12 @@ public class OptionStarter extends JFrame implements ActionListener {
 
 	public OptionStarter(Class<?> gameToStart, String[] args) {
 		this.gameToStart = gameToStart;
+		Log.info("OptionStarter Args: "+ Arrays.toString(args));
 		MyPropertys.setFile(gameToStart);
 		loadSavedOptions();
 		MyPropertys.setStrings(args);
 
-		if (haveToshowOptionStarter || showOptionPanelOnStart) {
+		if (showOptionPanelOnStart) {
 			initCompoments();
 			setVisible(true);
 		} else {
@@ -101,9 +102,9 @@ public class OptionStarter extends JFrame implements ActionListener {
 		windoSizePanel.add(selectFullscreen);
 		windoSizePanel.add(selectWindow);
 
-//		resolution = new JComboBox(resolutions);
-//		resolution.setPreferredSize(new Dimension(200, 34));
-//		add(resolution);
+		// resolution = new JComboBox(resolutions);
+		// resolution.setPreferredSize(new Dimension(200, 34));
+		// add(resolution);
 
 		showOptionsOnStart = new JCheckBox();
 		showOptionsOnStart.setSelected(showOptionPanelOnStart);
@@ -125,6 +126,7 @@ public class OptionStarter extends JFrame implements ActionListener {
 		runButtons.add(exitOptions);
 		setGuiStrings();
 		SwingUtils.addGlobalKeyListener(new AWTEventListener() {
+
 			@Override
 			public void eventDispatched(AWTEvent e) {
 				if (e.getID() == KeyEvent.KEY_PRESSED) {
@@ -151,11 +153,9 @@ public class OptionStarter extends JFrame implements ActionListener {
 	}
 
 	public boolean startGame() {
+		setVisible(false);
+		dispose();
 		MainStarter mainStarter = new MainStarter(gameToStart, getMainArgs());
-		// MainStarter mainStarter = new MainStarter(gameToStart, new String[]{});
-		if (mainStarter.isMethodStarted()) { // TODO: Wait for isMothodStarted() in Thread
-			setVisible(false);
-		}
 		return mainStarter.isMethodStarted();
 	}
 
@@ -216,23 +216,18 @@ public class OptionStarter extends JFrame implements ActionListener {
 	 * {@link LanguageSelector}
 	 */
 	private void setGuiStrings() {
-		setTitle(LanguageSelector.getString("game") + " "
-				+ LanguageSelector.getString("options"));
-		languageSelectPanel.setBorder(BorderFactory.createTitledBorder(LanguageSelector
-				.getString("language")));
-		windoSizePanel.setBorder(BorderFactory.createTitledBorder(LanguageSelector
-				.getString("window_size")));
+		setTitle(LanguageSelector.getString("game") + " " + LanguageSelector.getString("options"));
+		languageSelectPanel.setBorder(BorderFactory.createTitledBorder(LanguageSelector.getString("language")));
+		windoSizePanel.setBorder(BorderFactory.createTitledBorder(LanguageSelector.getString("window_size")));
 		startGame.setText(LanguageSelector.getString("start"));
-		exitOptions.setText(LanguageSelector.getString("exit_")
-				+ LanguageSelector.getString("options"));
+		exitOptions.setText(LanguageSelector.getString("exit_") + LanguageSelector.getString("options"));
 		selectEnglish.setText(LanguageSelector.getString("english"));
 		selectWindow.setText(LanguageSelector.getString("window"));
 		selectGerman.setText(LanguageSelector.getString("german"));
 		showOptionsOnStart.setText(LanguageSelector.getString("show_options_on_start"));
 		selectFullscreen.setText(LanguageSelector.getString("fullscreen"));
 		if (checkForUpdatesOnStart != null) {
-			checkForUpdatesOnStart.setText(LanguageSelector
-					.getString("check_for_updates_on_start"));
+			checkForUpdatesOnStart.setText(LanguageSelector.getString("check_for_updates_on_start"));
 		}
 		validate();
 	}
@@ -260,8 +255,7 @@ public class OptionStarter extends JFrame implements ActionListener {
 
 	private void loadSavedOptions() {
 		showOptionPanelOnStart = MyOptions.getBoolean(Args.showOptionPanelOnStart, true);
-		isGermanSetAsDefaultlanguage = MyOptions.getBoolean(Args.isGermanSetAsDefaultLanguage,
-				false);
+		isGermanSetAsDefaultlanguage = MyOptions.getBoolean(Args.isGermanSetAsDefaultLanguage, false);
 		startGameInFullscreen = MyOptions.getBoolean(Args.startGameInFullscreen, false);
 		checkForUpdates = MyOptions.getBoolean(Args.checkForUpdates, true);
 	}
@@ -279,8 +273,7 @@ public class OptionStarter extends JFrame implements ActionListener {
 		} else if (e.getSource().equals(startGame)) {
 			startGame();
 		} else if (e.getSource().equals(showOptionsOnStart)) {
-			MyPropertys.setString("showOptionPanelOnStart", showOptionsOnStart.isSelected()
-					+ "");
+			MyPropertys.setString("showOptionPanelOnStart", showOptionsOnStart.isSelected() + "");
 		} else if (e.getSource().equals(selectFullscreen)) {
 			MyOptions.setString(Args.startGameInFullscreen, "true");
 		} else if (e.getSource().equals(selectWindow)) {

@@ -5,11 +5,11 @@
 package xswing.start;
 
 import lib.mylib.http.OnlineChecker;
-import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.tools.*;
 import lib.mylib.util.*;
 import lib.mylib.version.UpdateMessage;
 import org.newdawn.slick.util.Log;
+import xswing.DefaultArgs.Args;
 
 /**
  * Starts XSwing Plus with an updatecheck and an option dialog on start

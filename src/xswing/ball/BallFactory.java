@@ -2,17 +2,19 @@
  * @version 0.0 01.12.2008
  * @author Tobse F
  */
-package xswing;
+package xswing.ball;
 
+import java.util.*;
 import lib.mylib.SpriteSheet;
 import lib.mylib.object.SObjectList;
 import org.newdawn.slick.Font;
+import xswing.*;
 import xswing.EffectCatalog.particleEffects;
 import xswing.events.BallEventListener;
 import xswing.extras.*;
 
 /**
- * Provides factory mothods for creating balls and extras
+ * Provides factory methods for creating balls and extras
  * 
  * @author Tobse
  */
@@ -26,12 +28,13 @@ public class BallFactory {
 	private int currentSpriteSheetNr = 0;
 	private Level levelBall;
 	private SObjectList ballsToMove;
-	private BallEventListener ballEventListener;
-
-	public BallFactory(BallEventListener ballEventListener, BallTable ballTable,
+	private List<BallEventListener> ballEventListener = new LinkedList<BallEventListener>();
+	private int ballID =0;
+	
+	
+	public BallFactory(BallTable ballTable,
 			SObjectList ballsToMove, Font font, SpriteSheet[] spriteSheet,
 			EffectCatalog effectCatalog, Cannon canon, Level levelBall) {
-		this.ballEventListener = ballEventListener;
 		this.ballTable = ballTable;
 		this.ballsToMove = ballsToMove;
 		this.font = font;
@@ -40,6 +43,10 @@ public class BallFactory {
 		this.canon = canon;
 		this.levelBall = levelBall;
 	}
+	
+	public void addBallEventListener(BallEventListener eventListener){
+		ballEventListener.add(eventListener);
+	}
 
 	private Ball getNewBall(int x, int y, int level) {
 		Ball ball = new Ball(level, x, y, spriteSheet[currentSpriteSheetNr]);
@@ -47,12 +54,15 @@ public class BallFactory {
 		ball.setFont(font);
 		ball.setEffects(effectCatalog);
 		ballsToMove.add(ball);
-		ball.addBallEventListener(ballEventListener);
+		ball.setId(ballID++);
+		for(BallEventListener listener: ballEventListener){
+			ball.addBallEventListener(listener);
+		}
 		return ball;
 	}
 
 	public Ball getNewBall() {
-		return getNewBall(canon.getX(), canon.getY(), levelBall.getLevel());
+		return getNewBall(0,0, levelBall.getLevel());
 	}
 
 	public void addNewJoker() {
@@ -60,7 +70,9 @@ public class BallFactory {
 		ballsToMove.remove(canon.getBall());
 		ballsToMove.add(ball);
 		canon.setBall(ball);
-		ball.addBallEventListener(ballEventListener);
+		for(BallEventListener listener: ballEventListener){
+			ball.addBallEventListener(listener);
+		}
 		effectCatalog.addEffect(canon.getBall(), particleEffects.FLASH);
 	}
 
@@ -70,15 +82,16 @@ public class BallFactory {
 		ballsToMove.remove(canon.getBall());
 		ballsToMove.add(ball);
 		canon.setBall(ball);
-		ball.addBallEventListener(ballEventListener);
+		for(BallEventListener listener: ballEventListener){
+			ball.addBallEventListener(listener);
+		}
 		effectCatalog.addEffect(canon.getBall(), particleEffects.FLASH);
 	}
 
 	public void addTopBalls() {
 		for (int row = 12; row > 10; row--) {
 			for (int column = 0; column < 8; column++) {
-				int[] pos = ballTable.getFieldPosOnScreen(column, row);
-				Ball newBall = getNewBall(pos[0], pos[1], levelBall.getLevel());
+				Ball newBall = getNewBall(0,0, levelBall.getLevel());
 				ballTable.setBall(column, row, newBall);
 			}
 		}

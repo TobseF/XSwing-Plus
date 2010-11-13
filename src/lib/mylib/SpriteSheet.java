@@ -4,13 +4,21 @@
  */
 package lib.mylib;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
 import org.newdawn.slick.Image;
 
-/** Extendened version of the Slick Spritesheet class */
-public class SpriteSheet extends org.newdawn.slick.SpriteSheet {
-
-	public SpriteSheet(Image image, int tw, int th) {
-		super(image, tw, th);
+/** Extended version of the Slick Spritesheet class */
+public class SpriteSheet extends org.newdawn.slick.SpriteSheet implements Iterable<Image>{
+	
+	protected int spriteWidth;
+	protected int spriteHeight;
+	
+	public SpriteSheet(Image image, int spriteWidth, int spriteHeight) {
+		super(image, spriteWidth, spriteHeight);
+		this.spriteWidth = spriteWidth;
+		this.spriteHeight = spriteHeight;
 	}
 
 	/**
@@ -41,6 +49,20 @@ public class SpriteSheet extends org.newdawn.slick.SpriteSheet {
 		}
 		return images;
 	}
+	
+	/**
+	 * Get get all Sprites of a specifid row
+	 * 
+	 * @param row The row (Y-Pos.) of the Sprites
+	 * @return Array with Images
+	 */
+	public Image[] getSprites() {
+		Image[] images = new Image[getSpriteCount()];
+		for (int i = 0; i < getSpriteCount(); i++) {
+			images[i] = getSprite(i);
+		}
+		return images;
+	}
 
 	/**
 	 * @return The number of Sprites in the SpriteSheet
@@ -49,4 +71,15 @@ public class SpriteSheet extends org.newdawn.slick.SpriteSheet {
 		return getHorizontalCount() * getVerticalCount();
 	}
 
+	public int getSpriteHeight() {
+		return spriteHeight;
+	}
+	public int getSpriteWidth() {
+		return spriteWidth;
+	}
+
+	@Override
+	public Iterator<Image> iterator() {
+		return Arrays.asList(getSprites()).iterator();
+	}
 }

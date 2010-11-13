@@ -6,9 +6,9 @@ package lib.mylib.util;
 
 import java.io.*;
 import java.util.*;
-import lib.mylib.options.DefaultArgs;
 import org.newdawn.slick.*;
 import org.newdawn.slick.util.Log;
+import xswing.DefaultArgs;
 
 /**
  * @author Tobse Overlay to easily access a {@link SavedState} without catching exceptions and

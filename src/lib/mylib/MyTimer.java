@@ -7,17 +7,21 @@ package lib.mylib;
 import lib.mylib.object.*;
 
 /**
- * Timer wich provides a {@link #timerAction()} function. It's called after the
- * <code>duration</code>.
+ * Timer which provides a {@link #timerAction()} function. It's called after the the timer was
+ * started with {@link #start()} and the {@link #duration} period has passe by. The timer
+ * <b>has to<b> updated with {@link #update(int)}.
  * 
  * @author Tobse
  * @see #timerAction()
  */
 public class MyTimer implements Updateable, Resetable {
 
-	private int duration, timeSinceStart;
-	/** Whether the timer schould run consecutively (true) */
-	private boolean repeat;
+	/** Time in ms before the Timer Action is called */
+	private int duration;
+	/** Time since the timer was started, or last {@link #timerAction()} was called. */
+	private int timeSinceStart;
+	/** Whether the timer should run consecutively (true) */
+	private final boolean repeating;
 	/** Whether the timer is running at the moment */
 	private boolean running = true;
 	/** Whether the timer should be started on build */
@@ -25,9 +29,9 @@ public class MyTimer implements Updateable, Resetable {
 
 	/**
 	 * @param duration time before the Timer Action is called.
-	 * @param repeat Whether the timer schould run consecutively (true) or stop after one
+	 * @param repeat Whether the timer should run consecutively (true) or stop after one
 	 *            runningOnStart Whether the Timer should start running on build (true) ore
-	 *            have started with {@link #setPause(boolean)} Timer Action (false)
+	 *            have started with {@link #setPaused(boolean)} Timer Action (false)
 	 * @see #MyTimer(int, boolean)
 	 * @see #timerAction()
 	 */
@@ -39,14 +43,14 @@ public class MyTimer implements Updateable, Resetable {
 
 	/**
 	 * @param duration time before the Timer Action is called.
-	 * @param repeat Whether the timer schould run consecutively (true) or stop after one Timer
+	 * @param repeat Whether the timer should run consecutively (true) or stop after one Timer
 	 *            Action (false)
 	 * @see #MyTimer(int, boolean, boolean)
 	 * @see #timerAction()
 	 */
 	public MyTimer(int duration, boolean repeat) {
 		this.duration = duration;
-		this.repeat = repeat;
+		this.repeating = repeat;
 	}
 
 	@Override
@@ -55,7 +59,7 @@ public class MyTimer implements Updateable, Resetable {
 			timeSinceStart += delta;
 			if (timeSinceStart >= duration) {
 				timerAction();
-				if (repeat) {
+				if (repeating) {
 					timeSinceStart -= duration;
 				} else {
 					running = false;
@@ -65,29 +69,49 @@ public class MyTimer implements Updateable, Resetable {
 	}
 
 	/**
-	 * Action which is procceden on a Timer event. Overwrite this function to get Timer
+	 * Action which is proceeded on a Timer event. Overwrite this function to get Timer
 	 * functionality.
 	 */
 	protected void timerAction() {}
 
-	public void setPause(boolean doPause) {
+	public void setPaused(boolean doPause) {
 		running = !doPause;
 	}
 
-	public boolean isInPause() {
+	/**
+	 * @return if the timer paused (not running)
+	 */
+	public boolean isPaused() {
 		return !running;
 	}
 
+	/**
+	 * @return if the timer is not running and the {@link #timerAction()} was called
+	 */
 	public boolean isFinsihed() {
 		return (!running && timeSinceStart >= duration);
 	}
 
+	/**
+	 * Starts the timer. 
+	 */
 	public void start() {
 		running = true;
 	}
 
+	/**
+	 * Pauses the timer.
+	 */
 	public void pause() {
 		running = false;
+	}
+	
+	/**
+	 * Stops the timer, an resets it. 
+	 */
+	public void stop(){
+		reset();
+		pause();
 	}
 
 	public void setDuration(int duration) {
@@ -95,6 +119,22 @@ public class MyTimer implements Updateable, Resetable {
 		reset();
 	}
 
+	
+	
+	public boolean isRunning() {
+		return running;
+	}
+	
+	
+	public boolean isRunningOnStart() {
+		return runningOnStart;
+	}
+	
+	
+	public boolean isRepeating() {
+		return repeating;
+	}
+	
 	@Override
 	public void reset() {
 		timeSinceStart = 0;

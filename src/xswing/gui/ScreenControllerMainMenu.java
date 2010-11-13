@@ -25,9 +25,6 @@ public class ScreenControllerMainMenu implements ScreenController {
 
 	public ScreenControllerMainMenu(StateBasedGame game) {
 		this.game = game;
-		// VOID: why not with base="" ? -->
-		// <onFocus name="myChangeFont"
-		// font="res/fonts/berlin_sans_sb_49_bw_gradient.fnt"></onFocus>
 	}
 
 	/**
@@ -37,7 +34,6 @@ public class ScreenControllerMainMenu implements ScreenController {
 	 * @param screen screen
 	 */
 	public final void bind(final Nifty nifty, final Screen newScreen) {
-		//game.getContainer().setMouseGrabbed(true);
 		this.nifty = nifty;
 		screen = newScreen;
 		screen.findElementByName("version_label").getRenderer(TextRenderer.class).setText(XSwing.VERSION);
@@ -100,13 +96,6 @@ public class ScreenControllerMainMenu implements ScreenController {
 //			e.printStackTrace();
 //		}
 		// screen.findElementByName("Start").setFocus();
-
-		/*
-		 * game.getContainer().getInput().clearControlPressedRecord();
-		 * game.getContainer().getInput().clearKeyPressedRecord();
-		 * game.getContainer().getInput().clearMousePressedRecord();
-		 */
-
 	}
 
 	/**
@@ -119,7 +108,7 @@ public class ScreenControllerMainMenu implements ScreenController {
 	}
 
 	/**
-	 * Starts a multi player Game -called from nifty xml gui
+	 * Starts a multiplayer Game -called from nifty xml gui
 	 */
 	public final void startMultiplayer() {
 		Log.info("Started Multiplayer Game");
@@ -162,6 +151,7 @@ public class ScreenControllerMainMenu implements ScreenController {
 					nifty.setAlternateKey("fade");
 					nifty.exit();
 					game.getContainer().exit();
+					
 				}
 			}
 		});

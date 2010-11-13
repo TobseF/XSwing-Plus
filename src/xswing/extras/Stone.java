@@ -6,7 +6,7 @@ package xswing.extras;
 
 import static lib.mylib.options.Paths.RES_DIR;
 import org.newdawn.slick.*;
-import xswing.Ball;
+import xswing.ball.Ball;
 
 public class Stone extends Ball {
 

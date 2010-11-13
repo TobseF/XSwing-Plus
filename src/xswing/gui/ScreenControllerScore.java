@@ -2,12 +2,12 @@ package xswing.gui;
 
 import java.text.NumberFormat;
 import lib.mylib.highscore.*;
-import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.util.*;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.util.Log;
 import xswing.*;
+import xswing.DefaultArgs.Args;
 import xswing.start.XSwing;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.button.controller.ButtonControl;
@@ -27,20 +27,18 @@ public class ScreenControllerScore implements ScreenController {
 	private HighScoreLine newScore;
 	private TextFieldControl textField;
 	private Clock clock;
-	private BallKiller ballsDisbanded;
-	private BallCounter ballsReleased;
+	private GameStatistics gameStatistics;
 	private String playerName;
 
 	private final static String SCORE_SERVER_PATH = "";
 	private final static String SCORE_LINE_SUBMIT_FILE = "submit_high_score_line.php";
 	
 	public ScreenControllerScore(StateBasedGame game, HighScoreTable highScoreList, Clock clock,
-			BallCounter ballsReleased, BallKiller ballsDisbanded) {
+			GameStatistics gameStatistics) {
 		this.game = game;
 		this.highScoreList = highScoreList;
 		this.clock = clock;
-		this.ballsDisbanded = ballsDisbanded;
-		this.ballsReleased = ballsReleased;
+		this.gameStatistics = gameStatistics;
 	}
 
 	public void setHighScore(int highScore) {
@@ -118,9 +116,9 @@ public class ScreenControllerScore implements ScreenController {
 //			MyOptions.save();
 		}
 		Log.info("Score entered: " + highScore + " " + name);
-		newScore = new HighScoreLine(highScore, name, clock.getTimeSinceStart(), ballsReleased.getBalls(),
-				ballsDisbanded.getBallKills());
-		System.out.println(newScore);
+		Log.info("Released Balls: " + gameStatistics.getReleasedBalls() + " Dertroyed Balls: " + gameStatistics.getDestroyedBalls());
+		newScore = new HighScoreLine(highScore, name, clock.getTimeSinceStart(), gameStatistics.getReleasedBalls(),
+				gameStatistics.getDestroyedBalls());
 		highScoreList.addScore(newScore);
 		highScoreList.save();
 		boolean submitHighscoreOnline = screen.findControl("upload-score", CheckboxControl.class).isChecked();

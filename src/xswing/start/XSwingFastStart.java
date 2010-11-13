@@ -45,6 +45,7 @@ public class XSwingFastStart extends StateBasedGame {
 			// game.setDisplayMode(460,390,fullsceen);
 			game.setClearEachFrame(true);
 			game.setIcons(new String[] { RES_DIR + "16.png", RES_DIR + "32.png" });
+			game.setForceExit(false);
 			game.setMouseGrabbed(!debug);
 			game.start();
 		} catch (SlickException e) {
@@ -57,6 +58,7 @@ public class XSwingFastStart extends StateBasedGame {
 		LocationController.setMultiplayer(false);
 		addState(new LoadingScreen(0));
 		addState(new GamePanel(1));
+		LocationController.setMultiplayer(false);
 	}
 
 }

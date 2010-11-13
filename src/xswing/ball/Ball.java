@@ -2,19 +2,21 @@
  * @version 0.0 15.04.2008
  * @author Tobse F
  */
-package xswing;
+package xswing.ball;
 
 import java.awt.Point;
 import javax.swing.event.EventListenerList;
 import lib.mylib.SpriteSheet;
 import lib.mylib.object.SObject;
 import org.newdawn.slick.*;
+import org.newdawn.slick.util.pathfinding.Mover;
+import xswing.EffectCatalog;
 import xswing.EffectCatalog.particleEffects;
 import xswing.events.*;
 import xswing.events.BallEvent.BallEventType;
 
 /** The ball which moves on the screen. It can be stored in a BallTable */
-public class Ball extends SObject implements Cloneable {
+public class Ball extends SObject implements Cloneable, Mover {
 
 	/** Font for drawing the weight */
 	protected Font font;
@@ -28,6 +30,22 @@ public class Ball extends SObject implements Cloneable {
 	private int speed = 20;
 	/** If the balls has to to be moved in update */
 	private boolean moving = false;
+
+	private int id;
+
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	protected void setId(int id) {
+		this.id = id;
+	}
 
 	/** The directions in which the Ball can move */
 	private enum MovingDirection {
@@ -43,8 +61,16 @@ public class Ball extends SObject implements Cloneable {
 
 	private EventListenerList eventListenerList = new EventListenerList();
 
-	/** Lenght of an edge */
+	/** Length of an edge */
 	public static final int A = 48;
+
+	public Ball(int x, int y) {
+		super(x, y);
+	}
+
+	public Ball(int level, int x, int y) {
+		this(level, x, y, null);
+	}
 
 	/**
 	 * @param level
@@ -52,18 +78,14 @@ public class Ball extends SObject implements Cloneable {
 	 * @param y Position on screen
 	 * @param balls Sprite sheet for 45 ball levels
 	 */
-	public Ball(int level, int x, int y, SpriteSheet balls) {
-		super(x, y);
+	public Ball(int level, int x, int y, SpriteSheet ballsSpriteSheet) {
+		this(x, y);
 		nr = (int) (Math.random() * level);
 		weight = 1 + (int) (Math.random() * (level + 1));
-		ballsSpriteSheet = balls;
-		if (balls != null) {
+		this.ballsSpriteSheet = ballsSpriteSheet;
+		if (ballsSpriteSheet != null) {
 			setImage(ballsSpriteSheet.getSprite(nr));
 		}
-	}
-
-	public Ball(int x, int y) {
-		super(x, y);
 	}
 
 	/**
@@ -73,18 +95,14 @@ public class Ball extends SObject implements Cloneable {
 	 * @param y
 	 * @param balls
 	 */
-	public Ball(int nr, int wieght, int x, int y, SpriteSheet balls) {
-		super(x, y);
+	public Ball(int nr, int weight, int x, int y, SpriteSheet ballsSpriteSheet) {
+		this(x, y);
 		this.nr = nr + 1;
-		weight = wieght;
-		ballsSpriteSheet = balls;
-		if (balls != null) {
+		this.weight = weight;
+		this.ballsSpriteSheet = ballsSpriteSheet;
+		if (ballsSpriteSheet != null) {
 			setImage(ballsSpriteSheet.getSprite(nr));
 		}
-	}
-
-	public Ball(int level, int x, int y) {
-		this(level, x, y, null);
 	}
 
 	public Ball(int nr) {
@@ -99,15 +117,6 @@ public class Ball extends SObject implements Cloneable {
 	 */
 	public void setFont(Font font) {
 		this.font = font;
-	}
-
-	@Override
-	public Ball clone() {
-		Ball newBall = null;
-		try {
-			newBall = (Ball) super.clone();
-		} catch (CloneNotSupportedException e) {}
-		return newBall;
 	}
 
 	public void setEffects(EffectCatalog effectCatalog) {
@@ -128,9 +137,18 @@ public class Ball extends SObject implements Cloneable {
 		return effect;
 	}
 
-	/** Returns the number of the ball */
+	/** Returns the number (color) of the ball */
 	public int getNr() {
 		return nr;
+	}
+
+	/**
+	 * @param visitor the ball which wants to know this {@link #nr}
+	 * @return the number (color) of this ball
+	 * @see #getNr()
+	 */
+	public int getNr(Ball visitor) {
+		return getNr();
 	}
 
 	@Override
@@ -142,8 +160,8 @@ public class Ball extends SObject implements Cloneable {
 	/** Draws the weight number on the Ball */
 	protected void drawNumber(Graphics g) {
 		if (font != null) {
-			font.drawString(x + A / 2 - font.getWidth(weight + "") / 2 - 1, y + 21, weight
-					+ "");
+			final int fontCorrection = 21;
+			font.drawString(x + (A / 2) - (font.getWidth(weight + "") / 2) - 1, y + fontCorrection, weight + "");
 		}
 	}
 
@@ -152,25 +170,9 @@ public class Ball extends SObject implements Cloneable {
 		return weight;
 	}
 
-	/** Returns wether the Ball is moving */
+	/** Returns whether the Ball is moving */
 	public boolean isMoving() {
 		return moving;
-	}
-
-	/**
-	 * Changes the moving BallState and (if necessary) removes the ball from the BallTable
-	 */
-	public void toggleMoving() {
-		moving = !moving;
-		if (moving && ballTable.isOverGrid(x, y)) {
-			// when moving ball is remomved from the BallTable
-			ballTable.removeBall(this);
-		}
-	}
-
-	/** Sets the falling speed */
-	public void setSpeed(int speed) {
-		this.speed = speed;
 	}
 
 	public void setSpiteSheet(SpriteSheet spriteSheet) {
@@ -178,29 +180,18 @@ public class Ball extends SObject implements Cloneable {
 		setNr(nr);
 	}
 
-	/** Checks wether the given ball has the same nr, 99 is the Joker */
-	public boolean compare(Ball ball) {
-		return getNr() == ball.getNr() || ball.getNr() == 99;
-	}
-
 	/**
-	 * Sets a <code>nr</code> to the ball -it also changes the icon. Only values between 0 and
-	 * 45 are allowed.
+	 * Sets a {@link #nr} to the ball -it also changes the icon. Only values between 0 and 45
+	 * are allowed.
 	 */
 	public void setNr(int nr) {
-		if (nr >= 0 && nr < 44) {
-			this.nr = nr;
-			if (ballsSpriteSheet != null) {
-				image = ballsSpriteSheet.getSprite(nr);
-			}
-		} else {
+		if (nr < 0 || nr > 44) {
 			throw new IllegalArgumentException("0>= nr <= 44 !");
 		}
-	}
-
-	/** Returns the current sped of the ball */
-	public int getSpeed() {
-		return speed;
+		this.nr = nr;
+		if (ballsSpriteSheet != null) {
+			image = ballsSpriteSheet.getSprite(nr);
+		}
 	}
 
 	/** Returns the weight of the ball */
@@ -215,35 +206,47 @@ public class Ball extends SObject implements Cloneable {
 			case UP:
 				break;
 			case DOWN:
-				y += speed;
-				if (isCollidingWithBall() || isCollidingWithSoil()) {
-					collide();
-				}
+				moveDown();
 				break;
 			case LEFT:
 				break;
 			case RIGHT:
 				break;
 			}
-		} else if (ballTable.isOverGrid(x, y)
-				&& !(isCollidingWithBall() || isCollidingWithSoil())) {
-			toggleMoving();
-		}
+		} else if (ballTable.isOverGrid(x, y)) {
+			Point ballPosInTable = ballTable.getField(x, y);
+			if (!(isCollidingWithBall(ballPosInTable) || isCollidingWithSoil(ballPosInTable))) {
 
+				toggleMoving();
+			}
+		}
 	}
 
-	@Override
-	public String toString() {
-		return "[" + getNr() + "]";
+	protected void moveDown() {
+		y += speed;
+		Point ballPosInTable = ballTable.getField(x, y);
+		if (isCollidingWithBall(ballPosInTable) || isCollidingWithSoil(ballPosInTable)) {
+			collide(ballPosInTable);
+		}
 	}
 
 	/**
-	 * Checks if the ball itersects the ground
+	 * Changes the moving BallState and (if necessary) removes the ball from the BallTable
+	 */
+	public void toggleMoving() {
+		moving = !moving;
+		if (moving) {
+			ballTable.remove(this);
+		}
+	}
+
+	/**
+	 * Checks if the ball intersects the ground
 	 * 
 	 * @return <code>true</code> if the {@link Ball} collides with the soil
 	 */
-	private boolean isCollidingWithSoil() {
-		return ballTable.getField(x, y).y == 0;
+	private boolean isCollidingWithSoil(Point ballPosInTable) {
+		return ballPosInTable.y == 0;
 	}
 
 	/**
@@ -251,39 +254,26 @@ public class Ball extends SObject implements Cloneable {
 	 * 
 	 * @return <code>true</code> if the {@link Ball} collides with another ball
 	 */
-	private boolean isCollidingWithBall() {
-		Point positionInBallTable = ballTable.getField(x, y);
-		return !isCollidingWithSoil() && positionInBallTable.y <= 8
-				&& !ballTable.isEmpty(positionInBallTable.x, positionInBallTable.y - 1);
-	}
-
-	/** Performs a collsion with a ball below */
-	private void collide() {
-		toggleMoving();
-		ballTable.addBall(this);
-		if (isCollidingWithSoil()) {
-			notifyListener(new BallEvent(this, this, BallEventType.BALL_HITS_GROUND));
-		}
-		if (isCollidingWithBall()) {
-			notifyListener(new BallEvent(this, this, BallEventType.BALL_HITS_BALL));
-		}
-
-		if (effectCatalog != null) {
-			effectCatalog.addEffect(this, particleEffects.BOUNCING);
-		}
+	private boolean isCollidingWithBall(Point ballPosInTable) {
+		return !isCollidingWithSoil(ballPosInTable) && ballPosInTable.y <= BallTable.LINES
+				&& !ballTable.isEmpty(ballPosInTable.x, ballPosInTable.y - 1);
 	}
 
 	/**
-	 * Checks wether the ball has the same Nr (Color)
-	 * 
-	 * @param ball Ball to check with
-	 * @return wether the ball has the same Nr as the given
+	 * Ads the ball to the {@link BallTable} and performs a collision with a (ball | soil)
+	 * below.
 	 */
-	public boolean isSameNr(Ball ball) {
-		if (ball == null) {
-			return false;
-		} else {
-			return ball.getNr() == getNr();
+	private void collide(Point ballPosInTable) {
+		toggleMoving();
+		ballTable.addBall(this);
+		if (isCollidingWithSoil(ballPosInTable)) {
+			notifyListener(new BallEvent(this, this, BallEventType.BALL_HITS_GROUND));
+		}
+		if (isCollidingWithBall(ballPosInTable)) {
+			notifyListener(new BallEvent(this, this, BallEventType.BALL_HITS_BALL));
+		}
+		if (effectCatalog != null) {
+			effectCatalog.addEffect(this, particleEffects.BOUNCING);
 		}
 	}
 
@@ -318,7 +308,7 @@ public class Ball extends SObject implements Cloneable {
 	}
 
 	/**
-	 * Fires a ball Event. All Listeners will be nitified and if registered the event will be
+	 * Fires a ball Event. All Listeners will be notified and if registered the event will be
 	 * executed.
 	 * 
 	 * @param eventType event to execute
@@ -327,4 +317,38 @@ public class Ball extends SObject implements Cloneable {
 		notifyListener(new BallEvent(this, this, eventType));
 	}
 
+	@Override
+	public String toString() {
+		return String.format("Id:%d Col:%d Wgh:%d x:%3d y%3d", id, nr, weight, x, y);
+	}
+
+	/**
+	 * Checks whether the given ball has the same {@link #nr} (Color), or if the given is a
+	 * joker
+	 * 
+	 * @param ball Ball to check with
+	 * @return whether the ball has the same {@link #nr} as the given, or the given is a joker#
+	 */
+	public boolean compare(Ball ball) {
+		return (ball != null && getNr() == ball.getNr());
+	}
+
+	@Override
+	public Ball clone() {
+		Ball newBall = new Ball(nr, weight, x, y, ballsSpriteSheet);
+		newBall.setFont(font);
+		newBall.setEffects(effectCatalog);
+		newBall.setBallTable(ballTable);
+		return newBall;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof Ball && ((Ball) obj).id == id;
+	}
+
+	@Override
+	public int hashCode() {
+		return id;
+	}
 }

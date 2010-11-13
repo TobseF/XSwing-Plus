@@ -5,7 +5,7 @@
 package xswing.events;
 
 import java.util.EventObject;
-import xswing.Ball;
+import xswing.ball.Ball;
 
 public class XSwingEvent extends EventObject implements Comparable<XSwingEvent> {
 

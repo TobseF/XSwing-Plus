@@ -7,9 +7,9 @@ package xswing.testcases.server;
 import static org.junit.Assert.assertEquals;
 import lib.mylib.highscore.*;
 import lib.mylib.http.EasyPostString;
-import lib.mylib.options.DefaultArgs.Args;
 import org.junit.*;
-import xswing.GameStatistics;
+import xswing.LocalXSwingStatistics;
+import xswing.DefaultArgs.Args;
 
 public class OnlineSubmitterTest {
 
@@ -74,7 +74,7 @@ public class OnlineSubmitterTest {
 	}
 
 	public final void submitStatistic(String scoreSubmitURL) {
-		GameStatistics statistics = new GameStatistics();
+		LocalXSwingStatistics statistics = new LocalXSwingStatistics();
 		String statisticsInOneLine = statistics.getScoreInOneHTTPLine();
 		// System.out.println("statistic: " + statisticsInOneLine);
 		String cryptedStatistic = new EasyCrypter()

@@ -10,7 +10,7 @@ public class MainStarter extends MethodStarter {
 		super(classToInvoke, "main", new Object[] { args });
 	}
 
-	public MainStarter(String classToInvoke, String[] args) {
+	public MainStarter(String classToInvoke, String[] args) throws ClassNotFoundException {
 		super(classToInvoke, "main", new Object[] { args });
 	}
 

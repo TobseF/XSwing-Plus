@@ -6,7 +6,7 @@ package lib.mylib.highscore;
 
 import java.util.*;
 import javax.swing.table.AbstractTableModel;
-import lib.mylib.options.DefaultArgs.Args;
+import xswing.DefaultArgs.Args;
 import lib.mylib.util.MyOptions;
 
 /**

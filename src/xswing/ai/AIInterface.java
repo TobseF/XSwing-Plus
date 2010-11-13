@@ -7,6 +7,7 @@ package xswing.ai;
 import java.util.LinkedList;
 import lib.mylib.object.Updateable;
 import xswing.*;
+import xswing.ball.*;
 import xswing.events.*;
 import xswing.events.XSwingEvent.GameEventType;
 
@@ -115,20 +116,20 @@ public class AIInterface implements Updateable {
 				if (ballMitte == null) {
 					continue;
 				}
-				if (ballLinks != null && ballLinks.isSameNr(ballMitte)) {
+				if (ballLinks != null && ballLinks.compare(ballMitte)) {
 					wert -= 1;
 				}
-				if (ballRechts != null && ballRechts.isSameNr(ballMitte)) {
+				if (ballRechts != null && ballRechts.compare(ballMitte)) {
 					wert -= 1;
 				}
-				if (ballOben != null && ballOben.isSameNr(ballMitte)) {
+				if (ballOben != null && ballOben.compare(ballMitte)) {
 					wert -= 1;
 				}
-				if (ballUnten != null && ballUnten.isSameNr(ballMitte)) {
+				if (ballUnten != null && ballUnten.compare(ballMitte)) {
 					wert -= 1;
 				}
-				if (ballLinks != null && ballRechts != null && ballLinks.isSameNr(ballRechts)
-						&& !ballLinks.isSameNr(ballMitte)) {
+				if (ballLinks != null && ballRechts != null && ballLinks.compare(ballRechts)
+						&& !ballLinks.compare(ballMitte)) {
 					wert += 10;
 				}
 			}

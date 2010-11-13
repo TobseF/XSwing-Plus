@@ -7,7 +7,7 @@ package lib.mylib.object;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class BasicGameState extends org.newdawn.slick.state.BasicGameState {
+public abstract class BasicGameState extends org.newdawn.slick.state.BasicGameState {
 
 	private int id = 0;
 
@@ -28,15 +28,6 @@ public class BasicGameState extends org.newdawn.slick.state.BasicGameState {
 		this.id = id;
 	}
 
-	@Override
-	public void init(GameContainer container, StateBasedGame game) throws SlickException {}
 
-	@Override
-	public void render(GameContainer container, StateBasedGame game, Graphics g)
-			throws SlickException {}
-
-	@Override
-	public void update(GameContainer container, StateBasedGame game, int delta)
-			throws SlickException {}
 
 }

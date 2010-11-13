@@ -4,8 +4,8 @@
  */
 package tests;
 
-import lib.mylib.options.DefaultArgs;
-import lib.mylib.options.DefaultArgs.Args;
+import xswing.DefaultArgs;
+import xswing.DefaultArgs.Args;
 import lib.mylib.util.MyPropertysArgs;
 
 public class MyPropertys2Test {

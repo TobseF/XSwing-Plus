@@ -18,16 +18,16 @@ public class EffectBlinking implements Resetable, Updateable {
 	private int blincCount = 0;
 	/** Times the Blinker did blinked */
 	private int blincedCount = 0;
-	/** The blinc statuse */
+	/** The blink status */
 	private boolean blinc;
-	/** Blinc BallState on start (saved for reset) */
+	/** Blink BallState on start (saved for reset) */
 	private boolean visibleOnStart;
 	private MyTimer timer;
 
 	/**
 	 * @param blincCount Times the Blinker should blink
 	 * @param blincDuration Duration of a blink in ms (visible Time)
-	 * @param visibleOnStart Wether blinc BallState should be on start <code>true<code>
+	 * @param visibleOnStart Whether blink BallState should be on start <code>true<code>
 	 * @see {@link #getBlink()}
 	 */
 	public EffectBlinking(int blincCount, int blincDuration, boolean visibleOnStart) {
@@ -49,11 +49,11 @@ public class EffectBlinking implements Resetable, Updateable {
 			blinc = !blinc;
 			blincedCount++;
 		} else {
-			timer.setPause(true);
+			timer.setPaused(true);
 		}
 	}
 
-	/** Returns the current blincing BallState */
+	/** Returns the current blinking BallState */
 	public boolean getBlink() {
 		return blinc;
 	}

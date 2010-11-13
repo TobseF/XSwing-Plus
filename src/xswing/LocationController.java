@@ -6,6 +6,7 @@ package xswing;
 
 import java.awt.Point;
 import java.util.*;
+import xswing.ball.BallTable;
 import lib.mylib.object.SObject;
 import lib.mylib.util.Clock;
 import com.sun.xml.internal.bind.v2.schemagen.episode.Klass;

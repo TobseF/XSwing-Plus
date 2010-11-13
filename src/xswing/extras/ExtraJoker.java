@@ -7,6 +7,7 @@ package xswing.extras;
 import static lib.mylib.options.Paths.RES_DIR;
 import org.newdawn.slick.*;
 import xswing.*;
+import xswing.ball.*;
 
 public class ExtraJoker extends Extra {
 
@@ -21,11 +22,25 @@ public class ExtraJoker extends Extra {
 
 	@Override
 	public boolean compare(Ball ball) {
-		return true;
+		return lastVisitor == null || (lastVisitor != null && lastVisitor.getNr() == ball.getNr())
+				|| ball instanceof ExtraJoker;
 	}
 
 	@Override
 	protected void drawNumber(Graphics g) {
 	// do nothing
 	}
+
+	@Override
+	public int getNr(Ball visitor) {
+		lastVisitor = visitor;
+		return visitor.getNr();
+	}
+
+	@Override
+	public void update(int delta) {
+		super.update(delta);
+		lastVisitor = null;
+	}
+	private Ball lastVisitor = null;
 }

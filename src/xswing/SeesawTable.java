@@ -6,6 +6,7 @@ package xswing;
 
 import lib.mylib.object.SObject;
 import org.newdawn.slick.*;
+import xswing.ball.*;
 
 /** Draws the weight sum per column on the screen */
 public class SeesawTable extends SObject {
