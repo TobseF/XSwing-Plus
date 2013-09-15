@@ -28,9 +28,7 @@ public class BallFactory {
 	private int currentSpriteSheetNr = 0;
 	private Level levelBall;
 	private SObjectList ballsToMove;
-	private List<BallEventListener> ballEventListener = new LinkedList<BallEventListener>();
-	private int ballID =0;
-	
+	private List<BallEventListener> ballEventListener = new LinkedList<BallEventListener>();	
 	
 	public BallFactory(BallTable ballTable,
 			SObjectList ballsToMove, Font font, SpriteSheet[] spriteSheet,
@@ -54,7 +52,6 @@ public class BallFactory {
 		ball.setFont(font);
 		ball.setEffects(effectCatalog);
 		ballsToMove.add(ball);
-		ball.setId(ballID++);
 		for(BallEventListener listener: ballEventListener){
 			ball.addBallEventListener(listener);
 		}

@@ -19,7 +19,7 @@ public class Properties extends java.util.Properties
   public static final String DEFAULT_FILE_NAME = "Properties.xml";
   // private static final String DEFAULT_FILE_PATH = "META-INF\\";
   /**
-   * Default file which is used on {@link #load()} and {@link #store()}, if no
+   * Default file which is used on {@link #loadXML()} and {@link #storeXML()}, if no
    * file was given in the constructor.
    */
   private static final File DEFAULT_FILE = new File(DEFAULT_FILE_NAME);
@@ -96,6 +96,67 @@ public class Properties extends java.util.Properties
   public int getPropertyInt(String key)
   {
     return getPropertyInt(key, 0);
+  }
+  
+  /**
+   * Searches for the Float with the specified key in this property list. If
+   * the key is not found or if the value is not an integer, the default value
+   * will be returned.
+   * 
+   * @param key
+   *            the property key.
+   * @param defaultValue
+   *            default value which is used when the value could found in this
+   *            property list
+   * @return The integer with the specified key in this property list.
+   * @see #getPropertyInt(String)
+   */
+  public float getPropertyFloat(String key, float defaultValue)
+  {
+    String value = getProperty(key);
+    float parsedValie = value == null ? useDefault(key, defaultValue) : defaultValue;
+    if (value != null)
+    {
+      try
+      {
+        parsedValie = Float.parseFloat(value);
+      }
+      catch (NumberFormatException e)
+      {
+        useDefault(key, defaultValue);
+      }
+    }
+    return parsedValie;
+  }
+  
+  /**
+   * Searches for the Integer with the specified key in this property list. If
+   * the key is not found or if the value is not an integer, 0 value will be
+   * returned.
+   * 
+   * @param key
+   *            the property key.
+   * @return The integer with the specified key in this property list.
+   * @see #getPropertyInt(String, int)
+   */
+  public float getPropertyFloat(String key)
+  {
+    return getPropertyFloat(key, 0);
+  }
+  
+  
+  /**
+   * Sets the given key with the given value.
+   * 
+   * @param key
+   *            the key to be placed into this property list.
+   * @param value
+   *            the float value corresponding to key.
+   * @see Properties#getPropertyInt(String, int)
+   */
+  public synchronized void setPropertyFloat(String key, float value)
+  {
+    setProperty(key, String.valueOf(value));
   }
 
   /**
@@ -182,16 +243,76 @@ public class Properties extends java.util.Properties
   }
 
   /**
+   * Saves this Properties list in the given {@link File} as INI.
+   * 
+   * @param comment
+   *            in the header of the saved file.
+   * @param file
+   * @see #storeXML()
+   * @see #loadXML()
+   * @see #Properties(File)
+   */
+  public synchronized void storeINI(String comment, File file)
+  {
+    FileOutputStream fileOutputStream = null;
+    try
+    {
+      fileOutputStream = new FileOutputStream(file);
+      store(fileOutputStream, comment);
+    }
+    catch (IOException e)
+    {
+    	Log.warn("Could't store in file: "+ e.getMessage());
+    }
+    finally
+    {
+      try
+      {
+        fileOutputStream.close();
+      }
+      catch (Exception e)
+      {
+      }
+    }
+  }
+  
+  /**
+   * Saves this Properties list in the given {@link File} as INI.
+   * 
+   * @param comment
+   *            in the header of the saved file.
+   * @see #storeXML()
+   * @see #loadXML()
+   * @see #Properties(File)
+   */
+  public synchronized void storeINI(String comment)
+  {
+    storeINI(comment, file);
+  }
+  
+  /**
+   * Saves this Properties list in the given {@link File} in XML.
+   * 
+   * @see #storeXML()
+   * @see #loadXML()
+   * @see #Properties(File)
+   */
+  public synchronized void storeINI()
+  {
+	  storeINI("");
+  }
+  
+  /**
    * Saves this Properties list in the given {@link File} in XML.
    * 
    * @param comment
    *            in the header of the saved file.
    * @param file
-   * @see #store()
-   * @see #load()
+   * @see #storeXML()
+   * @see #loadXML()
    * @see #Properties(File)
    */
-  public synchronized void store(String comment, File file)
+  public synchronized void storeXML(String comment, File file)
   {
     FileOutputStream fileOutputStream = null;
     try
@@ -220,46 +341,67 @@ public class Properties extends java.util.Properties
    * 
    * @param comment
    *            in the header of the saved file.
-   * @see #store()
-   * @see #load()
+   * @see #storeXML()
+   * @see #loadXML()
    * @see #Properties(File)
    */
-  public synchronized void store(String comment)
+  public synchronized void storeXML(String comment)
   {
-    store(comment, file);
+    storeXML(comment, file);
   }
 
   /**
    * Saves this Properties list in the given {@link File} in XML.
    * 
-   * @see #store()
-   * @see #load()
+   * @see #storeXML()
+   * @see #loadXML()
    * @see #Properties(File)
    */
-  public synchronized void store(File file)
+  public synchronized void storeXML(File file)
   {
-    store("", file);
+    storeXML("", file);
   }
 
   /**
    * Saves this Properties list in the given {@link File} in XML.
    * 
-   * @see #store()
-   * @see #load()
+   * @see #storeXML()
+   * @see #loadXML()
    * @see #Properties(File)
    */
-  public synchronized void store()
+  public synchronized void storeXML()
   {
-    store("");
+    storeXML("");
+  }
+  
+  /**
+   * Reads this Properties list out of the given XML {@link File}.
+   * 
+   * @see #storeXML()
+   * @see #Properties(File)
+   */
+  public synchronized void loadINI()
+  {
+    FileInputStream fileInputStream = null;
+    try
+    {
+      fileInputStream = new FileInputStream(file);
+      load(fileInputStream);
+      fileInputStream.close();
+    }
+    catch (IOException e)
+    {
+    	Log.warn("Couldn't load from file: "+file.getAbsolutePath()+" "+ e.getMessage());
+    }
   }
 
   /**
    * Reads this Properties list out of the given XML {@link File}.
    * 
-   * @see #store()
+   * @see #storeXML()
    * @see #Properties(File)
    */
-  public synchronized void load()
+  public synchronized void loadXML()
   {
     FileInputStream fileInputStream = null;
     try
@@ -344,4 +486,5 @@ public class Properties extends java.util.Properties
   {
     return super.hashCode();
   }
+ 
 }

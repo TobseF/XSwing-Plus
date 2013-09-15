@@ -4,27 +4,48 @@
  */
 package xswing;
 
-import java.awt.Point;
 import java.util.*;
-import xswing.ball.BallTable;
+import xswing.ball.*;
+import lib.mylib.math.Point;
 import lib.mylib.object.SObject;
 import lib.mylib.util.Clock;
-import com.sun.xml.internal.bind.v2.schemagen.episode.Klass;
+
 
 public class LocationController {
 
 	public enum GameComponentLocation {
-		CENTER, LEFT, RIGHT
+		CENTER, LEFT, RIGHT, ANDROID
 	};
 
 	private static boolean multiplayer = false;
 	private List<SObject> objectList = new ArrayList<SObject>();
 	private HashMap<Class<?>, Point> positions = new LinkedHashMap<Class<?>, Point>();
-
+	
+	private static int gapBetweenBalls = 16;
 	public LocationController(GameComponentLocation location) {
+
 		multiplayer = (location == GameComponentLocation.LEFT || location == GameComponentLocation.RIGHT);
 		switch (location) {
+		case ANDROID:
+			Ball.A = 38;
+			Ball.fontCorrection = 16;
+			BallTable.ballA = 38;
+			BallTable.topBallYCorrection = 25;
+			HighScoreCounter.bonusLineSpace = 42;
+			gapBetweenBalls = 11; 
+			BallTable.gab_between_balls =gapBetweenBalls;
+			positions.put(BallTable.class, new Point(199, 166));
+			positions.put(Level.class, new Point(20, 10));
+			positions.put(Cannon.class, new Point(199, 86));
+			positions.put(HighScoreCounter.class, new Point(764, 38));
+			positions.put(BallCounter.class, new Point(126, 20));
+			positions.put(Clock.class, new Point(28, 439));
+			positions.put(HighScoreMultiplicator.class, new Point(37, 74));
+			positions.put(SeesawTable.class, new Point(1000, 1000));
+			positions.put(HighScorePanel.class, new Point(1000, 1000));
+			break;
 		case CENTER:
+			gapBetweenBalls = 16;
 			positions.put(BallTable.class, new Point(248, 289));
 			positions.put(Level.class, new Point(25, 15));
 			positions.put(Cannon.class, new Point(248, 166));
@@ -37,6 +58,7 @@ public class LocationController {
 			break;
 
 		case LEFT:
+			gapBetweenBalls =12;
 			positions.put(BallCounter.class, new Point(222, 25));
 			positions.put(BallTable.class, new Point(12, 316));
 			positions.put(Level.class, new Point(489, 10));
@@ -46,6 +68,7 @@ public class LocationController {
 			break;
 
 		case RIGHT:
+			gapBetweenBalls =12;
 			positions.put(BallCounter.class, new Point(790, 25));
 			positions.put(BallTable.class, new Point(520, 316));
 			// positions.put(Level.class, new Point(774, 10));
@@ -67,12 +90,8 @@ public class LocationController {
 		return multiplayer;
 	}
 
-	public static int getGapBetweenBalls() {
-		return multiplayer ? 12 : 16;
-	}
-
-	public Point getLocation(Klass klass) {
-		return positions.get(klass);
+	public static int getGapBetweenBalls() {		
+		return gapBetweenBalls;
 	}
 
 	public void resetPositions() {

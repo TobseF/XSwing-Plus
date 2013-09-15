@@ -33,6 +33,7 @@ public class ScoreOnlineSubmitterTest {
 		submitScoreLineTest(SCORE_SERVER_LOCAL);
 	}
 
+	@Ignore
 	@Test
 	public final void testScoreOnlineSubmitterOnline() {
 		submitScoreLineTest(SCORE_SERVER_ONLINE);

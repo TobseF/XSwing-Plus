@@ -17,6 +17,50 @@ import de.lessvoid.nifty.slick.NiftyGameState;
  */
 public class TestState2 extends BasicGameState implements ScreenController {
 
+	@Override
+	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void bind(Nifty arg0, Screen arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onEndScreen() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onStartScreen() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getID() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	
+/*
 	public static final int ID = 1;
 	private GameContainer container;
 	private Font font;
@@ -95,4 +139,5 @@ public class TestState2 extends BasicGameState implements ScreenController {
 			}
 		});
 	}
+	*/
 }

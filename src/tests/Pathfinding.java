@@ -4,8 +4,9 @@
  */
 package tests;
 
-import java.awt.Point;
+
 import java.util.LinkedList;
+import lib.mylib.math.Point;
 import org.newdawn.slick.util.pathfinding.*;
 import xswing.*;
 import xswing.ball.*;

@@ -15,7 +15,7 @@ public class SlickUtils {
 
 	/**
 	 * Can hide ore show the mouse cursor.<br>
-	 * In Fullscreen mode this will be done with setMouseGrabbed() and in window mode, with
+	 * In full screen mode this will be done with setMouseGrabbed() and in window mode, with
 	 * moving the cursor in or outside the window.<br>
 	 * <b>Warning:</b> Can only called after the container was created!
 	 * 
@@ -25,6 +25,9 @@ public class SlickUtils {
 	public static void hideMouse(GameContainer container, boolean hide) {
 		if (container.isFullscreen()) {
 			container.setMouseGrabbed(hide);
+//			container.setMouseGrabbed(true);
+			//TODO:check cursor hiding
+			
 		} else {
 			if (robot == null) {
 				try {

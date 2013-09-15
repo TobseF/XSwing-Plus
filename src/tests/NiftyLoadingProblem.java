@@ -138,6 +138,18 @@ public class NiftyLoadingProblem extends StateBasedGame {
 				enterState(0);
 			}
 		}
+
+		@Override
+		public void init(GameContainer container, StateBasedGame game) throws SlickException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
 }

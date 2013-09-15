@@ -7,9 +7,9 @@ package xswing.testcases.server;
 import static org.junit.Assert.assertEquals;
 import lib.mylib.highscore.*;
 import lib.mylib.http.EasyPostString;
+import lib.mylib.options.DefaultArgs.Args;
 import org.junit.*;
 import xswing.LocalXSwingStatistics;
-import xswing.DefaultArgs.Args;
 
 public class OnlineSubmitterTest {
 

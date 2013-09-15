@@ -62,6 +62,7 @@ public class EasyCrypter implements Cryptable {
 	 * @param stringToEncrypt
 	 * @return encryptedString (e.g. 01642391)
 	 */
+	@Override
 	public String enCrypt(String stringToEncrypt) {
 		String crypted = stringToEncrypt;
 		try {
@@ -83,6 +84,7 @@ public class EasyCrypter implements Cryptable {
 	 * @param stringToDeCrypt a with {@link #enCrypt(String)} crypted String
 	 * @return uncrypted String or "" (an empty String), if there was an error while decrypting
 	 */
+	@Override
 	public String deCrypt(String stringToDeCrypt) {
 		try {
 			stringToDeCrypt = cryptLib.deCryptString(stringToDeCrypt, phrase);

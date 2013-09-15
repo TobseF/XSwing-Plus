@@ -7,9 +7,9 @@ package lib.mylib.version;
 import java.awt.*;
 import java.net.URI;
 import javax.swing.JOptionPane;
+import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.util.*;
 import org.newdawn.slick.util.Log;
-import xswing.DefaultArgs.Args;
 
 /**
  * @author Tobse If the {@link Args#checkForUpdates} in {@link MyOptions} is <code>true</code>,

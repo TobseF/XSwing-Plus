@@ -15,15 +15,15 @@ public class MusicJukebox implements MusicListener, Resetable {
 
 	public MusicJukebox(Music... playlist) {
 		for (Music title : playlist) {
-			title.addListener(this);
-			this.playlist.add(title);
+			addMusic(title);
 		}
 	}
 
 	public MusicJukebox() {}
 
 	public void addMusic(Music music) {
-		addMusic(music);
+		music.addListener(this);
+		playlist.add(music);
 	}
 
 	private Music getCurrentTitle() {

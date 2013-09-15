@@ -4,8 +4,9 @@
  */
 package xswing.ai;
 
-import java.awt.Point;
+
 import java.util.List;
+import lib.mylib.math.Point;
 import xswing.ball.*;
 
 public class Simulator {

@@ -4,7 +4,7 @@
  */
 package lib.mylib.object;
 
-import java.awt.Point;
+import lib.mylib.math.Point;
 import org.newdawn.slick.*;
 
 /** A basic Object on the Screen, which can be moved and drawn */
@@ -12,6 +12,7 @@ public class SObject implements Drawable, Updateable, Positionable {
 
 	/** X and Y- position on the screen. */
 	protected int x, y;
+	protected int width, height;
 	/** Default image which is rendered in {@link #render(Graphics)} */
 	protected Image image = null;
 
@@ -192,5 +193,23 @@ public class SObject implements Drawable, Updateable, Positionable {
 	public void translate(int x, int y) {
 		this.x+=x;
 		this.y+=y;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+	public int getWidth() {
+		return width;
+	}
+	public void setHeight(int height) {
+		this.height = height;
+	}
+	public void setWidth(int width) {
+		this.width = width;
+	}
+	
+	public void setSize(int width,int height){
+		this.height = height;
+		this.width = width;
 	}
 }

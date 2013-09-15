@@ -14,9 +14,7 @@ import xswing.ball.*;
 public class Cannon extends SObject implements Resetable {
 
 	/** Gap between balls */
-	private int gap = 16; //
-	/** Ball lenght */
-	private int ballLenght = 48;
+	private int ballGap = 16; 
 	/** The current column */
 	private int cannonPosition = 0;
 
@@ -25,7 +23,8 @@ public class Cannon extends SObject implements Resetable {
 	private Ball ball = null;
 	private BallTable ballTable;
 	private Sound move;
-	private Sound alarm;
+	private Sound stackingAlarm;
+	private Sound dropBall;
 	private SpriteSheet cannons;
 	private Animation animationWarning;
 	private Animation animationDanger;
@@ -43,12 +42,10 @@ public class Cannon extends SObject implements Resetable {
 	 * @param sounds The moving sound (0) and the alarm sound
 	 * @param ballTable
 	 */
-	public Cannon(SpriteSheet cannons, Sound[] sounds, BallTable ballTable,
+	public Cannon(SpriteSheet cannons, BallTable ballTable,
 			Countable ballCounter, EffectCatalog effectCatalog) {
 		super(cannons.getSprite(0, 0));
-		gap = LocationController.getGapBetweenBalls();
-		move = sounds[0];
-		alarm = sounds[1];
+		ballGap = LocationController.getGapBetweenBalls();
 		this.cannons = cannons;
 		this.ballTable = ballTable;
 		this.effectCatalog = effectCatalog;
@@ -60,6 +57,18 @@ public class Cannon extends SObject implements Resetable {
 		animationDanger.start();
 		animationDanger.setPingPong(true);
 	}
+	
+	public void setSoundDropBall(Sound dropBall) {
+		this.dropBall = dropBall;
+	}
+	public void setSoundStackingAlarm(Sound stackingAlarm) {
+		this.stackingAlarm = stackingAlarm;
+	}
+	public void setSoundMove(Sound move) {
+		this.move = move;
+	}
+	
+	
 
 	/** Moves the canon one step left */
 	public void moveLeft() {
@@ -81,7 +90,7 @@ public class Cannon extends SObject implements Resetable {
 
 	@Override
 	public int getX() {
-		return x + gap + cannonPosition * (ballLenght + gap);
+		return x + ballGap + cannonPosition * (Ball.A + ballGap);
 	}
 
 	@Override
@@ -99,9 +108,9 @@ public class Cannon extends SObject implements Resetable {
 		}
 		if (ballPileHeight == 8) { // red Warining
 			setImage(animationDanger.getCurrentFrame());
-			if (!alarm.playing()) {
-				alarm.play();
-			}
+			//if (!alarm.playing()) {
+				stackingAlarm.play();
+			//}
 		}
 	}
 
@@ -119,6 +128,7 @@ public class Cannon extends SObject implements Resetable {
 			ball.setPos(getX(), y - 22);
 			effectCatalog.addEffect(ball, particleEffects.FLASH);
 			ballCounter.count();
+			dropBall.play();
 		}
 	}
 

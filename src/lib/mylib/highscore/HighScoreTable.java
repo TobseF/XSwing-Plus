@@ -5,15 +5,14 @@
 package lib.mylib.highscore;
 
 import java.util.*;
-import javax.swing.table.AbstractTableModel;
-import xswing.DefaultArgs.Args;
+import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.util.MyOptions;
 
 /**
  * @author Tobse A Highscore table which is evertime sorted by score and limited by
  *         #maximumElements
  */
-public class HighScoreTable extends AbstractTableModel implements Iterable<HighScoreLine>{
+public class HighScoreTable  implements Iterable<HighScoreLine>{
 
 	/** Maximum score values which should be stored in this score table */
 	private int maximumElements = Integer.MAX_VALUE;
@@ -136,52 +135,8 @@ public class HighScoreTable extends AbstractTableModel implements Iterable<HighS
 		return highScores.iterator();
 	}
 
-	@Override
-	public int getColumnCount() {
-		return HighScoreLine.VALUE_COUNT;
-	}
-
-	@Override
-	public int getRowCount() {
-		return highScores.size();
-	}
-	@Override
-	public String getColumnName(int column) {
-		switch (column) {
-		case 0:
-			return "Name";
-		case 1:
-			return "Score";
-		case 2:
-			return "Balls Released";
-		case 3:
-			return "Balls Disbanded";
-		case 4:
-			return "Time";
-		case 5:
-			return "Date";
-		default:
-			return null;
-		}
-	}
-
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		HighScoreLine line = highScores.get(rowIndex);
-		switch (columnIndex) {
-		case 0:
-			return line.getName();
-		case 1:
-			return line.getScore();
-		case 2:
-			return line.getDispandedBalls();
-		case 3:
-			return line.getTime();
-		case 4:
-			return line.getDate();
-		default:
-			return null;
-		}
+	public HighScoreLine get(int index){
+		return highScores.get(index);
 	}
 
 }

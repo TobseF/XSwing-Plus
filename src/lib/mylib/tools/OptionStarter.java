@@ -12,10 +12,10 @@ import java.util.Arrays;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import lib.mylib.options.Paths;
+import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.swing.SwingUtils;
 import lib.mylib.util.*;
 import org.newdawn.slick.util.*;
-import xswing.DefaultArgs.Args;
 
 public class OptionStarter extends JFrame implements ActionListener {
 

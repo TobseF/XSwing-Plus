@@ -13,7 +13,7 @@ import xswing.ball.Ball;
 /** The ball which counts the levels. Level can be 1-45 */
 public class Level extends Ball implements Resetable {
 
-	/** The Level with wich the game starts (only for reset) */
+	/** The Level with which the game starts (only for reset) */
 	private int startLeveL;
 	/** The Highest reachable level */
 	private static final int MAX_LEVEL = 45;
@@ -33,6 +33,7 @@ public class Level extends Ball implements Resetable {
 		blinking = new EffectBlinking(8, 300, true);
 	}
 
+	@Override
 	public void reset() {
 		setLevel(startLeveL);
 		blinking.reset();

@@ -5,8 +5,7 @@
 package xswing.testcases;
 
 import static org.junit.Assert.assertEquals;
-import java.util.Properties;
-import lib.mylib.util.PropertiesTools;
+import lib.mylib.util.*;
 import org.junit.Test;
 
 public class PropertiesToolsTest {
@@ -22,7 +21,7 @@ public class PropertiesToolsTest {
 		System.out.println(properties);
 		System.out.println("");
 
-		String xml = PropertiesTools.propertiesToXMLString((lib.mylib.util.Properties) properties);
+		String xml = PropertiesTools.propertiesToXMLString( properties);
 		System.out.println(xml);
 
 		Properties newProperties = PropertiesTools.xmlPropertiesStringToProperties(xml);

@@ -19,4 +19,16 @@ public class TestStage1 extends BasicGameState {
 		g.drawString("State 1", 10, 10);
 	}
 
+	@Override
+	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

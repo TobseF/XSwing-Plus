@@ -4,9 +4,9 @@
  */
 package xswing.ball;
 
-import java.awt.Point;
-import javax.swing.event.EventListenerList;
+import java.util.*;
 import lib.mylib.SpriteSheet;
+import lib.mylib.math.Point;
 import lib.mylib.object.SObject;
 import org.newdawn.slick.*;
 import org.newdawn.slick.util.pathfinding.Mover;
@@ -30,8 +30,11 @@ public class Ball extends SObject implements Cloneable, Mover {
 	private int speed = 20;
 	/** If the balls has to to be moved in update */
 	private boolean moving = false;
-
+	
+	public static int fontCorrection = 21;
+	
 	private int id;
+	private static int id_counter =0;
 
 	/**
 	 * @return the id
@@ -40,12 +43,6 @@ public class Ball extends SObject implements Cloneable, Mover {
 		return id;
 	}
 
-	/**
-	 * @param id the id to set
-	 */
-	protected void setId(int id) {
-		this.id = id;
-	}
 
 	/** The directions in which the Ball can move */
 	private enum MovingDirection {
@@ -59,13 +56,14 @@ public class Ball extends SObject implements Cloneable, Mover {
 	protected EffectCatalog effectCatalog = null;
 	private SpriteSheet ballsSpriteSheet = null;
 
-	private EventListenerList eventListenerList = new EventListenerList();
+	private List<BallEventListener> eventListenerList = new LinkedList<BallEventListener>();
 
 	/** Length of an edge */
-	public static final int A = 48;
+	public static int A = 48;
 
 	public Ball(int x, int y) {
 		super(x, y);
+		id = id_counter++;
 	}
 
 	public Ball(int level, int x, int y) {
@@ -106,6 +104,7 @@ public class Ball extends SObject implements Cloneable, Mover {
 	}
 
 	public Ball(int nr) {
+		this(0,0);
 		weight = nr;
 		this.nr = nr + 1;
 	}
@@ -160,7 +159,6 @@ public class Ball extends SObject implements Cloneable, Mover {
 	/** Draws the weight number on the Ball */
 	protected void drawNumber(Graphics g) {
 		if (font != null) {
-			final int fontCorrection = 21;
 			font.drawString(x + (A / 2) - (font.getWidth(weight + "") / 2) - 1, y + fontCorrection, weight + "");
 		}
 	}
@@ -283,7 +281,7 @@ public class Ball extends SObject implements Cloneable, Mover {
 	 * @param listener the {@code BallEventListener} to be added
 	 */
 	public void addBallEventListener(BallEventListener listener) {
-		eventListenerList.add(BallEventListener.class, listener);
+		eventListenerList.add(listener);
 	}
 
 	/**
@@ -292,7 +290,7 @@ public class Ball extends SObject implements Cloneable, Mover {
 	 * @param listener to be removed
 	 */
 	public void removeBallEventListener(BallEventListener listener) {
-		eventListenerList.remove(BallEventListener.class, listener);
+		eventListenerList.remove(listener);
 	}
 
 	/**
@@ -302,7 +300,7 @@ public class Ball extends SObject implements Cloneable, Mover {
 	 * @see EventListenerList
 	 */
 	protected synchronized void notifyListener(BallEvent event) {
-		for (BallEventListener l : eventListenerList.getListeners(BallEventListener.class)) {
+		for (BallEventListener l : eventListenerList) {
 			l.ballEvent(event);
 		}
 	}

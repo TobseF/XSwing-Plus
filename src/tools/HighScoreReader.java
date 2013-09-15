@@ -66,8 +66,9 @@ public class HighScoreReader extends JFrame implements ActionListener {
 			remove(table);
 			table = null;
 		}
-		table = new JTable(highScoreTable);
-		table.setRowSorter(new TableRowSorter<TableModel>(highScoreTable));
+		HighScoreTableModel tableModel = new HighScoreTableModel(highScoreTable);
+		table = new JTable(tableModel);
+		table.setRowSorter(new TableRowSorter<TableModel>(tableModel));
 		this.add(panel = new JScrollPane(table));
 		validate();
 		repaint();
@@ -126,5 +127,61 @@ public class HighScoreReader extends JFrame implements ActionListener {
 		}
 		highScoreTable.save();
 	}
+	
+	
+	public static class HighScoreTableModel extends AbstractTableModel{
+		private HighScoreTable highScoreTable;
+		
+		public HighScoreTableModel(HighScoreTable highScoreTable) {
+			this.highScoreTable = highScoreTable;
+		}
+		
+		@Override
+		public int getColumnCount() {
+			return HighScoreLine.VALUE_COUNT;
+		}
 
+		@Override
+		public int getRowCount() {
+			return highScoreTable.size();
+		}
+		@Override
+		public String getColumnName(int column) {
+			switch (column) {
+			case 0:
+				return "Name";
+			case 1:
+				return "Score";
+			case 2:
+				return "Balls Released";
+			case 3:
+				return "Balls Disbanded";
+			case 4:
+				return "Time";
+			case 5:
+				return "Date";
+			default:
+				return null;
+			}
+		}
+
+		@Override
+		public Object getValueAt(int rowIndex, int columnIndex) {
+			HighScoreLine line = highScoreTable.get(rowIndex);
+			switch (columnIndex) {
+			case 0:
+				return line.getName();
+			case 1:
+				return line.getScore();
+			case 2:
+				return line.getDispandedBalls();
+			case 3:
+				return line.getTime();
+			case 4:
+				return line.getDate();
+			default:
+				return null;
+			}
+		}
+	}
 }

@@ -27,7 +27,6 @@ public class MyMathTest {
 			}
 			assertTrue(random >= 0.2f);
 			assertTrue(random <= 0.8f);
-
 		}
 	}
 
@@ -35,7 +34,10 @@ public class MyMathTest {
 	public void getInt() {
 		for (int i = 0; i < 40; i++) {
 			int random = MyMath.getInt(20, 100);
-			assertTrue(random >= 20 && random <= 100);
+			if(random >= 20 && random <= 100){
+			}else{
+				fail();
+			}		
 		}
 	}
 

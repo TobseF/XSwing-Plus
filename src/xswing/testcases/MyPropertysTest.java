@@ -6,9 +6,9 @@ package xswing.testcases;
 
 import static org.junit.Assert.*;
 import java.util.HashSet;
+import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.util.*;
 import org.junit.*;
-import xswing.DefaultArgs.Args;
 
 public class MyPropertysTest {
 

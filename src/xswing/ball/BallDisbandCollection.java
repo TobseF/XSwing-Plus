@@ -4,9 +4,9 @@
  */
 package xswing.ball;
 
-import java.awt.Point;
 import java.util.*;
 import lib.mylib.MyTimer;
+import lib.mylib.math.Point;
 import lib.mylib.object.*;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.pathfinding.*;

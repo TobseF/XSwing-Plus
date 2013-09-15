@@ -6,7 +6,7 @@ package lib.mylib.highscore;
 
 import lib.mylib.http.EasyPostString;
 import lib.mylib.ident.*;
-import xswing.DefaultArgs.Args;
+import lib.mylib.options.DefaultArgs.Args;
 import xswing.start.XSwing;
 
 /**

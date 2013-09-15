@@ -4,7 +4,7 @@
  */
 package lib.mylib.util;
 
-import xswing.DefaultArgs.Args;
+import lib.mylib.options.DefaultArgs.Args;
 
 /**
  * @author Tobse Same as {@link MyPropertys}, but adds Methods to direct use {@link Args}

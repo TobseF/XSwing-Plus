@@ -9,7 +9,10 @@ import lib.mylib.EffectBlinking;
 import lib.mylib.object.*;
 import org.newdawn.slick.*;
 
-/** Draws the HighScoreFormatter and the Bonus number */
+/**
+ * Draws the HighScoreFormatter and the Bonus number. The position ist the left upper corner of
+ * the first digit. Number will be automatically shifted to the left.
+ */
 public class HighScoreCounter extends SObject implements Resetable {
 
 	private int score = 0;
@@ -18,6 +21,7 @@ public class HighScoreCounter extends SObject implements Resetable {
 	private HighScoreMultiplicator multiplicator;
 	private int letterLenght;
 	private EffectBlinking blinking;
+	public static int bonusLineSpace = 55;
 
 	public HighScoreCounter(Font font, HighScoreMultiplicator multiplicator) {
 		this.font = font;
@@ -40,7 +44,7 @@ public class HighScoreCounter extends SObject implements Resetable {
 		font.drawString(x - (scoreS.length() - 1) * letterLenght, y, scoreS);
 		if (blinking.getBlink() && !LocationController.isMultiplayer()) {
 			String bonusS = NumberFormat.getInstance().format(bonus);
-			font.drawString(x - (bonusS.length() - 1) * letterLenght, y + 55, bonusS);
+			font.drawString(x - (bonusS.length() - 1) * letterLenght, y + bonusLineSpace, bonusS);
 		}
 	}
 

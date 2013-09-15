@@ -4,9 +4,10 @@
  */
 package xswing.ball;
 
-import java.awt.Point;
+
 import java.util.*;
 import javax.swing.event.EventListenerList;
+import lib.mylib.math.Point;
 import xswing.events.*;
 import xswing.events.BallEvent.BallEventType;
 
@@ -19,7 +20,7 @@ import xswing.events.BallEvent.BallEventType;
 public class Mechanics {
 
 	private BallTable ballTable;
-	private EventListenerList eventListenerList = new EventListenerList();
+	private List<BallEventListener> eventListenerList = new LinkedList<BallEventListener>();
 
 	private static final int[][] POSITIONS_FOR_SOROUNDING_CHECK = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
 
@@ -231,7 +232,7 @@ public class Mechanics {
 	 * @param listener the {@code BallEventListener} to be added
 	 */
 	public void addBallEventListener(BallEventListener listener) {
-		eventListenerList.add(BallEventListener.class, listener);
+		eventListenerList.add(listener);
 	}
 
 	/**
@@ -240,7 +241,7 @@ public class Mechanics {
 	 * @param listener to be removed
 	 */
 	public void removeBallEventListener(BallEventListener listener) {
-		eventListenerList.remove(BallEventListener.class, listener);
+		eventListenerList.remove(listener);
 	}
 
 	/**
@@ -250,7 +251,7 @@ public class Mechanics {
 	 * @see EventListenerList
 	 */
 	protected synchronized void notifyListener(BallEvent event) {
-		for (BallEventListener l : eventListenerList.getListeners(BallEventListener.class)) {
+		for (BallEventListener l : eventListenerList) {
 			l.ballEvent(event);
 		}
 	}

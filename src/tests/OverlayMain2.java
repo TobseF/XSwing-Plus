@@ -1,7 +1,7 @@
 package tests;
 
 import org.newdawn.slick.*;
-import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.*;
 
 /**
  * This demonstrates a standard slick GameState that has been "overlayed" with a simple Nifty
@@ -18,7 +18,7 @@ public class OverlayMain2 extends StateBasedGame {
 
 	@Override
 	public void initStatesList(final GameContainer container) throws SlickException {
-		addState(new TestState2());
+		addState((GameState) new TestState2());
 	}
 
 	public static void main(final String[] args) {

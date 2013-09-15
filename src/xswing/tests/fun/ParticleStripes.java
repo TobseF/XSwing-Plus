@@ -14,7 +14,8 @@ public class ParticleStripes extends BasicGame {
 	Image background;
 	private ParticleSystem paticleSystem;
 	static AppGameContainer container;
-	ConfigurableEmitter configurableEmitter;
+	ConfigurableEmitter DEFAULT_EMITTER;
+	ConfigurableEmitter emitter1;
 
 	public ParticleStripes() {
 		super("ParticleBallStress2");
@@ -23,7 +24,7 @@ public class ParticleStripes extends BasicGame {
 	public static void main(String[] args) {
 		try {
 			container = new AppGameContainer(new ParticleStripes());
-			container.setDisplayMode(640, 480, false);
+			container.setDisplayMode(1024, 768, false);
 			container.setClearEachFrame(false);
 			// container.setMaximumLogicUpdateInterval(15);
 			container.setMinimumLogicUpdateInterval(15);
@@ -37,11 +38,15 @@ public class ParticleStripes extends BasicGame {
 
 	@Override
 	public void init(GameContainer container) throws SlickException {
-		background = new Image("restest/swing_background.jpg");
+		background = new Image(RES_TEST_DIR+"galaxy_klein.jpg");
 		try {
-			configurableEmitter = ParticleIO.loadEmitter(RES_TEST_DIR + "explosion2.xml");
+			DEFAULT_EMITTER = ParticleIO.loadEmitter(RES_TEST_DIR + "magic_stripe.xml");
 			paticleSystem = ParticleIO.loadConfiguredSystem(RES_TEST_DIR + "emptySystem.xml");
-			paticleSystem.setRemoveCompletedEmitters(true);
+			//paticleSystem.setRemoveCompletedEmitters(true);
+			emitter1 = DEFAULT_EMITTER.duplicate();
+			emitter1.reset();
+			paticleSystem.addEmitter(emitter1);
+			paticleSystem.setPosition(0, 0);
 			// paticles2 =
 			// ParticleIO.loadConfiguredSystem("res/balls_system2.xml");
 
@@ -52,17 +57,19 @@ public class ParticleStripes extends BasicGame {
 
 	@Override
 	public void update(GameContainer container, int delta) throws SlickException {
+		int mouseX = container.getInput().getMouseX();
+		int mouseY = container.getInput().getMouseY();
 		if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
 			part(100, 100);
 		}
 		if (container.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
-			part(container.getInput().getMouseX(), container.getInput().getMouseY());
+			part(mouseX, mouseY);
 		}
 		if (container.getInput().isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
-			part(container.getInput().getMouseX() + 20, container.getInput().getMouseY() + 20);
+			part(mouseX + 20, mouseY + 20);
 		}
 		if (container.getInput().isMouseButtonDown(Input.MOUSE_MIDDLE_BUTTON)) {
-			part(container.getInput().getMouseX() - 20, container.getInput().getMouseY() - 20);
+			part(mouseX - 20, mouseY - 20);
 		}
 		if (container.getInput().isKeyPressed(Input.KEY_1)) {
 			partMulti();
@@ -79,17 +86,17 @@ public class ParticleStripes extends BasicGame {
 	}
 
 	public void part(int x, int y) {
-		ConfigurableEmitter temp = configurableEmitter.duplicate();
+		//ConfigurableEmitter temp = DEFAULT_EMITTER.duplicate();
 		// temp.reset();
-		temp.setPosition(x, y);
-		paticleSystem.addEmitter(temp);
+		emitter1.setPosition(x, y);
+		//paticleSystem.addEmitter(temp);
 	}
 
 	@Override
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		g.drawImage(background, 0, 0);
 		// paticles2.render(200,200);
-		paticleSystem.render(0, 0);
+		paticleSystem.render();
 		g.drawString("PART: " + paticleSystem.getParticleCount(), 5, 20);
 	}
 

@@ -4,9 +4,8 @@
  */
 package xswing.ball;
 
-import java.awt.Point;
 import java.util.*;
-import javax.swing.event.EventListenerList;
+import lib.mylib.math.Point;
 import lib.mylib.object.*;
 import org.newdawn.slick.util.pathfinding.*;
 import xswing.LocationController;
@@ -18,32 +17,34 @@ import xswing.events.BallEvent.BallEventType;
  */
 public class BallTable extends SObject implements Resetable, Cloneable, TileBasedMap {
 
-	/** Ball side length */
-	private int ballA;
+	/** Ball side length in pixels */
+	public static int ballA = Ball.A;
 	/** Gap between the balls */
-	public int gab_between_balls = 16;
-	/** Height and Weight of the Ball Table in pixels */
+	public static int gab_between_balls;
+	/** Height and Weight of the BallTable in pixels */
 	private int height;
 	/** The height of a ball stack. The upper two lines are for the ball magazine. */
+	// TODO: make field size Variable, make values clear (height == 13 ??)
 	public static final int ROWS = 13;
 	/** The number of ball lines, which can be filled each with one stack. */
 	public static final int LINES = 8;
 	/**
-	 * BallTable with [lines][rows]. Field [0][0] is the first ball in the left corner.
+	 * BallTable with [lines][rows]. Field [0][0] is the first ball low in the left corner.
+	 * Field [0][1] is on top of the first.
 	 */
 	private Ball[][] balls = new Ball[LINES][ROWS];
 
-
 	private HashSet<Ball> ballSet = new HashSet<Ball>();
 	
+	public static int topBallYCorrection=0;
+
 	private static final String NEW_LINE = System.getProperty("line.separator");
 
-	private EventListenerList listener = new EventListenerList();
+	private List<BallEventListener> listener = new LinkedList<BallEventListener>();
 
 	// TODO: add ballTablechangedEvent
 
 	public BallTable() {
-		ballA = Ball.A;
 		height = ballA * 8;
 		gab_between_balls = LocationController.getGapBetweenBalls();
 	}
@@ -104,23 +105,22 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 			ball.setPos(getFieldPosOnScreen(x, y));
 			ballSet.add(ball);
 			notifyListener(new BallEvent(this, ball, BallEventType.ADDED_TO_BALLTABLE, new Point(x, y)));
-			if(y <= 8){
+			if (y <= 8) {
 				notifyListener(new BallEvent(this, ball, BallEventType.ADDED_TO_PLAY_FIELD, new Point(x, y)));
 			}
 		}
 		balls[x][y] = ball;
 	}
 
-	
 	/**
-	 * @param x Position on Screen
-	 * @param y Position on Screen
-	 * @return Whether the position is over the BallTable play field
+	 * @param x Position on screen in pixels
+	 * @param y Position on screen in pixels
+	 * @return Whether the position is over the BallTable play BallTable area, or not
 	 */
 	public boolean isOverGrid(int x, int y) {
 		return (y >= this.y - 48);
 	}
-	
+
 	/** Sets a ball to the TabllTable, accordingly to its position. */
 	public void addBall(Ball ball) {
 		if (ball != null) {
@@ -129,8 +129,9 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 		}
 	}
 
-	/** 
+	/**
 	 * Throws a ball into the BallTable and let it fall up to the ground or a ball beneath.
+	 * 
 	 * @param ball which should be insert
 	 * @param line The number of ball line (Each can be filled with one stack).
 	 */
@@ -159,11 +160,20 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 	 * @return <code>null</code> if no Ball is found
 	 */
 	public Ball getBall(int x, int y) {
-		if (x >= 0 && x < LINES && y >= 0 && y < ROWS) {
+		if (isFieldInTable(x, y)) {
 			return balls[x][y];
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * @param x 
+	 * @param y
+	 * @return Whether the position lays in the ball table play size;
+	 */
+	public static boolean isFieldInTable(int x, int y) {
+		return x >= 0 && x < LINES && y >= 0 && y < ROWS;
 	}
 
 	@Override
@@ -186,8 +196,8 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 	 * @return Point(x,y) respectively Point(line,row)
 	 */
 	public Point getField(int x, int y) {
-		int posX = (int) ((x - this.x + gab_between_balls) / (double) (ballA + gab_between_balls));
-		double posYTemp = ((this.y + height - y) / (double) ballA);
+		int posX = (x - this.x + gab_between_balls) / (ballA + gab_between_balls);
+		double posYTemp = (this.y + height - y) / (double) ballA;
 		int posY = (int) posYTemp;
 		if (posYTemp % 1 == 0) {// if it's exactly on the grid
 			posY -= 1;
@@ -235,7 +245,11 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 
 	/** Returns the coordinates of a given BallTable cell on the display */
 	public Point getFieldPosOnScreen(int posX, int posY) {
-		return new Point(x + gab_between_balls + posX * (ballA + gab_between_balls), y + height - ((posY + 1) * ballA));
+		int yCorrection =0;
+		if(posY>=11){
+			yCorrection+=topBallYCorrection;//FIXME: What is topBallYCorrection?
+		}
+		return new Point(x + gab_between_balls + posX * (ballA + gab_between_balls),yCorrection+ y + height - ((posY + 1) * ballA));
 	}
 
 	/** Returns the coordinates of a given BallTable cell on the display */
@@ -309,11 +323,11 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 
 	@Override
 	public void pathFinderVisited(int x, int y) {
-	// no debug output is needed
+		// no debug output is needed
 	}
 
 	public void addBallEventListerner(BallEventListener ballEventListener) {
-		listener.add(BallEventListener.class, ballEventListener);
+		listener.add(ballEventListener);
 	}
 
 	/**
@@ -323,15 +337,14 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 	 * @see EventListenerList
 	 */
 	protected void notifyListener(BallEvent event) {
-		for (BallEventListener listenerInList : listener.getListeners(BallEventListener.class)) {
+		for (BallEventListener listenerInList : listener) {
 			listenerInList.ballEvent(event);
 		}
 	}
-	
 
 	/** Removes the given balls from the BallTable */
-	public void remove(Ball ball){
-		if(ballSet.contains(ball)){
+	public void remove(Ball ball) {
+		if (ballSet.contains(ball)) {
 			Point position = getField(ball);
 			balls[position.x][position.y] = null;
 			ballSet.remove(ball);

@@ -5,20 +5,28 @@
 package xswing.start;
 
 import static lib.mylib.options.Paths.RES_DIR;
+import static xswing.properties.XSGameConfigs.getConfig;
+
+
+
 import java.util.Arrays;
 import java.util.logging.*;
+
 import lib.mylib.gamestates.LoadingScreen;
 import lib.mylib.hacks.NiftyGameState;
+import lib.mylib.options.DefaultArgs.Args;
+import lib.mylib.properties.Resolution;
 import lib.mylib.tools.*;
 import lib.mylib.util.*;
 import lib.mylib.version.Version;
+
 import org.newdawn.slick.*;
 import org.newdawn.slick.loading.LoadingList;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.*;
 import org.newdawn.slick.util.Log;
+
 import xswing.GamePanel;
-import xswing.DefaultArgs.Args;
 import xswing.gui.ScreenControllerMainMenu;
 
 /**
@@ -33,9 +41,13 @@ public class XSwing extends StateBasedGame {
 	public static final int LOADING_SCREEN = 0, START_SCREEN = 1, GAME_PANEL = 2, GAME_OVER = 3;
 	public static final String XSWING_HOST_URL = "http://xswing.net/";
 	public static final String POST_BUG_URL = XSWING_HOST_URL + "postbug.php";
+	public final static String SCORE_SERVER_PATH = "";
+	public final static String SCORE_LINE_SUBMIT_FILE = "submit_high_score_line.php";
 	
 	public XSwing() {
 		super("XSwing Plus " + VERSION);
+		//TODO: Put all res in a dir on export
+		
 	}
 
 	@Override
@@ -50,7 +62,6 @@ public class XSwing extends StateBasedGame {
 			}else {
 				Log.warn("Using Nifty mouse cursor and grabbing mouse.");
 				mainMenu.enableMouseImage(new Image("res/cursor.png"), 2, 2); // Nifty way
-				container.setMouseGrabbed(!MyOptions.getBoolean(Args.debug));
 			}
 			// VOID: how to catch nifty exceptions
 			mainMenu.fromXml("xswing/gui/main_menu.xml", controller);
@@ -70,8 +81,10 @@ public class XSwing extends StateBasedGame {
 		MyOptions.setFile(XSwing.class);
 		MyOptions.setStrings(args);
 		Log.info("Args: " + Arrays.toString(args));
-		boolean debug = MyOptions.getBoolean(Args.debug);
-		boolean fullsceen = MyOptions.getBoolean(Args.startGameInFullscreen);
+//		boolean debug = MyOptions.getBoolean(Args.debug);
+		boolean debug = getConfig().isDebugMode();
+		boolean fullsceen = getConfig().getDisplayConfig().isFullscreen();
+//		boolean fullsceen = MyOptions.getBoolean(Args.startGameInFullscreen);
 
 		Log.setLogSystem(new MyLogSystem());
 		Log.info("XSwing Version: " + VERSION);
@@ -79,19 +92,20 @@ public class XSwing extends StateBasedGame {
 		Log.info("Fullstreen: " + fullsceen);
 		// Disable nifty logging
 		Logger.getLogger("de.lessvoid.nifty").setLevel(Level.WARNING);
+		Resolution resolution = getConfig().getDisplayConfig().getSelectedResolution();
 		// Log.setVerbose(debug); //debug info logging
 		try {
 			AppGameContainer game = new AppGameContainer(new XSwing());
 			game.setForceExit(false);
 			game.setShowFPS(debug);
-			game.setMinimumLogicUpdateInterval(26);
+			game.setMinimumLogicUpdateInterval(getConfig().getMinimumLogicUpdateInterval());
 			//game.setMaximumLogicUpdateInterval(26);
 			try {
-				game.setDisplayMode(1024, 768, fullsceen);
+				game.setDisplayMode(resolution.getWidth(), resolution.getHeight(), fullsceen);
 			} catch (SlickException e) {
 				if (fullsceen) {
 					// If fullscreen is not supported, try it in window mode
-					game.setDisplayMode(1024, 768, false);
+					game.setDisplayMode(resolution.getWidth(), resolution.getHeight(), false);
 				} else {
 					throw e;
 				}

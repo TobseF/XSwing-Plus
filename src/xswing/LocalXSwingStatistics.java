@@ -6,9 +6,9 @@ package xswing;
 
 import lib.mylib.ident.*;
 import lib.mylib.object.Resetable;
+import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.util.MyOptions;
 import org.newdawn.slick.util.Log;
-import xswing.DefaultArgs.Args;
 import xswing.events.*;
 import xswing.events.XSwingEvent.GameEventType;
 

@@ -8,25 +8,7 @@ import java.util.Random;
 
 public class MyMath {
 
-	private static Random random = null;
-
-	/**
-	 * Gets a (maybe) new value with the given aberrance.<br>
-	 * e.g.:<br>
-	 * <code>getRandom(100, 5);</code> ==> value between 95 and 105
-	 * 
-	 * @param value value which should be changed
-	 * @param percent for aberrance eg. 5 for 5%
-	 * @return changed value
-	 */
-	public static float getRandomAberrance(float value, float percent) {
-		if (random == null) {
-			random = new Random();
-		}
-		boolean plus = random.nextBoolean();
-		int aberrance = random.nextInt((int) ((percent / 100f) * value + 1));
-		return plus ? value + aberrance : value - aberrance;
-	}
+	private static final Random random = new Random();
 
 	/**
 	 * Gets a (maybe) new value with the given aberrance.<br>
@@ -37,7 +19,23 @@ public class MyMath {
 	 * @param percent for aberrance e.g. 5 for 5%
 	 * @return changed value
 	 */
+	public static float getRandomAberrance(float value, float percent) {
+		boolean plus = random.nextBoolean();
+		int aberrance = random.nextInt((int) ((percent / 100f) * value) + 1);
+		return plus ? value + aberrance : value - aberrance;
+	}
+
+	/**
+	 * Returns a value with has the given aberrance from the input number.<br>
+	 * e.g.:<br>
+	 * <code>getRandomAberrance(100, 5);</code> ==> value between 100 - 5% (95) and 100 + 5% (105).
+	 * 
+	 * @param value number which should be changed
+	 * @param percent for aberrance e.g. 5 for 5%
+	 * @return changed value
+	 */
 	public static int getRandomAberrance(int value, int percent) {
+		//not casting to float will produce a infinite loop
 		return (int) getRandomAberrance((float) value, (float) percent);
 	}
 
@@ -49,7 +47,7 @@ public class MyMath {
 	 * @return random number from min (inclusive) to max (also inclusive).
 	 */
 	public static int getInt(int min, int max) {
-		return min + random.nextInt(max) + 1;
+		return min + random.nextInt(max - min + 1);
 	}
 
 	/**
@@ -61,10 +59,7 @@ public class MyMath {
 	 * @return random number between min (exclusive) and max (also exclusive)
 	 */
 	public static float getFloat(float min, float max) {
-		if (random == null) {
-			random = new Random();
-		}
-		return min + (random.nextFloat() * (max - min));
+		return min + (random.nextFloat() * (max - min +1));
 	}
 
 	/**
@@ -95,9 +90,4 @@ public class MyMath {
 		return new int[] { centerX + posX, centerY + posY };
 	}
 
-
-	/*
-	 * public static int[] rotate(int x, int y, double degree) { double a[] =rotate((double)x,
-	 * (double)y, degree); return new int[]{(int)a[0],(int) a[1]}; }
-	 */
 }

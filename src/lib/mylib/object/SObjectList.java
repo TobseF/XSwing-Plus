@@ -5,14 +5,13 @@
 package lib.mylib.object;
 
 import java.util.*;
-import javax.swing.event.EventListenerList;
 import org.newdawn.slick.Graphics;
 
 public class SObjectList extends SObject implements Resetable {
 
 	private List<SObject> objectList;
 	private boolean removeFinishedObjects = true;
-	private EventListenerList removeObjectListenerList = new EventListenerList();
+
 
 	public boolean isRemoveFinishedObjects() {
 		return removeFinishedObjects;
@@ -77,16 +76,17 @@ public class SObjectList extends SObject implements Resetable {
 			}
 		}
 	}
+	
+	List<RemoveObjectListener> removeObjectListenerList = new LinkedList<RemoveObjectListener>();
 
 	private void notifyRemoveObjectListener(SObject removedSObject) {
-		for (RemoveObjectListener removeObjectListener : removeObjectListenerList
-				.getListeners(RemoveObjectListener.class)) {
+		for (RemoveObjectListener removeObjectListener : removeObjectListenerList) {
 			removeObjectListener.removedObecect(new SObjectRemovedEvent(this, removedSObject));
 		}
 	}
 
 	public void addRemoveObjectListener(RemoveObjectListener removeObjectListener) {
-		removeObjectListenerList.add(RemoveObjectListener.class, removeObjectListener);
+		removeObjectListenerList.add(removeObjectListener);
 	}
 
 	public List<SObject> getObjectList() {

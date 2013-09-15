@@ -4,8 +4,8 @@
  */
 package xswing.testcases;
 
-import java.awt.Point;
 import java.util.*;
+import lib.mylib.math.Point;
 import org.junit.*;
 import xswing.*;
 import xswing.ball.*;
@@ -29,6 +29,7 @@ public class BallTableTest {
 		ballTable.addBall(ball2, 0);
 		ballTable.addBall(ball3, 0);
 		ballTable.addBall(ball4, 0);
+		System.out.println(ballTable);
 	}
 
 	@Test

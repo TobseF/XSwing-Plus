@@ -20,7 +20,10 @@ public class EffectCatalog implements Resetable, Updateable, Drawable {
 	private static final String EFFECT_EXTENSION = ".xml";
 
 	public enum particleEffects {
-		BOUNCING, EXPLOSION, FLASH, SHRINC, SHRINC1, SHRINC2, SHRINC3, SHRINC4
+		/** Effect for the ball when it drops to the ground */
+		BOUNCING, EXPLOSION, 
+		/** Effect for the cannon when releasing a ball */
+		FLASH, SHRINC, SHRINC1, SHRINC2, SHRINC3, SHRINC4
 	};
 
 	private Map<particleEffects, ConfigurableEmitter> emitterList = new EnumMap<particleEffects, ConfigurableEmitter>(
@@ -58,9 +61,9 @@ public class EffectCatalog implements Resetable, Updateable, Drawable {
 		paticleSystem.setRemoveCompletedEmitters(true);
 	}
 
-	private void addEmitter(int x, int y, ConfigurableEmitter effect) {
+	private void addEmitterAndSetPosition(int x, int y, ConfigurableEmitter effect) {
+		effect.setPosition(x, y, false);
 		effect.replay();
-		effect.setPosition(x, y);
 		paticleSystem.addEmitter(effect);
 	}
 
@@ -78,32 +81,35 @@ public class EffectCatalog implements Resetable, Updateable, Drawable {
 			switch (effect) {
 			case BOUNCING:
 				currentEmitter = emitterList.get(effect).duplicate();
-				addEmitter(ball.getX() + a / 2, ball.getY() + a, currentEmitter);
+				addEmitterAndSetPosition(ball.getX() + a / 2, ball.getY() + a, currentEmitter);
 				break;
 			case EXPLOSION:
 				currentEmitter = emitterList.get(effect).duplicate();
-				addEmitter(ball.getX() + a / 2, ball.getY() + a / 2, currentEmitter);
+				addEmitterAndSetPosition(ball.getX() + a / 2, ball.getY() + a / 2, currentEmitter);
 				break;
 			case FLASH:
 				currentEmitter = emitterList.get(effect).duplicate();
-				addEmitter(ball.getX() - 42, ball.getY() + 50, currentEmitter);
+				addEmitterAndSetPosition(ball.getX() - 42, ball.getY() + 50, currentEmitter);
 				break;
 			case SHRINC:
 				int lenght = particleEffects.values().length;
 				for (int i = lenght - 1; i >= (lenght - 4); i--) {
-					addEmitter(ball.getX() + a / 2, ball.getY() + a / 2, emitterList.get(
+					addEmitterAndSetPosition(ball.getX() + a / 2, ball.getY() + a / 2, emitterList.get(
 							particleEffects.values()[i]).duplicate());
 				}
 				break;
 			default:
 				break;
 			}
-			if (sounds.get(effect) != null && !sounds.get(effect).playing()) {
+			if (sounds.get(effect) != null 
+					//&& !sounds.get(effect).playing()
+					) {
 				sounds.get(effect).play();
 			}
 		}
 	}
 
+	@Override
 	public void reset() {
 		paticleSystem.removeAllEmitters();
 		paticleSystem.reset();

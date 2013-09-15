@@ -2,12 +2,13 @@ package xswing.gui;
 
 import java.text.NumberFormat;
 import lib.mylib.highscore.*;
+import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.util.*;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.util.Log;
 import xswing.*;
-import xswing.DefaultArgs.Args;
+import xswing.net.ThreadedHighScoreSubmitter;
 import xswing.start.XSwing;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.button.controller.ButtonControl;
@@ -24,14 +25,12 @@ public class ScreenControllerScore implements ScreenController {
 	private StateBasedGame game;
 	private int highScore;
 	private HighScoreTable highScoreList;
-	private HighScoreLine newScore;
 	private TextFieldControl textField;
 	private Clock clock;
 	private GameStatistics gameStatistics;
 	private String playerName;
 
-	private final static String SCORE_SERVER_PATH = "";
-	private final static String SCORE_LINE_SUBMIT_FILE = "submit_high_score_line.php";
+
 	
 	public ScreenControllerScore(StateBasedGame game, HighScoreTable highScoreList, Clock clock,
 			GameStatistics gameStatistics) {
@@ -117,14 +116,16 @@ public class ScreenControllerScore implements ScreenController {
 		}
 		Log.info("Score entered: " + highScore + " " + name);
 		Log.info("Released Balls: " + gameStatistics.getReleasedBalls() + " Dertroyed Balls: " + gameStatistics.getDestroyedBalls());
-		newScore = new HighScoreLine(highScore, name, clock.getTimeSinceStart(), gameStatistics.getReleasedBalls(),
+		HighScoreLine newScore = new HighScoreLine(highScore, name, clock.getTimeSinceStart(), gameStatistics.getReleasedBalls(),
 				gameStatistics.getDestroyedBalls());
 		highScoreList.addScore(newScore);
 		highScoreList.save();
 		boolean submitHighscoreOnline = screen.findControl("upload-score", CheckboxControl.class).isChecked();
 		if (submitHighscoreOnline) {
 			Log.info("Submit score online");
-			new ScoreSubmitThread(newScore, XSwing.XSWING_HOST_URL + SCORE_SERVER_PATH + SCORE_LINE_SUBMIT_FILE);
+			ThreadedHighScoreSubmitter.submitScore(name, highScore,clock.getTimeSinceStart(), gameStatistics.getReleasedBalls(),
+					gameStatistics.getDestroyedBalls());
+//			new ScoreSubmitThread(newScore, XSwing.XSWING_HOST_URL + SCORE_SERVER_PATH + SCORE_LINE_SUBMIT_FILE);
 		}
 
 		((GamePanel) game.getState(XSwing.GAME_PANEL)).reset();
@@ -133,26 +134,9 @@ public class ScreenControllerScore implements ScreenController {
 		game.enterState(XSwing.GAME_PANEL, new EmptyTransition(), new EmptyTransition());
 		// FIXME: score isn't submit offline
 	}
+	
+	
 
-	private class ScoreSubmitThread extends Thread {
-
-		private final HighScoreLine score;
-		private final String url;
-
-		public ScoreSubmitThread(HighScoreLine score, String url) {
-			this.score = score;
-			this.url = url;
-			start();
-		}
-
-		@Override
-		public void run() {
-			new ScoreOnlineSubmitter(score, url).submit();
-		}
-	}
-
-	public void toggledCheckbox() {
-		Log.info("toggled Checkbox");
-	}
+	
 
 }
