@@ -93,8 +93,6 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	private SpriteSheet balls1, balls2, multipl, cannons;
 	private SpriteSheetFont numberFont, ballFont;
 	private AngelCodeFont fontText, fontScore, pauseFont;
-//	private Sound klack1, kran1, wup, shrinc, warning;
-	// private Music music;
 	private MusicJukebox music;
 	private Pause pause;
 
@@ -145,12 +143,12 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 //		klack1.setMaxPlyingTime(5); 
 //		wup.setMaxPlyingTime(1000);
 //		shrinc.setMaxPlyingTime(5);
-		music = new MusicJukebox();
 //		PropertiesEnum<Args> properties = new PropertiesEnum<Args>(new File("options.ini"));
 //		properties.loadINI();
 //		String[] musicFiles = properties.getPropertyString(Args.musicFiles).split(";");
+		music = new MusicJukebox();
 		for (String musicFile : config.getMusicPlayList()) {
-			music.addMusic(new Music(MUSIC_DIR + musicFile.trim()));
+			music.addMusic(new Music(MUSIC_DIR + musicFile.trim(),true));
 		}
 		SoundStore.get().setSoundVolume(config.getSoundConfig().getFxVoulme()/100f);
 		SoundStore.get().setMusicVolume(config.getSoundConfig().getMusicVolume()/100f);
@@ -202,7 +200,6 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		setSound(effectCatalog,particleEffects.SHRINC);
 		setSound(effectCatalog,particleEffects.BOUNCING);
 		
-	
 		ballKiller = new BallKiller(mechanics, highScoreCounter, ballTable);
 		ballTable.addBallEventListerner(ballKiller);
 		ballFactory = new BallFactory(ballTable, ballsToMove, ballFont, new SpriteSheet[] { balls1, balls2 }, effectCatalog, canon,
@@ -270,6 +267,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		this.game = game;
 		this.container = container;
 //		music.loop();
+		music.shuffle();
 		music.play();
 		// container.setMouseGrabbed(false);
 	}

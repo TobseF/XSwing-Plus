@@ -61,5 +61,9 @@ public class MusicJukebox implements MusicListener, Resetable {
 	public void reset() {
 		musicIndex = 0;
 	}
+	
+	public void shuffle(){
+		Collections.shuffle(playlist);
+	}
 
 }

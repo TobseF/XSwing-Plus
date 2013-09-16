@@ -29,7 +29,7 @@ public class ResourcesLoader {
 		for (ObjectConfigSet objectConfigSet : config) {
 
 			for (String music : config.getMusicPlayList()) {
-				new Music(MUSIC_DIR + music);
+				new Music(MUSIC_DIR + music,true);
 			}
 
 			for (ObjectConfig objectConfig : objectConfigSet) {

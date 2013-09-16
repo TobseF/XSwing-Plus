@@ -1,0 +1,146 @@
+{
+  "configIndex": 0,
+  "configs": [
+    {
+      "name": "DesktopPC",
+      "description": "High resolution desktop system (Win, Linux or Mac)",
+      "debugMode": false,
+      "configSetIndex": 0,
+      "displayConfig": {
+        "fullscreen": false,
+        "resolutionIndex": 0,
+        "resolutions": [
+          {
+            "height": 768,
+            "width": 1024
+          }
+        ]
+      },
+      "soundConfig": {
+        "musicVolume": 20,
+        "fxVoulme": 100
+      },
+      "minimumLogicUpdateInterval": 26,
+      "configSets": [
+        {
+          "name": "SinglePlayer",
+          "configs": [
+            {
+              "objectName": "Cannon",
+              "x": 248,
+              "y": 166,
+              "sounds": {
+                "stackingAlarm": "ALARM1.WAV",
+                "dropBall": "KRAN1.WAV",
+                "move": "KRAN1.WAV"
+              },
+              "images": {
+                "SpriteSheet": "cannons.png"
+              },
+              "properties": {
+                "millisecondsPerAnimationFrame": "180",
+                "cannonPosition": "3"
+              }
+            },
+            {
+              "objectName": "Background",
+              "image": "swing_background_b.jpg"
+            },
+            {
+              "objectName": "Ball",
+              "x": 48,
+              "y": 48,
+              "properties": {
+                "speed": "20",
+                "font": "arial_black_71"
+              }
+            },
+            {
+              "objectName": "BallFactory",
+              "images": {
+                "ballSet01": "balls1.png",
+                "ballSet02": "balls2.png"
+              },
+              "properties": {
+                "gapBetweenBalls": "16"
+              }
+            },
+            {
+              "objectName": "NumberFont",
+              "height": 19,
+              "width": 15,
+              "image": "fonts/numberFont_s19.png"
+            },
+            {
+              "objectName": "BallFont",
+              "height": 16,
+              "width": 11,
+              "image": "fonts/spriteFontBalls2.png"
+            },
+            {
+              "objectName": "Cursor",
+              "image": "cursor.png"
+            },
+            {
+              "objectName": "HighScoreMultiplicator",
+              "x": 59,
+              "y": 92,
+              "image": "multiplicator_sp.jpg"
+            },
+            {
+              "objectName": "BallTable",
+              "x": 248,
+              "y": 289
+            },
+            {
+              "objectName": "Level",
+              "x": 25,
+              "y": 15
+            },
+            {
+              "objectName": "BallCounter",
+              "x": 160,
+              "y": 22
+            },
+            {
+              "objectName": "SeesawTable",
+              "x": 228,
+              "y": 723
+            },
+            {
+              "objectName": "HighScoreCounter",
+              "x": 970,
+              "y": 106,
+              "properties": {
+                "bonusLineSpace": "42"
+              }
+            },
+            {
+              "objectName": "HighScorePanel",
+              "x": 980,
+              "y": 30
+            },
+            {
+              "objectName": "Clock",
+              "x": 85,
+              "y": 718
+            },
+            {
+              "objectName": "EffectCatalog",
+              "sounds": {
+                "shrinc": "SPRATZ2.WAV",
+                "bouncing": "KLACK4.WAV",
+                "explosion": "DREIER.WAV"
+              }
+            }
+          ]
+        }
+      ],
+      "musicPlayList": [
+        "Song2.ogg",
+        "Song3.ogg",
+        "Song4.ogg"
+      ]
+    }
+  ]
+}
