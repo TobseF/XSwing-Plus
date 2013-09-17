@@ -13,8 +13,6 @@ import xswing.ball.*;
 /** Provides a moveable Cannon which releses the Balls */
 public class Cannon extends SObject implements Resetable {
 
-	/** Gap between balls */
-	private int ballGap = 16; 
 	/** The current column */
 	private int cannonPosition = 0;
 
@@ -45,7 +43,6 @@ public class Cannon extends SObject implements Resetable {
 	public Cannon(SpriteSheet cannons, BallTable ballTable,
 			Countable ballCounter, EffectCatalog effectCatalog) {
 		super(cannons.getSprite(0, 0));
-		ballGap = LocationController.getGapBetweenBalls();
 		this.cannons = cannons;
 		this.ballTable = ballTable;
 		this.effectCatalog = effectCatalog;
@@ -90,7 +87,7 @@ public class Cannon extends SObject implements Resetable {
 
 	@Override
 	public int getX() {
-		return x + ballGap + cannonPosition * (Ball.A + ballGap);
+		return x + ballTable.gapBetweenBalls + cannonPosition * (Ball.A + ballTable.gapBetweenBalls);
 	}
 
 	@Override

@@ -59,7 +59,7 @@ public class Ball extends SObject implements Cloneable, Mover {
 	private List<BallEventListener> eventListenerList = new LinkedList<BallEventListener>();
 
 	/** Length of an edge */
-	public static int A = 48;
+	public static int A;
 
 	public Ball(int x, int y) {
 		super(x, y);

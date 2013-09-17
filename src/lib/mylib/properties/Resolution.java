@@ -1,10 +1,10 @@
 package lib.mylib.properties;
 
 public class Resolution {
-	/** Display height in px */
-	private int height;
 	/** Display width in px */
 	private int width;
+	/** Display height in px */
+	private int height;
 
 	/** Description of this {@link Resolution} (e.g. FullHD) */
 	private String name;

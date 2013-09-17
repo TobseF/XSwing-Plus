@@ -16,7 +16,6 @@ import xswing.start.XSwing;
 public class GamePanel extends BasicGameState implements Resetable {
 
 	private MainGame singlePlayer, multiPlayer1, multiPlayer2;
-	private Background background;
 	private boolean multiplayer = false;
 
 	private boolean coopertive = false; // TODO: implement meue entry for coopertive mode
@@ -36,8 +35,6 @@ public class GamePanel extends BasicGameState implements Resetable {
 		statistics = new LocalXSwingStatistics();
 
 		// make sure all graphics are loaded
-		background = new Background(true);
-		background = new Background(false);
 		singlePlayer = new MainGame(GameComponentLocation.CENTER);
 
 		multiPlayer1 = new MainGame(GameComponentLocation.LEFT);
@@ -52,7 +49,6 @@ public class GamePanel extends BasicGameState implements Resetable {
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
-		background.render(g);
 
 		if (!multiplayer) {
 			singlePlayer.render(container, game, g);
@@ -98,7 +94,6 @@ public class GamePanel extends BasicGameState implements Resetable {
 
 	private void initGame(boolean multiplayer, GameContainer container, StateBasedGame game)
 			throws SlickException {
-		background = new Background(multiplayer);
 		if (!multiplayer) {
 			singlePlayer = new MainGame(GameComponentLocation.CENTER);
 			singlePlayer.init(container, game);

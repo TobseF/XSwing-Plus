@@ -2,12 +2,13 @@ package xswing.properties;
 
 import java.lang.reflect.Field;
 
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.Sound;
-
 import lib.mylib.object.SObject;
 import lib.mylib.options.Paths;
 import lib.mylib.properties.ObjectConfig;
+
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 
 public class ConfigToObjectMapper {
 	
@@ -38,6 +39,9 @@ public class ConfigToObjectMapper {
 
 			if(config.isSetVisible()){
 				sobject.setVisible(config.isVisible());				
+			}
+			if(config.isSetImage()){
+				sobject.setImage(new Image(Paths.RES_DIR+config.getImage()));				
 			}
 
 			for (Field field : object.getClass().getDeclaredFields()) {

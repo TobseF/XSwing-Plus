@@ -9,8 +9,7 @@ import lib.mylib.object.*;
 import org.newdawn.slick.*;
 
 /**
- * Draws and returns the score multiplicatorSprites which can be set to the maximum of four and
- * decrease automatically
+ * Draws and returns the score multiplicatorSprites which can be set to the maximum of four and decrease automatically
  */
 public class HighScoreMultiplicator extends SObject implements Resetable {
 
@@ -55,8 +54,7 @@ public class HighScoreMultiplicator extends SObject implements Resetable {
 
 	@Override
 	public void render(Graphics g) {
-		if (isVisible && multiplicator > 1) {// Only muliplicator states 2,3 & 4 are in the
-			// spritesheet
+		if (isVisible && multiplicator > 1) {// Only multiplicator states 2,3 & 4 are in the spritesheet
 			g.drawImage(multiplicatorSprites.getSprite(0, 4 - multiplicator), x, y);
 		}
 	}

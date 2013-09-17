@@ -1,12 +1,13 @@
 package lib.mylib.properties;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-public class ObjectConfig {
+public class ObjectConfig implements Cloneable {
 	private String objectName;
 	private Integer x;
 	private Integer y;
@@ -65,15 +66,15 @@ public class ObjectConfig {
 	public void setY(int y) {
 		this.y = y;
 	}
-	
-	public void setSize(int width, int height){
+
+	public void setSize(int width, int height) {
 		this.width = width;
 		this.height = height;
 	}
-	
-	public void setPosition(int x, int y){
+
+	public void setPosition(int x, int y) {
 		this.x = x;
-		this.y =y;
+		this.y = y;
 	}
 
 	public int getHeight() {
@@ -156,38 +157,39 @@ public class ObjectConfig {
 	public String getImage() {
 		return image;
 	}
-	
-	public boolean isSetX(){
-		return x!=null;
+
+	public boolean isSetX() {
+		return x != null;
 	}
-	
-	public boolean isSetY(){
-		return y!=null;
+
+	public boolean isSetY() {
+		return y != null;
 	}
-	
-	public boolean isSetImage(){
-		return image!=null;
+
+	public boolean isSetImage() {
+		return image != null;
 	}
-	
-	public boolean isSetWidth(){
-		return width !=null;
+
+	public boolean isSetWidth() {
+		return width != null;
 	}
-	
-	public boolean isSetHeight(){
-		return height !=null;
+
+	public boolean isSetHeight() {
+		return height != null;
 	}
-	
-	public boolean isSetVisible(){
-		return visible !=null;
+
+	public boolean isSetVisible() {
+		return visible != null;
 	}
 
 	public Map<String, String> getSounds() {
 		return sounds;
 	}
-	
+
 	public Map<String, String> getImages() {
 		return images;
 	}
+
 	public Map<String, String> getProperties() {
 		return properties;
 	}
@@ -199,49 +201,82 @@ public class ObjectConfig {
 	public void setVisible(Boolean visible) {
 		this.visible = visible;
 	}
-	
-	public boolean objectConfig(){
-		return image!=null;
+
+	public boolean objectConfig() {
+		return image != null;
 	}
-	
-	public boolean isSetSounds(){
-		return sounds!=null;
+
+	public boolean isSetSounds() {
+		return sounds != null;
 	}
-	
-	public boolean isSetImages(){
-		return images!=null;
+
+	public boolean isSetImages() {
+		return images != null;
 	}
-	
-	public boolean isSetProperties(){
-		return properties!=null;
+
+	public boolean isSetProperties() {
+		return properties != null;
 	}
-	public boolean isSetFonts(){
-		return fonts!=null;
+
+	public boolean isSetFonts() {
+		return fonts != null;
 	}
-	
 
 	public void setFonts(Collection<String> fonts) {
 		this.fonts = fonts;
 	}
+
+	
 	
 	public Collection<String> getFonts() {
 		return fonts;
 	}
-	
-	public void addFont(String font){
-		if(fonts ==null){
+
+	public void addFont(String font) {
+		if (fonts == null) {
 			fonts = new LinkedList<String>();
 		}
 		fonts.add(font);
 	}
-	
 
 	@Override
 	public String toString() {
 		return "ObjectConfig [objectName=" + objectName + ", x=" + x + ", y=" + y + ", height=" + height + ", width=" + width + ", sounds="
 				+ sounds + ", images=" + images + ", properties=" + properties + ", image=" + image + ", visible=" + visible + "]";
 	}
-	
-	
-	
+
+	@Override
+	public ObjectConfig clone()  {
+		ObjectConfig cloned = new ObjectConfig();
+		cloned.objectName = objectName;
+		cloned.image=image;
+		if(isSetX()){
+			cloned.x = (int)x;
+		}
+		if(isSetY()){
+			cloned.y = (int)y;
+		}
+		if(isSetWidth()){
+			cloned.width=(int)width;
+		}
+		if(isSetHeight()){
+			cloned.height=(int)height;
+		}
+		if(isSetVisible()){
+			cloned.visible=(boolean)visible;
+		}
+		if(isSetImages()){
+			cloned.images = new HashMap<String, String>(images);
+		}
+		if(isSetSounds()){
+			cloned.sounds = new HashMap<String, String>(sounds);
+		}
+		if(isSetProperties()){
+			cloned.properties = new HashMap<String, String>(properties);
+		}
+		if(isSetFonts()){
+			cloned.fonts = new ArrayList<String>(fonts);
+		}
+		return cloned;
+	}
 }

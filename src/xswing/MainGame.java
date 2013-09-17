@@ -8,14 +8,8 @@ import static lib.mylib.options.Paths.*;
 import static xswing.properties.XSGameConfigs.getConfig;
 import static xswing.properties.ConfigToObjectMapper.map;
 
-
-
-
-
-
-
-
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +24,7 @@ import lib.mylib.object.*;
 import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.properties.GameConfig;
 import lib.mylib.properties.ObjectConfig;
+import lib.mylib.properties.ObjectConfigSet;
 import lib.mylib.util.*;
 
 import org.newdawn.slick.*;
@@ -62,6 +57,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		gameEventListeners = new EventListenerList();
 	}
 
+	private Background background = new Background();
 	private GameComponentLocation gameLocation;
 	private GameContainer container = null;
 	private StateBasedGame game = null;
@@ -69,7 +65,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	public static final String HIGH_SCORE_FILE = XSwing.class.getSimpleName() + "_high_score.hscr";
 	private int keyLeft = Input.KEY_LEFT, keyRight = Input.KEY_RIGHT, keyDown = Input.KEY_DOWN;
 	private int controllerID = 0;
-//	private LocationController locationController;
+	// private LocationController locationController;
 	private EffectCatalog effectCatalog;
 	private Cannon canon;
 	private Clock clock;
@@ -113,21 +109,20 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	private GameConfig config;
 	private Map<String, ObjectConfig> objectStore;
 
-
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		this.container = container;
 		config = getConfig();
 		objectStore = ResourcesLoader.getObjectStore(config.getSelctedObjectConfigSet());
-		
-		
+
+		map(new Ball(0));// Load Ball.A
+
 		ResourcesLoader.accesAllResources(config);
-		
-				// Images
+
+		// Images
 		multipl = new SpriteSheet(new Image(RES_DIR + "multiplicator_sp.jpg"), 189, 72);
 		cannons = new SpriteSheet(new Image(RES_DIR + "cannons.png"), 72, 110);
-		balls1 = new SpriteSheet(new Image(RES_DIR + "balls1.png"), Ball.A, Ball.A);
-		balls2 = new SpriteSheet(new Image(RES_DIR + "balls2.png"), Ball.A, Ball.A);
+
 		// Fonts
 		fontText = new AngelCodeFont(FONT_DIR + "font_arial_16_bold.fnt", FONT_DIR + "font_arial_16_bold.png");
 		pauseFont = new AngelCodeFont(FONT_DIR + "arial_black_71.fnt", FONT_DIR + "arial_black_71.png");
@@ -135,32 +130,33 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		numberFont = new SpriteSheetFont(new SpriteSheet(new Image(FONT_DIR + "numberFont_s19.png"), 15, 19), ',');
 		ballFont = new SpriteSheetFont(new SpriteSheet(new Image(FONT_DIR + "spriteFontBalls2.png"), 11, 16), '.');
 		// Sounds
-//		klack1 = new Sound(SOUND_DIR + "KLACK4.WAV");
-//		kran1 = new Sound(SOUND_DIR + "KRAN1.WAV");
-//		wup = new Sound(SOUND_DIR + "DREIER.WAV");
-//		shrinc = new Sound(SOUND_DIR + "SPRATZ2.WAV");
-//		warning = new Sound(SOUND_DIR + "ALARM1.WAV");
-//		klack1.setMaxPlyingTime(5); 
-//		wup.setMaxPlyingTime(1000);
-//		shrinc.setMaxPlyingTime(5);
-//		PropertiesEnum<Args> properties = new PropertiesEnum<Args>(new File("options.ini"));
-//		properties.loadINI();
-//		String[] musicFiles = properties.getPropertyString(Args.musicFiles).split(";");
+		// klack1 = new Sound(SOUND_DIR + "KLACK4.WAV");
+		// kran1 = new Sound(SOUND_DIR + "KRAN1.WAV");
+		// wup = new Sound(SOUND_DIR + "DREIER.WAV");
+		// shrinc = new Sound(SOUND_DIR + "SPRATZ2.WAV");
+		// warning = new Sound(SOUND_DIR + "ALARM1.WAV");
+		// klack1.setMaxPlyingTime(5);
+		// wup.setMaxPlyingTime(1000);
+		// shrinc.setMaxPlyingTime(5);
+		// PropertiesEnum<Args> properties = new PropertiesEnum<Args>(new File("options.ini"));
+		// properties.loadINI();
+		// String[] musicFiles = properties.getPropertyString(Args.musicFiles).split(";");
 		music = new MusicJukebox();
 		for (String musicFile : config.getMusicPlayList()) {
-			music.addMusic(new Music(MUSIC_DIR + musicFile.trim(),true));
+			music.addMusic(new Music(MUSIC_DIR + musicFile.trim(), true));
 		}
-		SoundStore.get().setSoundVolume(config.getSoundConfig().getFxVoulme()/100f);
-		SoundStore.get().setMusicVolume(config.getSoundConfig().getMusicVolume()/100f);
-		
-		
+		SoundStore.get().setSoundVolume(config.getSoundConfig().getFxVoulme() / 100f);
+		SoundStore.get().setMusicVolume(config.getSoundConfig().getMusicVolume() / 100f);
+
 		// music = new Music(MUSIC_DIR + "music.mod", true);
 		// Objects
+		map(background);
+
 		addXSwingListener(this);
 		gameStatistics = new GameStatistics();
 		addXSwingListener(gameStatistics);
-//		locationController = new LocationController(gameLocation);
-		
+		// locationController = new LocationController(gameLocation);
+
 		ballsToMove = new SObjectList();
 		gui = new SObjectList();
 		effectCatalog = new EffectCatalog();
@@ -168,7 +164,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		ballTable = new BallTable();
 		ballTable.addBallEventListerner(this);
 		map(ballTable);
-//		locationController.setLocationToObject(ballTable);
+		// locationController.setLocationToObject(ballTable);
 		mechanics = new Mechanics(ballTable);
 		mechanics.addBallEventListener(this);
 		clock = new Clock(numberFont);
@@ -180,7 +176,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		ballCounter.setLevel(levelBall);
 		canon = new Cannon(cannons, ballTable, ballCounter, effectCatalog);
 		map(canon);
-		
+
 		multiplicator = new HighScoreMultiplicator(multipl);
 		map(multiplicator);
 		highScoreCounter = new HighScoreCounter(numberFont, multiplicator);
@@ -195,17 +191,22 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		addXSwingListener(statistics);
 		seesawTable = new SeesawTable(numberFont, ballTable);
 		map(seesawTable);
-		
-		setSound(effectCatalog,particleEffects.EXPLOSION);
-		setSound(effectCatalog,particleEffects.SHRINC);
-		setSound(effectCatalog,particleEffects.BOUNCING);
-		
+
+		setSound(effectCatalog, particleEffects.EXPLOSION);
+		setSound(effectCatalog, particleEffects.SHRINC);
+		setSound(effectCatalog, particleEffects.BOUNCING);
+
 		ballKiller = new BallKiller(mechanics, highScoreCounter, ballTable);
 		ballTable.addBallEventListerner(ballKiller);
-		ballFactory = new BallFactory(ballTable, ballsToMove, ballFont, new SpriteSheet[] { balls1, balls2 }, effectCatalog, canon,
-				levelBall);
+		List<SpriteSheet> ballSets = new ArrayList<SpriteSheet>(5);
+		ballFactory = new BallFactory(ballTable, ballsToMove, ballFont, ballSets, effectCatalog, canon, levelBall);
 		ballFactory.addBallEventListener(this);
 		ballFactory.addBallEventListener(gameStatistics);
+		ObjectConfig ballFactoryConf = getConf(ballFactory);
+		for(String image :ballFactoryConf.getImages().values()){
+			ballSets.add(new SpriteSheet(new Image(RES_DIR + image), Ball.A, Ball.A));
+		}
+		
 		scoreScreenController = new ScreenControllerScore(game, scoreTable, clock, gameStatistics);
 		scorePopups = new SObjectList();
 
@@ -218,6 +219,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		reset.add(scorePopups);
 		reset.add(effectCatalog);
 
+		gui.add(background);
 		gui.add(canon);
 		gui.add(clock);
 		gui.add(seesawTable);
@@ -239,19 +241,19 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		container.getInput().removeListener(highScoreState);
 		container.getInput().addListener(highScoreState);
 	}
-	
-	public void map(SObject object) throws SlickException{
+
+	public void map(SObject object) throws SlickException {
 		ObjectConfig config = objectStore.get(object.getClass().getSimpleName());
-		ConfigToObjectMapper.map(object,config);
+		ConfigToObjectMapper.map(object, config);
 	}
-	
-	private void setSound(EffectCatalog effects,particleEffects effect) throws SlickException{
-		ObjectConfig config = objectStore.get(EffectCatalog.class.getSimpleName());	
-		effects.setSound(new Sound(SOUND_DIR+config.getSound(effect.toString().toLowerCase())),effect);
+
+	private void setSound(EffectCatalog effects, particleEffects effect) throws SlickException {
+		ObjectConfig config = objectStore.get(EffectCatalog.class.getSimpleName());
+		effects.setSound(new Sound(SOUND_DIR + config.getSound(effect.toString().toLowerCase())), effect);
 	}
-	
-	public ObjectConfig getConf(SObject sObject){
-		return objectStore.get(sObject.getClass().getSimpleName());	
+
+	public ObjectConfig getConf(SObject sObject) {
+		return objectStore.get(sObject.getClass().getSimpleName());
 	}
 
 	public void setKeys(int keyCodeLeft, int keyCodeRight, int keyCodeDown) {
@@ -266,7 +268,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		newGame();
 		this.game = game;
 		this.container = container;
-//		music.loop();
+		// music.loop();
 		music.shuffle();
 		music.play();
 		// container.setMouseGrabbed(false);

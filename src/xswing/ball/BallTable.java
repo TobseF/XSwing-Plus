@@ -17,10 +17,8 @@ import xswing.events.BallEvent.BallEventType;
  */
 public class BallTable extends SObject implements Resetable, Cloneable, TileBasedMap {
 
-	/** Ball side length in pixels */
-	public static int ballA = Ball.A;
 	/** Gap between the balls */
-	public static int gab_between_balls;
+	public static int gapBetweenBalls;
 	/** Height and Weight of the BallTable in pixels */
 	private int height;
 	/** The height of a ball stack. The upper two lines are for the ball magazine. */
@@ -45,8 +43,8 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 	// TODO: add ballTablechangedEvent
 
 	public BallTable() {
-		height = ballA * 8;
-		gab_between_balls = LocationController.getGapBetweenBalls();
+		height = Ball.A * 8;
+//		gab_between_balls = LocationController.getGapBetweenBalls();
 	}
 
 	public Ball[][] getBalls() {
@@ -196,8 +194,8 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 	 * @return Point(x,y) respectively Point(line,row)
 	 */
 	public Point getField(int x, int y) {
-		int posX = (x - this.x + gab_between_balls) / (ballA + gab_between_balls);
-		double posYTemp = (this.y + height - y) / (double) ballA;
+		int posX = (x - this.x + gapBetweenBalls) / (Ball.A + gapBetweenBalls);
+		double posYTemp = (this.y + height - y) / (double) Ball.A;
 		int posY = (int) posYTemp;
 		if (posYTemp % 1 == 0) {// if it's exactly on the grid
 			posY -= 1;
@@ -249,7 +247,7 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 		if(posY>=11){
 			yCorrection+=topBallYCorrection;//FIXME: What is topBallYCorrection?
 		}
-		return new Point(x + gab_between_balls + posX * (ballA + gab_between_balls),yCorrection+ y + height - ((posY + 1) * ballA));
+		return new Point(x + gapBetweenBalls + posX * (Ball.A + gapBetweenBalls),yCorrection+ y + height - ((posY + 1) * Ball.A));
 	}
 
 	/** Returns the coordinates of a given BallTable cell on the display */
@@ -259,7 +257,7 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 
 	/** Returns the coordinates of fields in the BallTable */
 	public Point getFieldPos(int posX, int posY) {
-		return new Point(gab_between_balls + posX * (ballA + gab_between_balls), height - posY * ballA);
+		return new Point(gapBetweenBalls + posX * (Ball.A + gapBetweenBalls), height - posY * Ball.A);
 	}
 
 	/** Returns the sum of all ball weight on the given column */

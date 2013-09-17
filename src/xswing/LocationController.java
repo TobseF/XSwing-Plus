@@ -29,11 +29,10 @@ public class LocationController {
 		case ANDROID:
 			Ball.A = 38;
 			Ball.fontCorrection = 16;
-			BallTable.ballA = 38;
 			BallTable.topBallYCorrection = 25;
 			HighScoreCounter.bonusLineSpace = 42;
 			gapBetweenBalls = 11; 
-			BallTable.gab_between_balls =gapBetweenBalls;
+			BallTable.gapBetweenBalls =gapBetweenBalls;
 			positions.put(BallTable.class, new Point(199, 166));
 			positions.put(Level.class, new Point(20, 10));
 			positions.put(Cannon.class, new Point(199, 86));

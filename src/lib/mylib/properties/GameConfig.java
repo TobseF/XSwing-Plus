@@ -15,8 +15,8 @@ public class GameConfig implements Iterable<ObjectConfigSet> {
 	private SoundConfig soundConfig;
 	private Integer minimumLogicUpdateInterval;
 	private Integer maximalLogicUpdateInterval;
-	private List<ObjectConfigSet> configSets = new LinkedList<ObjectConfigSet>();
 	private List<String> musicPlayList;
+	private List<ObjectConfigSet> configSets = new LinkedList<ObjectConfigSet>();
 
 	public GameConfig() {
 	}
