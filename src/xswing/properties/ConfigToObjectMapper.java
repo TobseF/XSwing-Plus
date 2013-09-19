@@ -59,7 +59,7 @@ public class ConfigToObjectMapper {
 						} else if (type.isAssignableFrom(Sound.class)) {
 							field.set(object,new Sound(Paths.SOUND_DIR+config.getSound(fieldName)));
 						} else {
-							throw new IllegalArgumentException("Could't map field" + fieldName + " of " + object);
+							throw new IllegalArgumentException("Could't map field '" + fieldName + "' of " +type+":" +object+"("+object.getClass().getName()+")");
 						}
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();

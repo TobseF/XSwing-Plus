@@ -7,27 +7,38 @@ package xswing.start;
 import static lib.mylib.options.Paths.RES_DIR;
 import static xswing.properties.XSGameConfigs.getConfig;
 
-
-
 import java.util.Arrays;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import lib.mylib.ScalableGameState;
 import lib.mylib.gamestates.LoadingScreen;
 import lib.mylib.hacks.NiftyGameState;
 import lib.mylib.options.DefaultArgs.Args;
+import lib.mylib.properties.GameConfig;
 import lib.mylib.properties.Resolution;
-import lib.mylib.tools.*;
-import lib.mylib.util.*;
+import lib.mylib.tools.ErrorReporter;
+import lib.mylib.tools.ServerRequest;
+import lib.mylib.util.MyLogSystem;
+import lib.mylib.util.MyOptions;
 import lib.mylib.version.Version;
 
-import org.newdawn.slick.*;
+import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.ScalableGame;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.loading.LoadingList;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.state.transition.*;
+import org.newdawn.slick.state.transition.EmptyTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.Log;
 
 import xswing.GamePanel;
+import xswing.MainGame;
 import xswing.gui.ScreenControllerMainMenu;
+import xswing.properties.XSGameConfigs;
 
 /**
  * Starts XSwing Plus with main menu.
@@ -43,11 +54,11 @@ public class XSwing extends StateBasedGame {
 	public static final String POST_BUG_URL = XSWING_HOST_URL + "postbug.php";
 	public final static String SCORE_SERVER_PATH = "";
 	public final static String SCORE_LINE_SUBMIT_FILE = "submit_high_score_line.php";
-	
+
 	public XSwing() {
 		super("XSwing Plus " + VERSION);
-		//TODO: Put all res in a dir on export
-		
+		// TODO: Put all res in a dir on export
+
 	}
 
 	@Override
@@ -56,10 +67,10 @@ public class XSwing extends StateBasedGame {
 			ScreenControllerMainMenu controller = new ScreenControllerMainMenu(this);
 			addState(new LoadingScreen(LOADING_SCREEN, new FadeOutTransition(Color.black), new EmptyTransition()));
 			NiftyGameState mainMenu = new NiftyGameState(START_SCREEN);
-			if(MyOptions.getBoolean(Args.useNativeMouseCursor)){
+			if (MyOptions.getBoolean(Args.useNativeMouseCursor)) {
 				Log.info("Using native mouse cursor");
 				container.setMouseCursor(new Image("res/cursor.png"), 2, 2);
-			}else {
+			} else {
 				Log.warn("Using Nifty mouse cursor and grabbing mouse.");
 				mainMenu.enableMouseImage(new Image("res/cursor.png"), 2, 2); // Nifty way
 			}
@@ -67,7 +78,14 @@ public class XSwing extends StateBasedGame {
 			mainMenu.fromXml("xswing/gui/main_menu.xml", controller);
 			addState(mainMenu);
 			container.setForceExit(false);
-			addState(new GamePanel(GAME_PANEL));
+			// GamePanel gamePanel = new GamePanel(GAME_PANEL);
+			MainGame mainGame = new MainGame();
+			container.setClearEachFrame(true);
+			ScalableGameState scaledGame = new ScalableGameState(mainGame, 1920, 1080,true);
+			scaledGame.setId(GAME_PANEL);
+			// ResizeableGameState scaledGamePanel = new ResizeableGameState(gamePanel,
+			// container.getWidth(),container.getHeight());
+			addState(scaledGame);
 		} catch (Throwable e) {
 			new ErrorReporter(e, new ServerRequest(POST_BUG_URL), true);
 			// e.printStackTrace();
@@ -80,26 +98,29 @@ public class XSwing extends StateBasedGame {
 	public static void main(String[] args) {
 		MyOptions.setFile(XSwing.class);
 		MyOptions.setStrings(args);
+		
 		Log.info("Args: " + Arrays.toString(args));
-//		boolean debug = MyOptions.getBoolean(Args.debug);
-		boolean debug = getConfig().isDebugMode();
-		boolean fullsceen = getConfig().getDisplayConfig().isFullscreen();
-//		boolean fullsceen = MyOptions.getBoolean(Args.startGameInFullscreen);
-
+		GameConfig config = XSGameConfigs.getConfig(MyOptions.getString(Args.configFile, XSGameConfigs.OPTION_FILE_NAME));
+		// boolean debug = MyOptions.getBoolean(Args.debug);
+		boolean debug = config.isDebugMode();
+		boolean fullsceen = config.getDisplayConfig().isFullscreen();
+		// boolean fullsceen = MyOptions.getBoolean(Args.startGameInFullscreen);
 		Log.setLogSystem(new MyLogSystem());
 		Log.info("XSwing Version: " + VERSION);
 		Log.info("Debugmode: " + debug);
 		Log.info("Fullstreen: " + fullsceen);
 		// Disable nifty logging
 		Logger.getLogger("de.lessvoid.nifty").setLevel(Level.WARNING);
-		Resolution resolution = getConfig().getDisplayConfig().getSelectedResolution();
+		Resolution resolution = config.getDisplayConfig().getSelectedResolution();
 		// Log.setVerbose(debug); //debug info logging
 		try {
-			AppGameContainer game = new AppGameContainer(new XSwing());
+			XSwing xSwing = new XSwing();
+			// ScalableGame scalableGame = new ScalableGame(xSwing, resolution.getWidth(), resolution.getHeight(),true);
+			AppGameContainer game = new AppGameContainer(xSwing);
 			game.setForceExit(false);
 			game.setShowFPS(debug);
-			game.setMinimumLogicUpdateInterval(getConfig().getMinimumLogicUpdateInterval());
-			//game.setMaximumLogicUpdateInterval(26);
+			game.setMinimumLogicUpdateInterval(config.getMinimumLogicUpdateInterval());
+			// game.setMaximumLogicUpdateInterval(26);
 			try {
 				game.setDisplayMode(resolution.getWidth(), resolution.getHeight(), fullsceen);
 			} catch (SlickException e) {
@@ -121,7 +142,7 @@ public class XSwing extends StateBasedGame {
 					// If fullscreen is not supported, try it in window mode
 					game.setFullscreen(false);
 					game.start();
-				}else{
+				} else {
 					throw e;
 				}
 			}

@@ -32,6 +32,8 @@ import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
+import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.ParseException;
+
 import tools.BallDropSimulator;
 import xswing.EffectCatalog.particleEffects;
 import xswing.LocationController.GameComponentLocation;
@@ -52,10 +54,6 @@ import xswing.start.XSwing;
  */
 public class MainGame extends BasicGameState implements Resetable, BallEventListener, XSwingListener {
 
-	public MainGame(GameComponentLocation gameLocation) {
-		this.gameLocation = gameLocation;
-		gameEventListeners = new EventListenerList();
-	}
 
 	private Background background = new Background();
 	private GameComponentLocation gameLocation;
@@ -85,6 +83,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	private BallFactory ballFactory;
 	private SObjectList scorePopups;
 	private LocalXSwingStatistics statistics;
+	private GameOver gameOver= new GameOver();
 
 	private SpriteSheet balls1, balls2, multipl, cannons;
 	private SpriteSheetFont numberFont, ballFont;
@@ -98,7 +97,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	private BallDropSimulator ballDropSimulator;
 	private GameStatistics gameStatistics;
 
-	private EventListenerList gameEventListeners;
+	private EventListenerList gameEventListeners=  new EventListenerList();
 
 	/** Highscore submit Panel */
 	private NiftyGameState highScoreState = null;
@@ -191,6 +190,8 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		addXSwingListener(statistics);
 		seesawTable = new SeesawTable(numberFont, ballTable);
 		map(seesawTable);
+		
+		map(gameOver);
 
 		setSound(effectCatalog, particleEffects.EXPLOSION);
 		setSound(effectCatalog, particleEffects.SHRINC);
@@ -244,6 +245,9 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 
 	public void map(SObject object) throws SlickException {
 		ObjectConfig config = objectStore.get(object.getClass().getSimpleName());
+		if(config==null){
+			throw new IllegalArgumentException("Coul't fin a config for "+object.getClass().getName()+":" +object);
+		}
 		ConfigToObjectMapper.map(object, config);
 	}
 
@@ -477,6 +481,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		// highScoreState.init(container, game);
 		highScoreState.enter(container, game);
 		// highScoreState.gotoScreenXSwing.GAME_OVER(; //VOID: ScreenID of NiftyGameState?)
+		gameOver.play();
 		container.setPaused(true);
 	}
 

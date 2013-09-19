@@ -20,6 +20,7 @@ import xswing.BallCounter;
 import xswing.BallFont;
 import xswing.Cannon;
 import xswing.EffectCatalog;
+import xswing.GameOver;
 import xswing.HighScoreCounter;
 import xswing.HighScoreMultiplicator;
 import xswing.HighScorePanel;
@@ -46,7 +47,7 @@ public class DefaultGameConfigs extends GameConfigs {
 									, seesawTable
 									, highScorePanel
 									, ballFont
-									, effectCatalog;
+									, effectCatalog,gameOver;
 	
 	private transient int resolutionIdex=1,configIndex=1;
 
@@ -107,6 +108,7 @@ public class DefaultGameConfigs extends GameConfigs {
 		highScorePanel = new ObjectConfig(HighScorePanel.class);
 		ballFont = new ObjectConfig(BallFont.class);
 		effectCatalog = new ObjectConfig(EffectCatalog.class);
+		gameOver= new ObjectConfig(GameOver.class);
 
 //		cannon.setPosition(610, 231);  FIXME:gapBetweenBalls-20 bug
 		cannon.setPosition(610-20, 231);
@@ -125,7 +127,7 @@ public class DefaultGameConfigs extends GameConfigs {
 		ball.setProperyInt("A", 70);
 		// ball.setProperyInt("fontCorrection", 16);
 		ball.setProperyInt("speed", 20);
-		ball.setPropery("font", "arial_black_71");
+//		ball.setPropery("font", "arial_black_71");
 		singlePlayer.addObjectConfig(ball);
 
 		ballFactory.addImage("ballSet01", "balls1_hd.png");
@@ -174,6 +176,9 @@ public class DefaultGameConfigs extends GameConfigs {
 		effectCatalog.addSound("explosion", "DREIER.WAV");
 		effectCatalog.addSound("shrinc", "SPRATZ2.WAV");
 		effectCatalog.addSound("bouncing", "KLACK4.WAV");
+		
+		singlePlayer.addObjectConfig(gameOver);
+		gameOver.addSound("gameOver", "SPRATZ2.WAV");
 	}
 
 	private void initSingleSplayerSD(ObjectConfigSet singlePlayer) {
@@ -193,6 +198,8 @@ public class DefaultGameConfigs extends GameConfigs {
 		highScorePanel = new ObjectConfig(HighScorePanel.class);
 		ballFont = new ObjectConfig(BallFont.class);
 		effectCatalog = new ObjectConfig(EffectCatalog.class);
+		gameOver= new ObjectConfig(GameOver.class);
+
 		singlePlayer.addObjectConfig(cannon);
 		cannon.setPosition(248, 166);
 		cannon.setProperyInt("cannonPosition", 3);
@@ -211,7 +218,7 @@ public class DefaultGameConfigs extends GameConfigs {
 		ball.setProperyInt("A", 48);
 		// ball.setProperyInt("fontCorrection", 16);
 		ball.setProperyInt("speed", 20);
-		ball.setPropery("font", "arial_black_71");
+//		ball.setPropery("font", "arial_black_71");
 
 		singlePlayer.addObjectConfig(ballFactory);
 		ballFactory.addImage("ballSet01", "balls1.png");
@@ -260,6 +267,9 @@ public class DefaultGameConfigs extends GameConfigs {
 		effectCatalog.addSound("explosion", "DREIER.WAV");
 		effectCatalog.addSound("shrinc", "SPRATZ2.WAV");
 		effectCatalog.addSound("bouncing", "KLACK4.WAV");
+		
+		singlePlayer.addObjectConfig(gameOver);
+		gameOver.addSound("gameOver", "SPRATZ2.WAV");
 	}
 
 	public static void main(String[] args) {

@@ -7,9 +7,8 @@ package lib.mylib.object;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
-public abstract class BasicGameState extends org.newdawn.slick.state.BasicGameState {
+public abstract class BasicGameState extends org.newdawn.slick.state.BasicGameState implements NumberedWithID {
 
-	private int id = 0;
 
 	public BasicGameState(int id) {
 		this.id = id;
@@ -18,12 +17,14 @@ public abstract class BasicGameState extends org.newdawn.slick.state.BasicGameSt
 	public BasicGameState() {
 
 	}
+	private int id = 0;
 
 	@Override
 	public int getID() {
 		return id;
 	}
 
+	@Override
 	public void setId(int id) {
 		this.id = id;
 	}

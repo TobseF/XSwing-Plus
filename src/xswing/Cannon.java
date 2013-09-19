@@ -105,9 +105,9 @@ public class Cannon extends SObject implements Resetable {
 		}
 		if (ballPileHeight == 8) { // red Warining
 			setImage(animationDanger.getCurrentFrame());
-			//if (!alarm.playing()) {
+			if (!stackingAlarm.playing()) {
 				stackingAlarm.play();
-			//}
+			}
 		}
 	}
 

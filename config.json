@@ -7,13 +7,17 @@
       "debugMode": false,
       "configSetIndex": 1,
       "displayConfig": {
-        "fullscreen": false,
-        "resolutionIndex": 1,
+        "fullscreen": true,
+        "resolutionIndex": 0,
         "resolutions": [
           {
             "width": 1024,
             "height": 768,
             "name": "XGA"
+          },
+          {
+            "width": 1600,
+            "height": 900
           },
           {
             "width": 1920,
@@ -61,8 +65,7 @@
               "width": 48,
               "properties": {
                 "speed": "20",
-                "A": "48",
-                "font": "arial_black_71"
+                "A": "48"
               }
             },
             {
@@ -142,6 +145,12 @@
                 "bouncing": "KLACK4.WAV",
                 "explosion": "DREIER.WAV"
               }
+            },
+            {
+              "objectName": "GameOver",
+              "sounds": {
+                "gameOver": "SPRATZ2.WAV"
+              }
             }
           ]
         },
@@ -175,8 +184,7 @@
               "width": 70,
               "properties": {
                 "speed": "20",
-                "A": "70",
-                "font": "arial_black_71"
+                "A": "70"
               }
             },
             {
@@ -255,6 +263,12 @@
                 "shrinc": "SPRATZ2.WAV",
                 "bouncing": "KLACK4.WAV",
                 "explosion": "DREIER.WAV"
+              }
+            },
+            {
+              "objectName": "GameOver",
+              "sounds": {
+                "gameOver": "SPRATZ2.WAV"
               }
             }
           ]
