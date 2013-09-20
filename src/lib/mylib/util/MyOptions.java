@@ -116,5 +116,12 @@ public class MyOptions extends MyPropertys {
 	public static void setBoolean(Args nameOfField, boolean value) {
 		setBoolean(nameOfField.toString(), value);
 	}
+	/**
+	 * @param nameOfField key
+	 * @return <code>true</code>: If the given key exists and has a value.
+	 */
+	public static boolean hasProperty(Args nameOfField){
+		return hasProperty(nameOfField.toString());
+	}
 
 }

@@ -81,7 +81,7 @@ public class XSwing extends StateBasedGame {
 			// GamePanel gamePanel = new GamePanel(GAME_PANEL);
 			MainGame mainGame = new MainGame();
 			container.setClearEachFrame(true);
-			ScalableGameState scaledGame = new ScalableGameState(mainGame, 1920, 1080,true);
+			ScalableGameState scaledGame = new ScalableGameState(mainGame, 1920, 1080, true);
 			scaledGame.setId(GAME_PANEL);
 			// ResizeableGameState scaledGamePanel = new ResizeableGameState(gamePanel,
 			// container.getWidth(),container.getHeight());
@@ -98,20 +98,23 @@ public class XSwing extends StateBasedGame {
 	public static void main(String[] args) {
 		MyOptions.setFile(XSwing.class);
 		MyOptions.setStrings(args);
-		
+
 		Log.info("Args: " + Arrays.toString(args));
 		GameConfig config = XSGameConfigs.getConfig(MyOptions.getString(Args.configFile, XSGameConfigs.OPTION_FILE_NAME));
-		// boolean debug = MyOptions.getBoolean(Args.debug);
-		boolean debug = config.isDebugMode();
-		boolean fullsceen = config.getDisplayConfig().isFullscreen();
-		// boolean fullsceen = MyOptions.getBoolean(Args.startGameInFullscreen);
+		boolean debug = MyOptions.hasProperty(Args.debug) ? MyOptions.getBoolean(Args.debug) : config.isDebugMode();
+		boolean fullscreen = MyOptions.hasProperty(Args.fullscreen) ? MyOptions.getBoolean(Args.fullscreen) : config.getDisplayConfig()
+				.isFullscreen();
+		Resolution resolution = config.getDisplayConfig().getSelectedResolution();
+		if (MyOptions.hasProperty(Args.resolution)) {
+			resolution = parseResolution(MyOptions.getString(Args.resolution), resolution);
+		}
 		Log.setLogSystem(new MyLogSystem());
 		Log.info("XSwing Version: " + VERSION);
 		Log.info("Debugmode: " + debug);
-		Log.info("Fullstreen: " + fullsceen);
+		Log.info("Fullscreen: " + fullscreen);
+		Log.info("Resolution: " + resolution.getWidth() + "x" + resolution.getHeight());
 		// Disable nifty logging
 		Logger.getLogger("de.lessvoid.nifty").setLevel(Level.WARNING);
-		Resolution resolution = config.getDisplayConfig().getSelectedResolution();
 		// Log.setVerbose(debug); //debug info logging
 		try {
 			XSwing xSwing = new XSwing();
@@ -122,9 +125,9 @@ public class XSwing extends StateBasedGame {
 			game.setMinimumLogicUpdateInterval(config.getMinimumLogicUpdateInterval());
 			// game.setMaximumLogicUpdateInterval(26);
 			try {
-				game.setDisplayMode(resolution.getWidth(), resolution.getHeight(), fullsceen);
+				game.setDisplayMode(resolution.getWidth(), resolution.getHeight(), fullscreen);
 			} catch (SlickException e) {
-				if (fullsceen) {
+				if (fullscreen) {
 					// If fullscreen is not supported, try it in window mode
 					game.setDisplayMode(resolution.getWidth(), resolution.getHeight(), false);
 				} else {
@@ -134,11 +137,11 @@ public class XSwing extends StateBasedGame {
 			game.setClearEachFrame(false);
 			game.setIcons(new String[] { RES_DIR + "16.png", RES_DIR + "32.png" });
 			LoadingList.setDeferredLoading(true);
-			game.setMouseGrabbed(fullsceen);
+			game.setMouseGrabbed(fullscreen);
 			try {
 				game.start();
 			} catch (SlickException e) {
-				if (fullsceen) {
+				if (fullscreen) {
 					// If fullscreen is not supported, try it in window mode
 					game.setFullscreen(false);
 					game.start();
@@ -150,6 +153,14 @@ public class XSwing extends StateBasedGame {
 			new ErrorReporter(e, new ServerRequest(POST_BUG_URL), true);
 			// e.printStackTrace();
 		}
+	}
+
+	public static Resolution parseResolution(String resolutionAsString, Resolution defaultResolution) {
+		if (resolutionAsString != null && resolutionAsString.matches("\\d+(x|\\*)\\d+")) {
+			String[] values = resolutionAsString.split("x|\\*");
+			return new Resolution(Integer.parseInt(values[0].trim()), Integer.parseInt(values[1].trim()));
+		}
+		return defaultResolution;
 	}
 
 }

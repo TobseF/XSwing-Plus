@@ -284,6 +284,14 @@ public class MyPropertys {
 		}
 		return getBoolean(nameOfField, false);
 	}
+	
+	/**
+	 * @param nameOfField key
+	 * @return <code>true</code>: If the given key exists and has a value.
+	 */
+	public static boolean hasProperty(String nameOfField){
+		return getString(nameOfField) != null && !nameOfField.isEmpty();
+	}
 
 	/**
 	 * Set's the boolean with the given name and saves it local
