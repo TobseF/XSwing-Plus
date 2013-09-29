@@ -85,7 +85,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	private LocalXSwingStatistics statistics;
 	private GameOver gameOver= new GameOver();
 
-	private SpriteSheet balls1, balls2, multipl, cannons;
+	private SpriteSheet balls1, multipl, cannons;
 	private SpriteSheetFont numberFont, ballFont;
 	private AngelCodeFont fontText, fontScore, pauseFont;
 	private MusicJukebox music;

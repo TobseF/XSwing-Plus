@@ -10,24 +10,29 @@ import org.newdawn.slick.*;
 import xswing.EffectCatalog.particleEffects;
 import xswing.ball.*;
 
-/** Provides a moveable Cannon which releses the Balls */
+/** Provides a movable Cannon which releases the Balls */
 public class Cannon extends SObject implements Resetable {
 
 	/** The current column */
 	private int cannonPosition = 0;
 
-	private Countable ballCounter;
+	private final Countable ballCounter;
 
 	private Ball ball = null;
 	private BallTable ballTable;
 	private Sound move;
 	private Sound stackingAlarm;
 	private Sound dropBall;
-	private SpriteSheet cannons;
+	private SpriteSheet cannonSprites;
 	private Animation animationWarning;
 	private Animation animationDanger;
-	/** period of time of one anmation frame */
+	/** period of time of one animation frame */
 	private final int duration = 180;
+	private int positionCorrecionX;
+	private int positionCorrecionY;
+	
+	public static final int ROW_WITH_ORANE_WARNING=7;
+	public static final int ROW_WITH_RED_WARNING=7;
 
 	private EffectCatalog effectCatalog;
 
@@ -43,7 +48,7 @@ public class Cannon extends SObject implements Resetable {
 	public Cannon(SpriteSheet cannons, BallTable ballTable,
 			Countable ballCounter, EffectCatalog effectCatalog) {
 		super(cannons.getSprite(0, 0));
-		this.cannons = cannons;
+		this.cannonSprites = cannons;
 		this.ballTable = ballTable;
 		this.effectCatalog = effectCatalog;
 		this.ballCounter = ballCounter;
@@ -65,8 +70,6 @@ public class Cannon extends SObject implements Resetable {
 		this.move = move;
 	}
 	
-	
-
 	/** Moves the canon one step left */
 	public void moveLeft() {
 		if (cannonPosition >= 1) {
@@ -92,18 +95,18 @@ public class Cannon extends SObject implements Resetable {
 
 	@Override
 	public void render(Graphics g) {
-		g.drawImage(image, getX() - 12, y - 3);
+		g.drawImage(image, getX() - positionCorrecionX, y - positionCorrecionY);
 	}
 
 	private void checkHigh() {
 		int ballPileHeight = ballTable.getColumnHeight(cannonPosition);
-		if (ballPileHeight <= 6) { // no warning
-			setImage(cannons.getSprite(0, 0));
-		}
-		if (ballPileHeight == 7) { // orange Warning
+		if (ballPileHeight < ROW_WITH_ORANE_WARNING) {
+			setImage(cannonSprites.getSprite(0, 0));
+		}else
+		if (ballPileHeight == ROW_WITH_ORANE_WARNING) {
 			setImage(animationWarning.getCurrentFrame());
-		}
-		if (ballPileHeight == 8) { // red Warining
+		}else
+		if (ballPileHeight == ROW_WITH_RED_WARNING) {
 			setImage(animationDanger.getCurrentFrame());
 			if (!stackingAlarm.playing()) {
 				stackingAlarm.play();
@@ -145,7 +148,7 @@ public class Cannon extends SObject implements Resetable {
 		setBallPos(ball);
 	}
 
-	/** Sets the postion from the Cannon tho the Ball */
+	/** Sets the position from the Cannon to the Ball */
 	private void setBallPos(Ball ball) {
 		if (ball != null) {
 			ball.setPos(getX(), ball.getY());

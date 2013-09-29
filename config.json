@@ -42,7 +42,7 @@
               "objectName": "Cannon",
               "x": 248,
               "y": 166,
-              "sounds": {
+              "sounds": {               
                 "stackingAlarm": "ALARM1.WAV",
                 "dropBall": "KRAN1.WAV",
                 "move": "KRAN1.WAV"
@@ -51,6 +51,8 @@
                 "SpriteSheet": "cannons.png"
               },
               "properties": {
+              	 "positionCorrecionX": "0",
+                "positionCorrecionY": "0",
                 "millisecondsPerAnimationFrame": "180",
                 "cannonPosition": "3"
               }
@@ -161,7 +163,7 @@
               "objectName": "Cannon",
               "x": 590,
               "y": 231,
-              "sounds": {
+              "sounds": {    
                 "stackingAlarm": "ALARM1.WAV",
                 "dropBall": "KRAN1.WAV",
                 "move": "KRAN1.WAV"
@@ -170,6 +172,8 @@
                 "SpriteSheet": "cannons.png"
               },
               "properties": {
+              	"positionCorrecionX": "12",
+                "positionCorrecionY": "3",
                 "millisecondsPerAnimationFrame": "180",
                 "cannonPosition": "3"
               }

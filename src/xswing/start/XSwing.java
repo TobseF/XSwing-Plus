@@ -67,14 +67,7 @@ public class XSwing extends StateBasedGame {
 			ScreenControllerMainMenu controller = new ScreenControllerMainMenu(this);
 			addState(new LoadingScreen(LOADING_SCREEN, new FadeOutTransition(Color.black), new EmptyTransition()));
 			NiftyGameState mainMenu = new NiftyGameState(START_SCREEN);
-			if (MyOptions.getBoolean(Args.useNativeMouseCursor)) {
-				Log.info("Using native mouse cursor");
-				container.setMouseCursor(new Image("res/cursor.png"), 2, 2);
-			} else {
-				Log.warn("Using Nifty mouse cursor and grabbing mouse.");
-				mainMenu.enableMouseImage(new Image("res/cursor.png"), 2, 2); // Nifty way
-			}
-			// VOID: how to catch nifty exceptions
+			setMouseCursor(container, mainMenu);
 			mainMenu.fromXml("xswing/gui/main_menu.xml", controller);
 			addState(mainMenu);
 			container.setForceExit(false);
@@ -92,6 +85,16 @@ public class XSwing extends StateBasedGame {
 		}
 	}
 
+	private void setMouseCursor(GameContainer container, NiftyGameState mainMenu) throws SlickException {
+		if (MyOptions.getBoolean(Args.useNativeMouseCursor)) {
+			Log.info("Using native mouse cursor");
+			container.setMouseCursor(new Image("res/cursor.png"), 2, 2);
+		} else {
+			Log.warn("Using Nifty mouse cursor and grabbing mouse.");
+			mainMenu.enableMouseImage(new Image("res/cursor.png"), 2, 2); // Nifty way
+		}
+	}
+
 	/**
 	 * @param
 	 */
@@ -101,21 +104,13 @@ public class XSwing extends StateBasedGame {
 
 		Log.info("Args: " + Arrays.toString(args));
 		GameConfig config = XSGameConfigs.getConfig(MyOptions.getString(Args.configFile, XSGameConfigs.OPTION_FILE_NAME));
-		boolean debug = MyOptions.hasProperty(Args.debug) ? MyOptions.getBoolean(Args.debug) : config.isDebugMode();
-		boolean fullscreen = MyOptions.hasProperty(Args.fullscreen) ? MyOptions.getBoolean(Args.fullscreen) : config.getDisplayConfig()
-				.isFullscreen();
-		Resolution resolution = config.getDisplayConfig().getSelectedResolution();
-		if (MyOptions.hasProperty(Args.resolution)) {
-			resolution = parseResolution(MyOptions.getString(Args.resolution), resolution);
-		}
+		boolean debug = isDebug(config);
+		boolean fullscreen = isFullscreen(config);
+		Resolution resolution = getResolution(config);
+		
 		Log.setLogSystem(new MyLogSystem());
-		Log.info("XSwing Version: " + VERSION);
-		Log.info("Debugmode: " + debug);
-		Log.info("Fullscreen: " + fullscreen);
-		Log.info("Resolution: " + resolution.getWidth() + "x" + resolution.getHeight());
-		// Disable nifty logging
-		Logger.getLogger("de.lessvoid.nifty").setLevel(Level.WARNING);
-		// Log.setVerbose(debug); //debug info logging
+		logInfo(debug, fullscreen, resolution);
+		disableNiftyLogging();
 		try {
 			XSwing xSwing = new XSwing();
 			// ScalableGame scalableGame = new ScalableGame(xSwing, resolution.getWidth(), resolution.getHeight(),true);
@@ -124,18 +119,9 @@ public class XSwing extends StateBasedGame {
 			game.setShowFPS(debug);
 			game.setMinimumLogicUpdateInterval(config.getMinimumLogicUpdateInterval());
 			// game.setMaximumLogicUpdateInterval(26);
-			try {
-				game.setDisplayMode(resolution.getWidth(), resolution.getHeight(), fullscreen);
-			} catch (SlickException e) {
-				if (fullscreen) {
-					// If fullscreen is not supported, try it in window mode
-					game.setDisplayMode(resolution.getWidth(), resolution.getHeight(), false);
-				} else {
-					throw e;
-				}
-			}
+			setResolution(fullscreen, resolution, game);
 			game.setClearEachFrame(false);
-			game.setIcons(new String[] { RES_DIR + "16.png", RES_DIR + "32.png" });
+			setIcon(game,"icon");
 			LoadingList.setDeferredLoading(true);
 			game.setMouseGrabbed(fullscreen);
 			try {
@@ -153,6 +139,52 @@ public class XSwing extends StateBasedGame {
 			new ErrorReporter(e, new ServerRequest(POST_BUG_URL), true);
 			// e.printStackTrace();
 		}
+	}
+
+	private static void setIcon(AppGameContainer game, String iconName) throws SlickException {
+		game.setIcons(new String[] { RES_DIR + iconName+"_16.png", RES_DIR +iconName+ "_32.png" });
+	}
+
+	private static void setResolution(boolean fullscreen, Resolution resolution, AppGameContainer game) throws SlickException {
+		try {
+			game.setDisplayMode(resolution.getWidth(), resolution.getHeight(), fullscreen);
+		} catch (SlickException e) {
+			if (fullscreen) {
+				// If fullscreen is not supported, try it in window mode
+				game.setDisplayMode(resolution.getWidth(), resolution.getHeight(), false);
+			} else {
+				throw e;
+			}
+		}
+	}
+
+	private static void disableNiftyLogging() {
+		Logger.getLogger("de.lessvoid.nifty").setLevel(Level.WARNING);
+		// Log.setVerbose(debug); //debug info logging
+	}
+
+	private static void logInfo(boolean debug, boolean fullscreen, Resolution resolution) {
+		Log.info("XSwing Version: " + VERSION);
+		Log.info("Debugmode: " + debug);
+		Log.info("Fullscreen: " + fullscreen);
+		Log.info("Resolution: " + resolution.getWidth() + "x" + resolution.getHeight());
+	}
+
+	private static Resolution getResolution(GameConfig config) {
+		Resolution resolution =config.getDisplayConfig().getSelectedResolution();
+		if (MyOptions.hasProperty(Args.resolution)) {
+			resolution = parseResolution(MyOptions.getString(Args.resolution), resolution);
+		}
+		return resolution;
+	}
+
+	private static boolean isDebug(GameConfig config) {
+		return MyOptions.hasProperty(Args.debug) ? MyOptions.getBoolean(Args.debug) : config.isDebugMode();
+	}
+
+	private static boolean isFullscreen(GameConfig config) {
+		return MyOptions.hasProperty(Args.fullscreen) ? MyOptions.getBoolean(Args.fullscreen) : config.getDisplayConfig()
+				.isFullscreen();
 	}
 
 	public static Resolution parseResolution(String resolutionAsString, Resolution defaultResolution) {

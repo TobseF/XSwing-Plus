@@ -92,23 +92,7 @@ public class DefaultGameConfigs extends GameConfigs {
 	}
 
 	private void initSingleSplayerHD(ObjectConfigSet singlePlayer) {
-		cannon = new ObjectConfig(Cannon.class);
-		background = new ObjectConfig(Background.class);
-		cusor = new ObjectConfig(Cursor.class);
-		ballFactory = new ObjectConfig(BallFactory.class);
-		ball = new ObjectConfig(Ball.class);
-		numberFont = new ObjectConfig(NumberFont.class);
-		highScoreMultiplicator = new ObjectConfig(HighScoreMultiplicator.class);
-		ballTable = new ObjectConfig(BallTable.class);
-		highScoreCounter = new ObjectConfig(HighScoreCounter.class);
-		level = new ObjectConfig(Level.class);
-		ballCounter = new ObjectConfig(BallCounter.class);
-		clock = new ObjectConfig(Clock.class);
-		seesawTable = new ObjectConfig(SeesawTable.class);
-		highScorePanel = new ObjectConfig(HighScorePanel.class);
-		ballFont = new ObjectConfig(BallFont.class);
-		effectCatalog = new ObjectConfig(EffectCatalog.class);
-		gameOver= new ObjectConfig(GameOver.class);
+		initObjects();
 
 //		cannon.setPosition(610, 231);  FIXME:gapBetweenBalls-20 bug
 		cannon.setPosition(610-20, 231);
@@ -118,6 +102,8 @@ public class DefaultGameConfigs extends GameConfigs {
 		cannon.addSound("stackingAlarm", "ALARM1.WAV");
 		cannon.addSound("dropBall", "KRAN1.WAV");
 		cannon.addImage("SpriteSheet", "cannons.png");
+		cannon.setProperyInt("positionCorrecionX", 0);
+		cannon.setProperyInt("positionCorrecionY", 0);
 		singlePlayer.addObjectConfig(cannon);
 
 		background.setImage("background_preview_hd.png");
@@ -144,9 +130,10 @@ public class DefaultGameConfigs extends GameConfigs {
 		cusor.setImage("cursor.png");
 		singlePlayer.addObjectConfig(cusor);
 
+		singlePlayer.addObjectConfig(highScoreMultiplicator);
 		highScoreMultiplicator.setPosition(145, 145);
 		highScoreMultiplicator.setImage("multiplicator_sp.jpg");
-		singlePlayer.addObjectConfig(highScoreMultiplicator);
+		highScoreMultiplicator.addSound("score", "KLACK4.WAV");
 
 		ballTable.setProperyInt("topBallYCorrection", 35);
 		singlePlayer.addObjectConfig(ballTable);
@@ -182,23 +169,7 @@ public class DefaultGameConfigs extends GameConfigs {
 	}
 
 	private void initSingleSplayerSD(ObjectConfigSet singlePlayer) {
-		cannon = new ObjectConfig(Cannon.class);
-		background = new ObjectConfig(Background.class);
-		cusor = new ObjectConfig(Cursor.class);
-		ballFactory = new ObjectConfig(BallFactory.class);
-		ball = new ObjectConfig(Ball.class);
-		numberFont = new ObjectConfig(NumberFont.class);
-		highScoreMultiplicator = new ObjectConfig(HighScoreMultiplicator.class);
-		ballTable = new ObjectConfig(BallTable.class);
-		highScoreCounter = new ObjectConfig(HighScoreCounter.class);
-		level = new ObjectConfig(Level.class);
-		ballCounter = new ObjectConfig(BallCounter.class);
-		clock = new ObjectConfig(Clock.class);
-		seesawTable = new ObjectConfig(SeesawTable.class);
-		highScorePanel = new ObjectConfig(HighScorePanel.class);
-		ballFont = new ObjectConfig(BallFont.class);
-		effectCatalog = new ObjectConfig(EffectCatalog.class);
-		gameOver= new ObjectConfig(GameOver.class);
+		initObjects();
 
 		singlePlayer.addObjectConfig(cannon);
 		cannon.setPosition(248, 166);
@@ -207,6 +178,8 @@ public class DefaultGameConfigs extends GameConfigs {
 		cannon.addSound("move", "KRAN1.WAV");
 		cannon.addSound("stackingAlarm", "ALARM1.WAV");
 		cannon.addSound("dropBall", "KRAN1.WAV");
+		cannon.setProperyInt("positionCorrecionX", 12);
+		cannon.setProperyInt("positionCorrecionY", 3);
 
 		cannon.addImage("SpriteSheet", "cannons.png");
 
@@ -238,6 +211,7 @@ public class DefaultGameConfigs extends GameConfigs {
 		singlePlayer.addObjectConfig(highScoreMultiplicator);
 		highScoreMultiplicator.setImage("multiplicator_sp.jpg");
 		highScoreMultiplicator.setPosition(59, 92);
+		highScoreMultiplicator.addSound("score", "KLACK4.WAV");
 
 		// ballTable.setProperyInt("topBallYCorrection", 0);
 		ballTable.setProperyInt("gapBetweenBalls", 16);
@@ -270,6 +244,26 @@ public class DefaultGameConfigs extends GameConfigs {
 		
 		singlePlayer.addObjectConfig(gameOver);
 		gameOver.addSound("gameOver", "SPRATZ2.WAV");
+	}
+
+	private void initObjects() {
+		cannon = new ObjectConfig(Cannon.class);
+		background = new ObjectConfig(Background.class);
+		cusor = new ObjectConfig(Cursor.class);
+		ballFactory = new ObjectConfig(BallFactory.class);
+		ball = new ObjectConfig(Ball.class);
+		numberFont = new ObjectConfig(NumberFont.class);
+		highScoreMultiplicator = new ObjectConfig(HighScoreMultiplicator.class);
+		ballTable = new ObjectConfig(BallTable.class);
+		highScoreCounter = new ObjectConfig(HighScoreCounter.class);
+		level = new ObjectConfig(Level.class);
+		ballCounter = new ObjectConfig(BallCounter.class);
+		clock = new ObjectConfig(Clock.class);
+		seesawTable = new ObjectConfig(SeesawTable.class);
+		highScorePanel = new ObjectConfig(HighScorePanel.class);
+		ballFont = new ObjectConfig(BallFont.class);
+		effectCatalog = new ObjectConfig(EffectCatalog.class);
+		gameOver= new ObjectConfig(GameOver.class);
 	}
 
 	public static void main(String[] args) {

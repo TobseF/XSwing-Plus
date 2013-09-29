@@ -20,6 +20,7 @@ public class HighScoreMultiplicator extends SObject implements Resetable {
 	private int timerStep = 2500;
 
 	private MyTimer timer;
+	private Sound score;
 
 	public HighScoreMultiplicator(SpriteSheet multiplicatorSprites) {
 		this.multiplicatorSprites = multiplicatorSprites;
@@ -37,6 +38,9 @@ public class HighScoreMultiplicator extends SObject implements Resetable {
 		timer.reset();
 		multiplicator = 4;
 		timer.start();
+		if(score!=null){
+			score.play();
+		}
 	}
 
 	@Override
