@@ -11,8 +11,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 
 public class ConfigToObjectMapper {
-	
-	
+
 	public static void map(Iterable<Object> objects, ObjectConfig config) throws SlickException {
 		for (Object object : objects) {
 			map(object, config);
@@ -23,30 +22,32 @@ public class ConfigToObjectMapper {
 
 		if (object instanceof SObject) {
 			SObject sobject = (SObject) object;
-			if(config.isSetX()){
-				sobject.setX(config.getX());				
+			if (config.isSetX()) {
+				sobject.setX(config.getX());
 			}
-			if(config.isSetY()){
-				sobject.setY(config.getY());				
+			if (config.isSetY()) {
+				sobject.setY(config.getY());
 			}
-			if(config.isSetWidth()){
-				sobject.setWidth(config.getWidth());				
-			}
-
-			if(config.isSetHeight()){
-				sobject.setHeight(config.getHeight());				
+			if (config.isSetWidth()) {
+				sobject.setWidth(config.getWidth());
 			}
 
-			if(config.isSetVisible()){
-				sobject.setVisible(config.isVisible());				
+			if (config.isSetHeight()) {
+				sobject.setHeight(config.getHeight());
 			}
-			if(config.isSetImage()){
-				sobject.setImage(new Image(Paths.RES_DIR+config.getImage()));				
+
+			if (config.isSetVisible()) {
+				sobject.setVisible(config.isVisible());
+			}
+			if (config.isSetImage()) {
+				sobject.setImage(new Image(Paths.RES_DIR + config.getImage()));
 			}
 
 			for (Field field : object.getClass().getDeclaredFields()) {
 				String fieldName = field.getName();
-				if ((config.isSetProperties() && config.getProperties().containsKey(fieldName) )||(config.isSetSounds()&& config.getSounds().containsKey(fieldName))) {
+				if ((config.isSetProperties() && config.getProperties().containsKey(fieldName))
+						|| (config.isSetSounds() && config.getSounds().containsKey(fieldName))||
+						config.isSetImages() && config.getImages().containsKey(fieldName)) {
 					try {
 						field.setAccessible(true);
 						Class<?> type = field.getType();
@@ -57,9 +58,12 @@ public class ConfigToObjectMapper {
 						} else if (type.isAssignableFrom(Boolean.TYPE)) {
 							field.setBoolean(object, config.getPropertyBoolean(fieldName));
 						} else if (type.isAssignableFrom(Sound.class)) {
-							field.set(object,new Sound(Paths.SOUND_DIR+config.getSound(fieldName)));
+							field.set(object, new Sound(Paths.SOUND_DIR + config.getSound(fieldName)));
+						} else if (type.isAssignableFrom(Image.class)) {
+							field.set(object, new Image(Paths.RES_DIR+config.getImage(fieldName)));
 						} else {
-							throw new IllegalArgumentException("Could't map field '" + fieldName + "' of " +type+":" +object+"("+object.getClass().getName()+")");
+							throw new IllegalArgumentException("Could't map field '" + fieldName + "' of " + type + ":" + object + "("
+									+ object.getClass().getName() + ")");
 						}
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();

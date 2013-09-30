@@ -4,7 +4,6 @@
  */
 package xswing.ball;
 
-
 import java.util.*;
 import javax.swing.event.EventListenerList;
 import lib.mylib.math.Point;
@@ -28,7 +27,6 @@ public class Mechanics {
 		this.ballTable = ballTable;
 	}
 
-
 	public void checkOfThree(Ball ball) {
 		if (isInRowWithThree(ball)) {
 			ball.fireBallEvent(BallEventType.BALL_WITH_THREE_IN_A_ROW);
@@ -38,7 +36,8 @@ public class Mechanics {
 	/**
 	 * Horizontal row check
 	 * 
-	 * @param ball to check
+	 * @param ball
+	 *            to check
 	 * @return whether given Ball lies in the middle of three in horizontal a row
 	 */
 	public boolean isInRowWithThree(Ball ball) {
@@ -47,21 +46,21 @@ public class Mechanics {
 		}
 		Point ballPos = ballTable.getField(ball);
 		Ball ballLeft1 = ballTable.getBall(ballPos.x - 1, ballPos.y), ballLeft2, ballRight1, ballRight2;
-		if (ballLeft1 != null && ball.compare(ballLeft1)) {
+		if (compare(ball, ballLeft1)) {
 			ballLeft2 = ballTable.getBall(ballPos.x - 2, ballPos.y);
-			if (ballLeft2 != null && ball.compare(ballLeft2)) {
+			if (compare(ball, ballLeft2)) {
 				return true;
 			} else {
 				ballRight1 = ballTable.getBall(ballPos.x + 1, ballPos.y);
-				if (ballRight1 != null && ball.compare(ballRight1)) {
+				if (compare(ball, ballRight1)) {
 					return true;
 				}
 			}
 		} else {
 			ballRight1 = ballTable.getBall(ballPos.x + 1, ballPos.y);
-			if (ballRight1 != null && ball.compare(ballRight1)) {
+			if (compare(ball, ballRight1)) {
 				ballRight2 = ballTable.getBall(ballPos.x + 2, ballPos.y);
-				if (ballRight2 != null && ball.compare(ballRight2)) {
+				if (compare(ball, ballRight2)) {
 					return true;
 				}
 			}
@@ -72,7 +71,8 @@ public class Mechanics {
 	/**
 	 * Vertical row check
 	 * 
-	 * @param ball to check
+	 * @param ball
+	 *            to check
 	 * @return whether the given ball lays as fifth ball (on the top) in a vertical stack
 	 */
 	public boolean isInRowWithFive(Ball ball) {
@@ -82,7 +82,7 @@ public class Mechanics {
 		Point field = ballTable.getField(ball);
 		for (int y = field.y - 1; y >= 0; y--) {
 			Ball ballInStack = ballTable.getBall(field.x, y);
-			if (ballInStack != null && ballInStack.compare(ball)) {
+			if (compare(ballInStack, ball)) {
 				if (field.y - y == 4) {
 					return true;
 				}
@@ -91,6 +91,10 @@ public class Mechanics {
 			}
 		}
 		return false;
+	}
+
+	private static boolean compare(Ball a, Ball b) {
+		return a != null && a.compare(b);
 	}
 
 	/** Checks all surrounding Balls of the given */
@@ -104,9 +108,8 @@ public class Mechanics {
 	}
 
 	/**
-	 * Checks surrounding four Balls of the given whether they're null, an other or the same
-	 * balls as the given. In last case, the ball will be added to the given list -only if not
-	 * happened already.
+	 * Checks surrounding four Balls of the given whether they're null, an other or the same balls as the given. In last
+	 * case, the ball will be added to the given list -only if not happened already.
 	 */
 	public List<Ball> getSurroundings(Ball ball, List<Ball> ballsTemp) {
 		Point pos = ballTable.getField(ball);
@@ -114,10 +117,9 @@ public class Mechanics {
 		for (int[] position : POSITIONS_FOR_SOROUNDING_CHECK) {
 			int nextXToCheck = pos.x + position[0];
 			int nextYToCheck = pos.y + position[1];
-			if (nextXToCheck >= 0 && nextXToCheck < BallTable.LINES && nextYToCheck >= 0
-					&& nextYToCheck < BallTable.LINES) {
+			if (nextXToCheck >= 0 && nextXToCheck < BallTable.LINES && nextYToCheck >= 0 && nextYToCheck < BallTable.LINES) {
 				checkinBall = ballTable.getBall(pos.x + position[0], pos.y + position[1]);
-				if (checkinBall != null && checkinBall.compare(ball) && !ballsTemp.contains(checkinBall)) {
+				if (compare(ball, checkinBall) && !ballsTemp.contains(checkinBall)) {
 					ballsTemp.add(checkinBall);
 				}
 			}
@@ -130,19 +132,23 @@ public class Mechanics {
 		List<Ball> ballsT = new ArrayList<Ball>();
 		for (int column = 0; column < 8; column++) {
 			for (int row = 0; row < 8; row++) {
-				Ball ball = ballTable.getBall(column, row);
-				if (ball != null) {
-					ballsT.add(ball);
-					if (ballsT.size() > 1 && ballsT.get(ballsT.size() - 2).getNr() != ball.getNr()) {
-						ballsT.clear();
-						ballsT.add(ball);
-					} else if (ballsT.size() > 4) {
-						notifyListener(new BallEvent(this, ballsT.get(0), BallEventType.BALL_WITH_FIVE_IN_A_ROW));
-						shrinkRow(ballsT);
-					}
-				}
+				checkOfFive(ballsT, column, row);
 			}
 			ballsT.clear();
+		}
+	}
+
+	private void checkOfFive(List<Ball> ballsT, int column, int row) {
+		Ball ball = ballTable.getBall(column, row);
+		if (ball != null) {
+			ballsT.add(ball);
+			if (ballsT.size() > 1 && ballsT.get(ballsT.size() - 2).getNr() != ball.getNr()) {
+				ballsT.clear();
+				ballsT.add(ball);
+			} else if (ballsT.size() > 4) {
+				notifyListener(new BallEvent(this, ballsT.get(0), BallEventType.BALL_WITH_FIVE_IN_A_ROW));
+				shrinkRow(ballsT);
+			}
 		}
 	}
 
@@ -158,8 +164,7 @@ public class Mechanics {
 		Point initialBallPosition = ballTable.getField(ball);
 		int weight = 0;
 		Ball shrincedBall = ballTable.getBall(initialBallPosition.x, initialBallPosition.y - 4);
-		List<Ball> ballsToShrink = ballTable.getBalls(initialBallPosition.x, initialBallPosition.y - 4,
-				initialBallPosition.y);
+		List<Ball> ballsToShrink = ballTable.getBalls(initialBallPosition.x, initialBallPosition.y - 4, initialBallPosition.y);
 
 		for (Ball ballToShrink : ballsToShrink) {
 			weight += ballToShrink.getWeight();
@@ -229,7 +234,8 @@ public class Mechanics {
 	/**
 	 * Adds an {@code BallEventListener}
 	 * 
-	 * @param listener the {@code BallEventListener} to be added
+	 * @param listener
+	 *            the {@code BallEventListener} to be added
 	 */
 	public void addBallEventListener(BallEventListener listener) {
 		eventListenerList.add(listener);
@@ -238,7 +244,8 @@ public class Mechanics {
 	/**
 	 * Removes an {@code BallEventListener}
 	 * 
-	 * @param listener to be removed
+	 * @param listener
+	 *            to be removed
 	 */
 	public void removeBallEventListener(BallEventListener listener) {
 		eventListenerList.remove(listener);
@@ -247,7 +254,8 @@ public class Mechanics {
 	/**
 	 * Notifies all {@code BallEventListener}s about a {@code BallEvent}
 	 * 
-	 * @param event the {@code BallEvent} object
+	 * @param event
+	 *            the {@code BallEvent} object
 	 * @see EventListenerList
 	 */
 	protected synchronized void notifyListener(BallEvent event) {
@@ -255,8 +263,7 @@ public class Mechanics {
 			l.ballEvent(event);
 		}
 	}
-	
-	
+
 	public BallTable getBallTable() {
 		return ballTable;
 	}

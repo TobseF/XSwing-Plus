@@ -54,7 +54,6 @@ import xswing.start.XSwing;
  */
 public class MainGame extends BasicGameState implements Resetable, BallEventListener, XSwingListener {
 
-
 	private Background background = new Background();
 	private GameComponentLocation gameLocation;
 	private GameContainer container = null;
@@ -83,9 +82,9 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	private BallFactory ballFactory;
 	private SObjectList scorePopups;
 	private LocalXSwingStatistics statistics;
-	private GameOver gameOver= new GameOver();
+	private GameOver gameOver = new GameOver();
 
-	private SpriteSheet balls1, multipl, cannons;
+	private SpriteSheet balls1, multipl;
 	private SpriteSheetFont numberFont, ballFont;
 	private AngelCodeFont fontText, fontScore, pauseFont;
 	private MusicJukebox music;
@@ -97,7 +96,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	private BallDropSimulator ballDropSimulator;
 	private GameStatistics gameStatistics;
 
-	private EventListenerList gameEventListeners=  new EventListenerList();
+	private EventListenerList gameEventListeners = new EventListenerList();
 
 	/** Highscore submit Panel */
 	private NiftyGameState highScoreState = null;
@@ -120,7 +119,6 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 
 		// Images
 		multipl = new SpriteSheet(new Image(RES_DIR + "multiplicator_sp.jpg"), 189, 72);
-		cannons = new SpriteSheet(new Image(RES_DIR + "cannons.png"), 72, 110);
 
 		// Fonts
 		fontText = new AngelCodeFont(FONT_DIR + "font_arial_16_bold.fnt", FONT_DIR + "font_arial_16_bold.png");
@@ -173,8 +171,9 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		levelBall = new Level(startLevel, balls1, ballFont);
 		map(levelBall);
 		ballCounter.setLevel(levelBall);
-		canon = new Cannon(cannons, ballTable, ballCounter, effectCatalog);
+		canon = new Cannon( ballTable, ballCounter, effectCatalog);
 		map(canon);
+		canon.setSpites();
 
 		multiplicator = new HighScoreMultiplicator(multipl);
 		map(multiplicator);
@@ -190,7 +189,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		addXSwingListener(statistics);
 		seesawTable = new SeesawTable(numberFont, ballTable);
 		map(seesawTable);
-		
+
 		map(gameOver);
 
 		setSound(effectCatalog, particleEffects.EXPLOSION);
@@ -204,10 +203,10 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		ballFactory.addBallEventListener(this);
 		ballFactory.addBallEventListener(gameStatistics);
 		ObjectConfig ballFactoryConf = getConf(ballFactory);
-		for(String image :ballFactoryConf.getImages().values()){
+		for (String image : ballFactoryConf.getImages().values()) {
 			ballSets.add(new SpriteSheet(new Image(RES_DIR + image), Ball.A, Ball.A));
 		}
-		
+
 		scoreScreenController = new ScreenControllerScore(game, scoreTable, clock, gameStatistics);
 		scorePopups = new SObjectList();
 
@@ -245,8 +244,8 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 
 	public void map(SObject object) throws SlickException {
 		ObjectConfig config = objectStore.get(object.getClass().getSimpleName());
-		if(config==null){
-			throw new IllegalArgumentException("Coul't fin a config for "+object.getClass().getName()+":" +object);
+		if (config == null) {
+			throw new IllegalArgumentException("Coul't fin a config for " + object.getClass().getName() + ":" + object);
 		}
 		ConfigToObjectMapper.map(object, config);
 	}

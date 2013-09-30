@@ -143,7 +143,8 @@ public class MainGameAndroidX extends BasicGame implements Resetable, BallEventL
 		levelBall = new Level(startLevel, balls1, ballFont);
 		locationController.setLocationToObject(levelBall);
 		ballCounter.setLevel(levelBall);
-		canon = new Cannon(cannons, ballTable, ballCounter, effectCatalog);
+		canon = new Cannon(ballTable, ballCounter, effectCatalog);
+		canon.setSpites(cannons);
 		canon.setSoundMove(kran1);
 		canon.setSoundStackingAlarm(warning);
 		locationController.setLocationToObject(canon);

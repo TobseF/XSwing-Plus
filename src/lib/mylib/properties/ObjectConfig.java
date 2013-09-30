@@ -76,6 +76,11 @@ public class ObjectConfig implements Cloneable {
 		this.x = x;
 		this.y = y;
 	}
+	
+	public void setBounds(int x, int y,int width, int height){
+		setPosition(x, y);
+		setSize(width, height);
+	}
 
 	public int getHeight() {
 		return height;

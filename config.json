@@ -8,7 +8,7 @@
       "configSetIndex": 1,
       "displayConfig": {
         "fullscreen": true,
-        "resolutionIndex": 0,
+        "resolutionIndex": 1,
         "resolutions": [
           {
             "width": 1024,
@@ -42,13 +42,15 @@
               "objectName": "Cannon",
               "x": 248,
               "y": 166,
+              "width": 72,
+               "height": 110,
               "sounds": {               
                 "stackingAlarm": "ALARM1.WAV",
                 "dropBall": "KRAN1.WAV",
                 "move": "KRAN1.WAV"
               },
               "images": {
-                "SpriteSheet": "cannons.png"
+                "spriteSheet": "cannons.png"
               },
               "properties": {
               	 "positionCorrecionX": "0",
@@ -97,7 +99,13 @@
               "objectName": "HighScoreMultiplicator",
               "x": 59,
               "y": 92,
-              "image": "multiplicator_sp.jpg"
+              "image": "multiplicator_sp.jpg",
+              "sounds": {               
+                "score1x": "Score1x.wav",
+                "score2x": "Score2x.wav",
+                "score3x": "Score3x.wav",
+                "score4x": "Score4x.wav"
+              }
             },
             {
               "objectName": "BallTable",
@@ -163,13 +171,15 @@
               "objectName": "Cannon",
               "x": 590,
               "y": 231,
+              "width": 72,
+                "height": 110,
               "sounds": {    
                 "stackingAlarm": "ALARM1.WAV",
                 "dropBall": "KRAN1.WAV",
                 "move": "KRAN1.WAV"
               },
               "images": {
-                "SpriteSheet": "cannons.png"
+                "spriteSheet": "cannons_hd.png"
               },
               "properties": {
               	"positionCorrecionX": "12",
@@ -217,7 +227,13 @@
               "objectName": "HighScoreMultiplicator",
               "x": 145,
               "y": 145,
-              "image": "multiplicator_sp.jpg"
+              "image": "multiplicator_sp.jpg",
+                "sounds": {               
+                "score1x": "Score1x.wav",
+                "score2x": "Score2x.wav",
+                "score3x": "Score3x.wav",
+                "score4x": "Score4x.wav"
+              }
             },
             {
               "objectName": "BallTable",

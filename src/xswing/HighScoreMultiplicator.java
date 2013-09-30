@@ -20,7 +20,7 @@ public class HighScoreMultiplicator extends SObject implements Resetable {
 	private int timerStep = 2500;
 
 	private MyTimer timer;
-	private Sound score;
+	private Sound score1x, score2x, score3x, score4x;
 
 	public HighScoreMultiplicator(SpriteSheet multiplicatorSprites) {
 		this.multiplicatorSprites = multiplicatorSprites;
@@ -38,8 +38,26 @@ public class HighScoreMultiplicator extends SObject implements Resetable {
 		timer.reset();
 		multiplicator = 4;
 		timer.start();
-		if(score!=null){
-			score.play();
+		playScore();
+	}
+
+	public void playScore() {
+		if (score1x != null && score2x != null && score3x != null && score4x != null) {
+			switch (multiplicator) {
+			case 1:
+				score1x.play();
+				break;
+			case 2:
+				score2x.play();
+				break;
+			case 3:
+				score3x.play();
+			case 4:
+				score4x.play();
+
+			default:
+				break;
+			}
 		}
 	}
 
@@ -51,6 +69,7 @@ public class HighScoreMultiplicator extends SObject implements Resetable {
 	private void multiply() {
 		if (multiplicator > 1) {
 			multiplicator--;
+			playScore();
 		} else {
 			timer.reset();
 		}

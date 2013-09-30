@@ -4,9 +4,12 @@
  */
 package xswing;
 
+import static lib.mylib.options.Paths.RES_DIR;
 import lib.mylib.SpriteSheet;
 import lib.mylib.object.*;
+
 import org.newdawn.slick.*;
+
 import xswing.EffectCatalog.particleEffects;
 import xswing.ball.*;
 
@@ -23,16 +26,18 @@ public class Cannon extends SObject implements Resetable {
 	private Sound move;
 	private Sound stackingAlarm;
 	private Sound dropBall;
-	private SpriteSheet cannonSprites;
+//	private SpriteSheet cannonSprites;
 	private Animation animationWarning;
 	private Animation animationDanger;
 	/** period of time of one animation frame */
 	private final int duration = 180;
 	private int positionCorrecionX;
 	private int positionCorrecionY;
+	private Image normal;
+	private Image spriteSheet;
 	
 	public static final int ROW_WITH_ORANE_WARNING=7;
-	public static final int ROW_WITH_RED_WARNING=7;
+	public static final int ROW_WITH_RED_WARNING=8;
 
 	private EffectCatalog effectCatalog;
 
@@ -45,19 +50,25 @@ public class Cannon extends SObject implements Resetable {
 	 * @param sounds The moving sound (0) and the alarm sound
 	 * @param ballTable
 	 */
-	public Cannon(SpriteSheet cannons, BallTable ballTable,
+	public Cannon(BallTable ballTable,
 			Countable ballCounter, EffectCatalog effectCatalog) {
-		super(cannons.getSprite(0, 0));
-		this.cannonSprites = cannons;
 		this.ballTable = ballTable;
 		this.effectCatalog = effectCatalog;
 		this.ballCounter = ballCounter;
+	}
+	
+	public void setSpites(){
+		setSpites(new SpriteSheet(spriteSheet, getWidth(), getHeight()));
+	}
+	
+	public void setSpites(SpriteSheet cannons){
 		animationWarning = new Animation(cannons.getSprites(1), duration);
 		animationDanger = new Animation(cannons.getSprites(2), duration);
 		animationWarning.start();
 		animationWarning.setPingPong(true);
 		animationDanger.start();
 		animationDanger.setPingPong(true);
+		normal = cannons.getSprite(0, 0);
 	}
 	
 	public void setSoundDropBall(Sound dropBall) {
@@ -98,10 +109,10 @@ public class Cannon extends SObject implements Resetable {
 		g.drawImage(image, getX() - positionCorrecionX, y - positionCorrecionY);
 	}
 
-	private void checkHigh() {
+	private void setWarningImage() {
 		int ballPileHeight = ballTable.getColumnHeight(cannonPosition);
 		if (ballPileHeight < ROW_WITH_ORANE_WARNING) {
-			setImage(cannonSprites.getSprite(0, 0));
+			setImage(normal);
 		}else
 		if (ballPileHeight == ROW_WITH_ORANE_WARNING) {
 			setImage(animationWarning.getCurrentFrame());
@@ -159,7 +170,7 @@ public class Cannon extends SObject implements Resetable {
 	public void update(int delta) {
 		animationWarning.update(delta);
 		animationDanger.update(delta);
-		checkHigh();
+		setWarningImage();
 		doBallEnterAnimation();
 	}
 

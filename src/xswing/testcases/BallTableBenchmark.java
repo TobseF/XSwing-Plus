@@ -20,13 +20,6 @@ public class BallTableBenchmark {
 		init();
 	}
 
-	public static void main(String[] args) {
-//		listTest();
-//		hashTest();
-		ballListTest();
-		ballHashTest();
-	}
-
 	@BeforeClass
 	public static void init() {
 		String field = "-- -- -- -- -- -- -- -- " + //
@@ -54,7 +47,7 @@ public class BallTableBenchmark {
 	}
 
 
-	public static void listTest() {
+	public  void listTest() {
 		for (int t = 0; t < 1000; t++) {
 			List<Integer> list = new ArrayList<Integer>(8 * 8);
 			for (Integer i : listData) {
@@ -66,7 +59,7 @@ public class BallTableBenchmark {
 	}
 	
 	@Test()
-	public static void ballListTest() {
+	public void ballListTest() {
 		for (int t = 0; t < 1000; t++) {
 			List<TestBall> list = new ArrayList<TestBall>(8 * 8);
 			for (TestBall i : ballData) {
@@ -78,7 +71,7 @@ public class BallTableBenchmark {
 	}
 
 
-	public static void hashTest() {
+	public  void hashTest() {
 		for (int t = 0; t < 1000; t++) {
 			List<Integer> list = new ArrayList<Integer>(8 * 8);
 			HashSet<Integer> hashSet = new HashSet<Integer>();
@@ -92,7 +85,7 @@ public class BallTableBenchmark {
 	}
 	
 	@Test
-	public  static void ballHashTest() {
+	public   void ballHashTest() {
 		for (int t = 0; t < 1000; t++) {
 			List<TestBall> list = new ArrayList<TestBall>(8 * 8);
 			BallListSet ballSet = new BallListSet(8, 8);

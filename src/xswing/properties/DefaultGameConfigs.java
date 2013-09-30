@@ -3,6 +3,7 @@ package xswing.properties;
 import static lib.mylib.options.Paths.SOUND_DIR;
 
 import java.awt.Cursor;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import lib.mylib.Sound;
@@ -93,15 +94,11 @@ public class DefaultGameConfigs extends GameConfigs {
 
 	private void initSingleSplayerHD(ObjectConfigSet singlePlayer) {
 		initObjects();
-
 //		cannon.setPosition(610, 231);  FIXME:gapBetweenBalls-20 bug
-		cannon.setPosition(610-20, 231);
+		cannon.setBounds(610-20, 231,72,110);
 		cannon.setProperyInt("cannonPosition", 3);
 		cannon.setProperyInt("millisecondsPerAnimationFrame", 180);
-		cannon.addSound("move", "KRAN1.WAV");
-		cannon.addSound("stackingAlarm", "ALARM1.WAV");
-		cannon.addSound("dropBall", "KRAN1.WAV");
-		cannon.addImage("SpriteSheet", "cannons.png");
+		cannon.addImage("spriteSheet", "cannons_hd.png");
 		cannon.setProperyInt("positionCorrecionX", 0);
 		cannon.setProperyInt("positionCorrecionY", 0);
 		singlePlayer.addObjectConfig(cannon);
@@ -160,28 +157,24 @@ public class DefaultGameConfigs extends GameConfigs {
 		clock.setPosition(250, 986);
 
 		singlePlayer.addObjectConfig(effectCatalog);
-		effectCatalog.addSound("explosion", "DREIER.WAV");
-		effectCatalog.addSound("shrinc", "SPRATZ2.WAV");
-		effectCatalog.addSound("bouncing", "KLACK4.WAV");
 		
 		singlePlayer.addObjectConfig(gameOver);
-		gameOver.addSound("gameOver", "SPRATZ2.WAV");
+		
+		addSounds();
 	}
 
 	private void initSingleSplayerSD(ObjectConfigSet singlePlayer) {
 		initObjects();
 
 		singlePlayer.addObjectConfig(cannon);
-		cannon.setPosition(248, 166);
+		cannon.setBounds(248, 166,72,110);
 		cannon.setProperyInt("cannonPosition", 3);
 		cannon.setProperyInt("millisecondsPerAnimationFrame", 180);
-		cannon.addSound("move", "KRAN1.WAV");
-		cannon.addSound("stackingAlarm", "ALARM1.WAV");
-		cannon.addSound("dropBall", "KRAN1.WAV");
+		
 		cannon.setProperyInt("positionCorrecionX", 12);
 		cannon.setProperyInt("positionCorrecionY", 3);
 
-		cannon.addImage("SpriteSheet", "cannons.png");
+		cannon.addImage("spriteSheet", "cannons.png");
 
 		singlePlayer.addObjectConfig(background);
 		background.setImage("swing_background_b.jpg");
@@ -211,7 +204,7 @@ public class DefaultGameConfigs extends GameConfigs {
 		singlePlayer.addObjectConfig(highScoreMultiplicator);
 		highScoreMultiplicator.setImage("multiplicator_sp.jpg");
 		highScoreMultiplicator.setPosition(59, 92);
-		highScoreMultiplicator.addSound("score", "KLACK4.WAV");
+
 
 		// ballTable.setProperyInt("topBallYCorrection", 0);
 		ballTable.setProperyInt("gapBetweenBalls", 16);
@@ -238,11 +231,26 @@ public class DefaultGameConfigs extends GameConfigs {
 		clock.setPosition(85, 718);
 
 		singlePlayer.addObjectConfig(effectCatalog);
+				
+		singlePlayer.addObjectConfig(gameOver);
+		
+		addSounds();
+	}
+
+	private void addSounds() {
+		cannon.addSound("move", "KRAN1.WAV");
+		cannon.addSound("stackingAlarm", "ALARM1.WAV");
+		cannon.addSound("dropBall", "abwurf.WAV");
+		
+		highScoreMultiplicator.addSound("score1x","Score1x.wav");
+		highScoreMultiplicator.addSound("score2x","Score2x.wav");
+		highScoreMultiplicator.addSound("score3x","Score3x.wav");
+		highScoreMultiplicator.addSound("score4x","Score4x.wav");
+		
 		effectCatalog.addSound("explosion", "DREIER.WAV");
 		effectCatalog.addSound("shrinc", "SPRATZ2.WAV");
 		effectCatalog.addSound("bouncing", "KLACK4.WAV");
 		
-		singlePlayer.addObjectConfig(gameOver);
 		gameOver.addSound("gameOver", "SPRATZ2.WAV");
 	}
 
