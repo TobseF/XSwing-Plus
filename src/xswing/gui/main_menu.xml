@@ -3,18 +3,15 @@
 
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 	<!-- load default styles and controls -->
+	
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 	<!-- <useStyles filename="nifty-default-styles.xml" />-->
 
 	<useStyles filename="res/gui/xswing-default-styles.xml" />
 	<useControls filename="nifty-default-controls.xml" />
-
-	<!--
-		<registerSound id="popup" filename="sound/34556__Corsica_S__reverse_bass_blip_2.wav" />
-	-->
-
-	<registerSound id="popup" filename="res/sounds/BubblePo-Benjamin-8.wav" />
-	<registerSound id="click" filename="res/sounds/Pop-J_Fairba-1725.wav" />
+	
+	<registerSound id="popup" filename="res/sounds/menu_popup.wav" />
+	<registerSound id="click" filename="res/sounds/menu_click.wav" />
 
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 	<!-- register effects we want to use -->

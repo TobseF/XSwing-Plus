@@ -10,6 +10,8 @@ import static xswing.properties.ConfigToObjectMapper.map;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +37,9 @@ import org.newdawn.slick.util.Log;
 import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.ParseException;
 
 import tools.BallDropSimulator;
-import xswing.EffectCatalog.particleEffects;
+import tools.InitMusicPlayList;
+import static xswing.EffectCatalog.EffectType.*;
+import xswing.EffectCatalog.EffectType;
 import xswing.LocationController.GameComponentLocation;
 import xswing.ai.AIInterface;
 import xswing.ball.*;
@@ -107,12 +111,14 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 	private GameConfig config;
 	private Map<String, ObjectConfig> objectStore;
 
+	/* (non-Javadoc)
+	 * @see org.newdawn.slick.state.GameState#init(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame)
+	 */
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		this.container = container;
 		config = getConfig();
 		objectStore = ResourcesLoader.getObjectStore(config.getSelctedObjectConfigSet());
-
 		map(new Ball(0));// Load Ball.A
 
 		ResourcesLoader.accesAllResources(config);
@@ -121,11 +127,11 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		multipl = new SpriteSheet(new Image(RES_DIR + "multiplicator_sp.jpg"), 189, 72);
 
 		// Fonts
-		fontText = new AngelCodeFont(FONT_DIR + "font_arial_16_bold.fnt", FONT_DIR + "font_arial_16_bold.png");
-		pauseFont = new AngelCodeFont(FONT_DIR + "arial_black_71.fnt", FONT_DIR + "arial_black_71.png");
-		fontScore = new AngelCodeFont(FONT_DIR + "berlin_sans_fb_demi_38.fnt", FONT_DIR + "berlin_sans_fb_demi_38.png");
-		numberFont = new SpriteSheetFont(new SpriteSheet(new Image(FONT_DIR + "numberFont_s19.png"), 15, 19), ',');
-		ballFont = new SpriteSheetFont(new SpriteSheet(new Image(FONT_DIR + "spriteFontBalls2.png"), 11, 16), '.');
+		fontText = newFont("font_arial_16_bold");
+		pauseFont = newFont("arial_black_71");
+		fontScore = newFont("berlin_sans_fb_demi_38");
+		numberFont = newNumberFont("numberFont_s19", 15, 19, ',');
+		ballFont = newNumberFont("spriteFontBalls2", 11, 16, '.');
 		// Sounds
 		// klack1 = new Sound(SOUND_DIR + "KLACK4.WAV");
 		// kran1 = new Sound(SOUND_DIR + "KRAN1.WAV");
@@ -138,12 +144,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		// PropertiesEnum<Args> properties = new PropertiesEnum<Args>(new File("options.ini"));
 		// properties.loadINI();
 		// String[] musicFiles = properties.getPropertyString(Args.musicFiles).split(";");
-		music = new MusicJukebox();
-		for (String musicFile : config.getMusicPlayList()) {
-			music.addMusic(new Music(MUSIC_DIR + musicFile.trim(), true));
-		}
-		SoundStore.get().setSoundVolume(config.getSoundConfig().getFxVoulme() / 100f);
-		SoundStore.get().setMusicVolume(config.getSoundConfig().getMusicVolume() / 100f);
+		intiMuiscJukeBox();
 
 		// music = new Music(MUSIC_DIR + "music.mod", true);
 		// Objects
@@ -171,7 +172,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		levelBall = new Level(startLevel, balls1, ballFont);
 		map(levelBall);
 		ballCounter.setLevel(levelBall);
-		canon = new Cannon( ballTable, ballCounter, effectCatalog);
+		canon = new Cannon(ballTable, ballCounter, effectCatalog);
 		map(canon);
 		canon.setSpites();
 
@@ -192,9 +193,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 
 		map(gameOver);
 
-		setSound(effectCatalog, particleEffects.EXPLOSION);
-		setSound(effectCatalog, particleEffects.SHRINC);
-		setSound(effectCatalog, particleEffects.BOUNCING);
+		setSounds(effectCatalog, EXPLOSION, SHRINC, BOUNCING);
 
 		ballKiller = new BallKiller(mechanics, highScoreCounter, ballTable);
 		ballTable.addBallEventListerner(ballKiller);
@@ -242,6 +241,17 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		container.getInput().addListener(highScoreState);
 	}
 
+	private void intiMuiscJukeBox() throws SlickException {
+		music = new MusicJukebox();
+		List<String> playList = config.isSetMusicPlayList() ? config.getMusicPlayList():InitMusicPlayList.getAllMusicFiles();
+		Collections.shuffle(playList);
+		for (String musicFile : playList) {
+			music.addMusic(new Music(MUSIC_DIR + musicFile.trim(), true));
+		}
+		SoundStore.get().setSoundVolume(config.getSoundConfig().getFxVoulme() / 100f);
+		SoundStore.get().setMusicVolume(config.getSoundConfig().getMusicVolume() / 100f);
+	}
+
 	public void map(SObject object) throws SlickException {
 		ObjectConfig config = objectStore.get(object.getClass().getSimpleName());
 		if (config == null) {
@@ -250,9 +260,15 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		ConfigToObjectMapper.map(object, config);
 	}
 
-	private void setSound(EffectCatalog effects, particleEffects effect) throws SlickException {
+	private void setSounds(EffectCatalog catalog, EffectType... effects) throws SlickException {
+		for (EffectType effect : effects) {
+			setSound(catalog, effect);
+		}
+	}
+
+	private void setSound(EffectCatalog catalog, EffectType effect) throws SlickException {
 		ObjectConfig config = objectStore.get(EffectCatalog.class.getSimpleName());
-		effects.setSound(new Sound(SOUND_DIR + config.getSound(effect.toString().toLowerCase())), effect);
+		catalog.setSound(new Sound(SOUND_DIR + config.getSound(effect.toString().toLowerCase())), effect);
 	}
 
 	public ObjectConfig getConf(SObject sObject) {
@@ -520,12 +536,12 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		} else if (e.getBallEventType() == BallEventType.BALL_WITH_THREE_IN_A_ROW) {
 			// e.getBall().addBallEventListener(ballKiller);
 		} else if (e.getBallEventType() == BallEventType.BALL_CAUGHT_BY_EXPLOSION) {
-			effectCatalog.addEffect(e.getBall(), particleEffects.EXPLOSION);
+			effectCatalog.addEffect(e.getBall(), EffectType.EXPLOSION);
 			ballsToMove.remove(e.getBall());
 			ballTable.remove(e.getBall());
 
 		} else if (e.getBallEventType() == BallEventType.BALL_CAUGHT_BY_SHRINC) {
-			effectCatalog.addEffect(e.getBall(), particleEffects.SHRINC);
+			effectCatalog.addEffect(e.getBall(), EffectType.SHRINC);
 		}
 	}
 
@@ -576,6 +592,14 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 
 	public void addStone() {
 		ballFactory.addNewStone();
+	}
+
+	private static AngelCodeFont newFont(String font) throws SlickException {
+		return new AngelCodeFont(FONT_DIR + font + ".fnt", FONT_DIR + font + ".png");
+	}
+
+	private static SpriteSheetFont newNumberFont(String font, int letterWidth, int letterHight, char startCharacter) throws SlickException {
+		return new SpriteSheetFont(new SpriteSheet(new Image(FONT_DIR + font + ".png"), letterWidth, letterHight), startCharacter);
 	}
 
 }

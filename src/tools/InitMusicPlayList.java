@@ -25,17 +25,7 @@ public class InitMusicPlayList {
 		try {
 			config = gson.fromJson(new FileReader(XSGameConfigs.OPTION_FILE_NAME), GameConfigs.class);
 //			System.out.println(gson.toJson(config));
-			File folder = new File(Paths.MUSIC_DIR);
-			File[] listOfFiles = folder.listFiles();
-			List<String> musicFiles = new LinkedList<String>();
-			for (int i = 0; i < listOfFiles.length; i++) {
-				if (listOfFiles[i].isFile()) {
-					String filename = listOfFiles[i].getName();
-					if (filename.endsWith(".ogg")) {
-						musicFiles.add(filename);
-					}
-				}
-			}
+			List<String> musicFiles = getAllMusicFiles();
 			System.out.println("found music files: "+musicFiles);
 		    Writer writer = new FileWriter(XSGameConfigs.OPTION_FILE_NAME);
 
@@ -52,6 +42,21 @@ public class InitMusicPlayList {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static List<String> getAllMusicFiles() {
+		File folder = new File(Paths.MUSIC_DIR);
+		File[] listOfFiles = folder.listFiles();
+		List<String> musicFiles = new LinkedList<String>();
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				String filename = listOfFiles[i].getName();
+				if (filename.endsWith(".ogg")) {
+					musicFiles.add(filename);
+				}
+			}
+		}
+		return musicFiles;
 	}
 
 	public static void main(String[] args) {

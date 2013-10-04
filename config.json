@@ -7,17 +7,13 @@
       "debugMode": false,
       "configSetIndex": 1,
       "displayConfig": {
-        "fullscreen": true,
+        "fullscreen": false,
         "resolutionIndex": 1,
         "resolutions": [
           {
             "width": 1024,
             "height": 768,
             "name": "XGA"
-          },
-          {
-            "width": 1600,
-            "height": 900
           },
           {
             "width": 1920,
@@ -31,9 +27,6 @@
         "fxVoulme": 100
       },
       "minimumLogicUpdateInterval": 26,
-      "musicPlayList": [
-        "Song2.ogg"
-      ],
       "configSets": [
         {
           "name": "SinglePlayer SD",
@@ -42,21 +35,21 @@
               "objectName": "Cannon",
               "x": 248,
               "y": 166,
+              "height": 110,
               "width": 72,
-               "height": 110,
-              "sounds": {               
-                "stackingAlarm": "ALARM1.WAV",
-                "dropBall": "KRAN1.WAV",
-                "move": "KRAN1.WAV"
+              "sounds": {
+                "stackingAlarm": "alert1.wav",
+                "dropBall": "drop.wav",
+                "move": "crane.wav"
               },
               "images": {
                 "spriteSheet": "cannons.png"
               },
               "properties": {
-              	 "positionCorrecionX": "0",
-                "positionCorrecionY": "0",
+                "positionCorrecionX": "12",
                 "millisecondsPerAnimationFrame": "180",
-                "cannonPosition": "3"
+                "cannonPosition": "3",
+                "positionCorrecionY": "3"
               }
             },
             {
@@ -99,13 +92,13 @@
               "objectName": "HighScoreMultiplicator",
               "x": 59,
               "y": 92,
-              "image": "multiplicator_sp.jpg",
-              "sounds": {               
-                "score1x": "Score1x.wav",
+              "sounds": {
                 "score2x": "Score2x.wav",
+                "score4x": "Score4x.wav",
                 "score3x": "Score3x.wav",
-                "score4x": "Score4x.wav"
-              }
+                "score1x": "Score1x.wav"
+              },
+              "image": "multiplicator_sp.jpg"
             },
             {
               "objectName": "BallTable",
@@ -151,15 +144,15 @@
             {
               "objectName": "EffectCatalog",
               "sounds": {
-                "shrinc": "SPRATZ2.WAV",
-                "bouncing": "KLACK4.WAV",
-                "explosion": "DREIER.WAV"
+                "shrinc": "shrink.wav",
+                "bouncing": "clack01.wav",
+                "explosion": "row_off1.wav"
               }
             },
             {
               "objectName": "GameOver",
               "sounds": {
-                "gameOver": "SPRATZ2.WAV"
+                "gameOver": "game_over.wav"
               }
             }
           ]
@@ -171,21 +164,21 @@
               "objectName": "Cannon",
               "x": 590,
               "y": 231,
+              "height": 110,
               "width": 72,
-                "height": 110,
-              "sounds": {    
-                "stackingAlarm": "ALARM1.WAV",
-                "dropBall": "KRAN1.WAV",
-                "move": "KRAN1.WAV"
+              "sounds": {
+                "stackingAlarm": "alert1.wav",
+                "dropBall": "drop.wav",
+                "move": "crane.wav"
               },
               "images": {
                 "spriteSheet": "cannons_hd.png"
               },
               "properties": {
-              	"positionCorrecionX": "12",
-                "positionCorrecionY": "3",
+                "positionCorrecionX": "0",
                 "millisecondsPerAnimationFrame": "180",
-                "cannonPosition": "3"
+                "cannonPosition": "3",
+                "positionCorrecionY": "0"
               }
             },
             {
@@ -227,13 +220,13 @@
               "objectName": "HighScoreMultiplicator",
               "x": 145,
               "y": 145,
-              "image": "multiplicator_sp.jpg",
-                "sounds": {               
-                "score1x": "Score1x.wav",
+              "sounds": {
                 "score2x": "Score2x.wav",
+                "score4x": "Score4x.wav",
                 "score3x": "Score3x.wav",
-                "score4x": "Score4x.wav"
-              }
+                "score1x": "Score1x.wav"
+              },
+              "image": "multiplicator_sp.jpg"
             },
             {
               "objectName": "BallTable",
@@ -280,15 +273,15 @@
             {
               "objectName": "EffectCatalog",
               "sounds": {
-                "shrinc": "SPRATZ2.WAV",
-                "bouncing": "KLACK4.WAV",
-                "explosion": "DREIER.WAV"
+                "shrinc": "shrink.wav",
+                "bouncing": "clack01.wav",
+                "explosion": "row_off1.wav"
               }
             },
             {
               "objectName": "GameOver",
               "sounds": {
-                "gameOver": "SPRATZ2.WAV"
+                "gameOver": "game_over.wav"
               }
             }
           ]

@@ -19,20 +19,20 @@ public class EffectCatalog implements Resetable, Updateable, Drawable {
 	private ParticleSystem paticleSystem = null;
 	private static final String EFFECT_EXTENSION = ".xml";
 
-	public enum particleEffects {
+	public static enum EffectType {
 		/** Effect for the ball when it drops to the ground */
 		BOUNCING, EXPLOSION, 
 		/** Effect for the cannon when releasing a ball */
 		FLASH, SHRINC, SHRINC1, SHRINC2, SHRINC3, SHRINC4
 	};
 
-	private Map<particleEffects, ConfigurableEmitter> emitterList = new EnumMap<particleEffects, ConfigurableEmitter>(
-			particleEffects.class);
-	private Map<particleEffects, Sound> sounds = new EnumMap<particleEffects, Sound>(
-			particleEffects.class);
+	private Map<EffectType, ConfigurableEmitter> emitterList = new EnumMap<EffectType, ConfigurableEmitter>(
+			EffectType.class);
+	private Map<EffectType, Sound> sounds = new EnumMap<EffectType, Sound>(
+			EffectType.class);
 	private boolean showParticles = true;
 
-	public void setSound(Sound sound, particleEffects effect) {
+	public void setSound(Sound sound, EffectType effect) {
 		sounds.put(effect, sound);
 	}
 
@@ -45,9 +45,9 @@ public class EffectCatalog implements Resetable, Updateable, Drawable {
 				e.printStackTrace();
 			}
 
-			for (particleEffects particleEffect : particleEffects.values()) {
+			for (EffectType particleEffect : EffectType.values()) {
 				ConfigurableEmitter emitter = null;
-				if (particleEffect != particleEffects.SHRINC) {
+				if (particleEffect != EffectType.SHRINC) {
 					try {
 						emitter = ParticleIO.loadEmitter(RES_DIR
 								+ particleEffect.toString().toLowerCase() + EFFECT_EXTENSION);
@@ -73,7 +73,7 @@ public class EffectCatalog implements Resetable, Updateable, Drawable {
 	 * @param ball which executes an effect
 	 * @param effectNr
 	 */
-	public void addEffect(Ball ball, particleEffects effect) {
+	public void addEffect(Ball ball, EffectType effect) {
 		if (showParticles) {
 			int a = Ball.A;
 			ConfigurableEmitter currentEmitter = null;
@@ -92,10 +92,10 @@ public class EffectCatalog implements Resetable, Updateable, Drawable {
 				addEmitterAndSetPosition(ball.getX() - 42, ball.getY() + 50, currentEmitter);
 				break;
 			case SHRINC:
-				int lenght = particleEffects.values().length;
+				int lenght = EffectType.values().length;
 				for (int i = lenght - 1; i >= (lenght - 4); i--) {
 					addEmitterAndSetPosition(ball.getX() + a / 2, ball.getY() + a / 2, emitterList.get(
-							particleEffects.values()[i]).duplicate());
+							EffectType.values()[i]).duplicate());
 				}
 				break;
 			default:
@@ -113,7 +113,7 @@ public class EffectCatalog implements Resetable, Updateable, Drawable {
 	public void reset() {
 		paticleSystem.removeAllEmitters();
 		paticleSystem.reset();
-		for (particleEffects effect : particleEffects.values()) {
+		for (EffectType effect : EffectType.values()) {
 			if (sounds.get(effect) != null) {
 				sounds.get(effect).stop();
 			}

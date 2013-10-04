@@ -9,6 +9,8 @@ import javax.swing.event.EventListenerList;
 import lib.mylib.math.Point;
 import xswing.events.*;
 import xswing.events.BallEvent.BallEventType;
+import static xswing.ball.BallTable.ROWS;
+import static xswing.ball.BallTable.LINES;;
 
 /**
  * The mechanic which executes all game logics (eg. finding 3 Balls in a row...)
@@ -20,6 +22,8 @@ public class Mechanics {
 
 	private BallTable ballTable;
 	private List<BallEventListener> eventListenerList = new LinkedList<BallEventListener>();
+	
+	private BallEventListener ballEventListener;
 
 	private static final int[][] POSITIONS_FOR_SOROUNDING_CHECK = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
 
@@ -115,9 +119,7 @@ public class Mechanics {
 		Point pos = ballTable.getField(ball);
 		Ball checkinBall;
 		for (int[] position : POSITIONS_FOR_SOROUNDING_CHECK) {
-			int nextXToCheck = pos.x + position[0];
-			int nextYToCheck = pos.y + position[1];
-			if (nextXToCheck >= 0 && nextXToCheck < BallTable.LINES && nextYToCheck >= 0 && nextYToCheck < BallTable.LINES) {
+			if (isOnBalltable(pos.x + position[0], pos.y + position[1])) {
 				checkinBall = ballTable.getBall(pos.x + position[0], pos.y + position[1]);
 				if (compare(ball, checkinBall) && !ballsTemp.contains(checkinBall)) {
 					ballsTemp.add(checkinBall);
@@ -125,6 +127,10 @@ public class Mechanics {
 			}
 		}
 		return ballsTemp;
+	}
+
+	private boolean isOnBalltable(int nextXToCheck, int nextYToCheck) {
+		return nextXToCheck >= 0 && nextXToCheck < BallTable.LINES && nextYToCheck >= 0 && nextYToCheck < BallTable.LINES;
 	}
 
 	/** Checks whether there are five balls on top of the other -and shrinks them */
@@ -172,16 +178,7 @@ public class Mechanics {
 				ballToShrink.fireBallEvent(BallEventType.BALL_CAUGHT_BY_EXPLOSION);
 			}
 		}
-		// for (int y = initialBallPosition.y; y > initialBallPosition.y - 4; y--) {
-		// weight += ballTable.getBall(initialBallPosition.x, y).getWeight();
-		// if (y < initialBallPosition.y - 4) {
-		// ballTable.getBall(initialBallPosition.x,
-		// y).fireBallEvent(BallEventType.BALL_CAUGHT_BY_EXPLOSION);
-		// }
-		// }
-		ballTable.remove(shrincedBall);
 		shrincedBall.setWeight(weight);
-		ballTable.addBall(shrincedBall);
 		shrincedBall.fireBallEvent(BallEventType.BALL_CAUGHT_BY_SHRINC);
 	}
 
@@ -194,9 +191,7 @@ public class Mechanics {
 		}
 		Ball firstBall = ballsT.get(0);
 		weight += firstBall.getWeight();
-		ballTable.remove(firstBall);// + add: because i change the hash code of the ball
 		firstBall.setWeight(weight);
-		ballTable.addBall(firstBall);
 		firstBall.fireBallEvent(BallEventType.BALL_CAUGHT_BY_SHRINC);
 	}
 

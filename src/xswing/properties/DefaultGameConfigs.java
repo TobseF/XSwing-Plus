@@ -60,11 +60,6 @@ public class DefaultGameConfigs extends GameConfigs {
 		gameConfig.setConfigSetIndex(configIndex);
 		gameConfig.setDescription("High resolution desktop system (Win, Linux or Mac)");
 		gameConfig.setMinimumLogicUpdateInterval(26);
-		gameConfig.setMusicPlayList(new LinkedList<String>() {
-			{
-				add("Song2.ogg");
-			}
-		});
 
 		DisplayConfig displayConfig = new DisplayConfig();
 		gameConfig.setDisplayConfig(displayConfig);
@@ -130,7 +125,6 @@ public class DefaultGameConfigs extends GameConfigs {
 		singlePlayer.addObjectConfig(highScoreMultiplicator);
 		highScoreMultiplicator.setPosition(145, 145);
 		highScoreMultiplicator.setImage("multiplicator_sp.jpg");
-		highScoreMultiplicator.addSound("score", "KLACK4.WAV");
 
 		ballTable.setProperyInt("topBallYCorrection", 35);
 		singlePlayer.addObjectConfig(ballTable);
@@ -238,20 +232,20 @@ public class DefaultGameConfigs extends GameConfigs {
 	}
 
 	private void addSounds() {
-		cannon.addSound("move", "KRAN1.WAV");
-		cannon.addSound("stackingAlarm", "ALARM1.WAV");
-		cannon.addSound("dropBall", "abwurf.WAV");
+		cannon.addSound("move", "crane.wav");
+		cannon.addSound("stackingAlarm", "alert1.wav");
+		cannon.addSound("dropBall", "drop.wav");
 		
 		highScoreMultiplicator.addSound("score1x","Score1x.wav");
 		highScoreMultiplicator.addSound("score2x","Score2x.wav");
 		highScoreMultiplicator.addSound("score3x","Score3x.wav");
 		highScoreMultiplicator.addSound("score4x","Score4x.wav");
+
+		effectCatalog.addSound("explosion", "row_off1.wav");
+		effectCatalog.addSound("shrinc", "shrink.wav");
+		effectCatalog.addSound("bouncing", "clack01.wav");
 		
-		effectCatalog.addSound("explosion", "DREIER.WAV");
-		effectCatalog.addSound("shrinc", "SPRATZ2.WAV");
-		effectCatalog.addSound("bouncing", "KLACK4.WAV");
-		
-		gameOver.addSound("gameOver", "SPRATZ2.WAV");
+		gameOver.addSound("gameOver", "game_over.wav");
 	}
 
 	private void initObjects() {

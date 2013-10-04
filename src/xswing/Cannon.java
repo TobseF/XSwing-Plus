@@ -10,7 +10,7 @@ import lib.mylib.object.*;
 
 import org.newdawn.slick.*;
 
-import xswing.EffectCatalog.particleEffects;
+import xswing.EffectCatalog.EffectType;
 import xswing.ball.*;
 
 /** Provides a movable Cannon which releases the Balls */
@@ -137,7 +137,7 @@ public class Cannon extends SObject implements Resetable {
 			ballTable.setBall(cannonPosition, 11, ballTable.getBall(cannonPosition, 12));
 			ballTable.setBall(cannonPosition, 12, nextBall);
 			ball.setPos(getX(), y - 22);
-			effectCatalog.addEffect(ball, particleEffects.FLASH);
+			effectCatalog.addEffect(ball, EffectType.FLASH);
 			ballCounter.count();
 			dropBall.play();
 		}

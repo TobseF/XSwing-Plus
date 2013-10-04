@@ -13,7 +13,7 @@ import lib.mylib.object.SObjectList;
 import org.newdawn.slick.Font;
 
 import xswing.*;
-import xswing.EffectCatalog.particleEffects;
+import xswing.EffectCatalog.EffectType;
 import xswing.events.BallEventListener;
 import xswing.extras.*;
 
@@ -73,7 +73,7 @@ public class BallFactory extends SObject{
 		for (BallEventListener listener : ballEventListener) {
 			ball.addBallEventListener(listener);
 		}
-		effectCatalog.addEffect(canon.getBall(), particleEffects.FLASH);
+		effectCatalog.addEffect(canon.getBall(), EffectType.FLASH);
 	}
 
 	public void addNewStone() {
@@ -85,7 +85,7 @@ public class BallFactory extends SObject{
 		for (BallEventListener listener : ballEventListener) {
 			ball.addBallEventListener(listener);
 		}
-		effectCatalog.addEffect(canon.getBall(), particleEffects.FLASH);
+		effectCatalog.addEffect(canon.getBall(), EffectType.FLASH);
 	}
 
 	public void addTopBalls() {

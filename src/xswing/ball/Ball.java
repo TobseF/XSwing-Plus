@@ -11,7 +11,7 @@ import lib.mylib.object.SObject;
 import org.newdawn.slick.*;
 import org.newdawn.slick.util.pathfinding.Mover;
 import xswing.EffectCatalog;
-import xswing.EffectCatalog.particleEffects;
+import xswing.EffectCatalog.EffectType;
 import xswing.events.*;
 import xswing.events.BallEvent.BallEventType;
 
@@ -42,6 +42,8 @@ public class Ball extends SObject implements Cloneable, Mover {
 	public int getId() {
 		return id;
 	}
+	
+	public static final Ball NO_BALL= new Ball(0);
 
 
 	/** The directions in which the Ball can move */
@@ -271,7 +273,7 @@ public class Ball extends SObject implements Cloneable, Mover {
 			notifyListener(new BallEvent(this, this, BallEventType.BALL_HITS_BALL));
 		}
 		if (effectCatalog != null) {
-			effectCatalog.addEffect(this, particleEffects.BOUNCING);
+			effectCatalog.addEffect(this, EffectType.BOUNCING);
 		}
 	}
 
@@ -328,7 +330,7 @@ public class Ball extends SObject implements Cloneable, Mover {
 	 * @return whether the ball has the same {@link #nr} as the given, or the given is a joker#
 	 */
 	public boolean compare(Ball ball) {
-		return (ball != null && getNr() == ball.getNr());
+		return (ball != null && nr == ball.nr);
 	}
 
 	@Override

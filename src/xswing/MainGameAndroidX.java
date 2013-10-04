@@ -18,7 +18,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
-import xswing.EffectCatalog.particleEffects;
+import xswing.EffectCatalog.EffectType;
 import xswing.LocationController.GameComponentLocation;
 import xswing.ai.AIInterface;
 import xswing.ball.*;
@@ -160,9 +160,9 @@ public class MainGameAndroidX extends BasicGame implements Resetable, BallEventL
 		addXSwingListener(statistics);
 		seesawTable = new SeesawTable(numberFont, ballTable);
 		locationController.setLocationToObject(seesawTable);
-		effectCatalog.setSound(wup, particleEffects.EXPLOSION);
-		effectCatalog.setSound(shrinc, particleEffects.SHRINC);
-		effectCatalog.setSound(klack1, particleEffects.BOUNCING);
+		effectCatalog.setSound(wup, EffectType.EXPLOSION);
+		effectCatalog.setSound(shrinc, EffectType.SHRINC);
+		effectCatalog.setSound(klack1, EffectType.BOUNCING);
 		ballKiller = new BallKiller(mechanics, highScoreCounter, ballTable);
 		ballTable.addBallEventListerner(ballKiller);
 		List<SpriteSheet> ballsList = new ArrayList<SpriteSheet>(2);
@@ -417,12 +417,12 @@ public class MainGameAndroidX extends BasicGame implements Resetable, BallEventL
 		} else if (e.getBallEventType() == BallEventType.BALL_WITH_THREE_IN_A_ROW) {
 			// e.getBall().addBallEventListener(ballKiller);
 		} else if (e.getBallEventType() == BallEventType.BALL_CAUGHT_BY_EXPLOSION) {
-			effectCatalog.addEffect(e.getBall(), particleEffects.EXPLOSION);
+			effectCatalog.addEffect(e.getBall(), EffectType.EXPLOSION);
 			ballsToMove.remove(e.getBall());
 			ballTable.remove(e.getBall());
 
 		} else if (e.getBallEventType() == BallEventType.BALL_CAUGHT_BY_SHRINC) {
-			effectCatalog.addEffect(e.getBall(), particleEffects.SHRINC);
+			effectCatalog.addEffect(e.getBall(), EffectType.SHRINC);
 		}
 	}
 

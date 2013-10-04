@@ -52,8 +52,8 @@ public class XSwingWithOptions {
 		try {
 			new XSwingWithOptions(args);
 		} catch (Exception e) {
-			new ErrorReporter(e, new ServerRequest(XSwing.POST_BUG_URL));
 			e.printStackTrace();
+			new ErrorReporter(e, new ServerRequest(XSwing.POST_BUG_URL));
 		}
 	}
 }

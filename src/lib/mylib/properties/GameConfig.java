@@ -130,6 +130,10 @@ public class GameConfig implements Iterable<ObjectConfigSet> {
 	public ObjectConfigSet getSelctedObjectConfigSet() {
 		return configSets == null || configSets.isEmpty() ? null : configSets.get(configSetIndex);
 	}
+	
+	public boolean isSetMusicPlayList(){
+		return musicPlayList !=null;
+	}
 
 	@Override
 	public String toString() {

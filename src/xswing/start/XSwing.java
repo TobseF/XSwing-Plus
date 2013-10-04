@@ -80,8 +80,8 @@ public class XSwing extends StateBasedGame {
 			// container.getWidth(),container.getHeight());
 			addState(scaledGame);
 		} catch (Throwable e) {
+			e.printStackTrace();
 			new ErrorReporter(e, new ServerRequest(POST_BUG_URL), true);
-			// e.printStackTrace();
 		}
 	}
 
@@ -136,8 +136,8 @@ public class XSwing extends StateBasedGame {
 				}
 			}
 		} catch (Throwable e) {
+			e.printStackTrace();
 			new ErrorReporter(e, new ServerRequest(POST_BUG_URL), true);
-			// e.printStackTrace();
 		}
 	}
 

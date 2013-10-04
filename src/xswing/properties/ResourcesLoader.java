@@ -16,20 +16,22 @@ import lib.mylib.properties.ObjectConfigSet;
 import static lib.mylib.options.Paths.*;
 
 public class ResourcesLoader {
-	
-	public static Map<String, ObjectConfig>  getObjectStore(ObjectConfigSet objectConfigSet){
-		Map<String, ObjectConfig> objectsStore= new HashMap<String, ObjectConfig>(objectConfigSet.getConfigs().size());
+
+	public static Map<String, ObjectConfig> getObjectStore(ObjectConfigSet objectConfigSet) {
+		Map<String, ObjectConfig> objectsStore = new HashMap<String, ObjectConfig>(objectConfigSet.getConfigs().size());
 		for (ObjectConfig objectConfig : objectConfigSet) {
 			objectsStore.put(objectConfig.getObjectName(), objectConfig);
 		}
 		return objectsStore;
 	}
-	
+
 	public static void accesAllResources(GameConfig config) throws SlickException {
 		for (ObjectConfigSet objectConfigSet : config) {
 
-			for (String music : config.getMusicPlayList()) {
-				new Music(MUSIC_DIR + music,true);
+			if (config.isSetMusicPlayList()) {
+				for (String music : config.getMusicPlayList()) {
+					new Music(MUSIC_DIR + music, true);
+				}
 			}
 
 			for (ObjectConfig objectConfig : objectConfigSet) {

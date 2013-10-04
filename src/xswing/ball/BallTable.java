@@ -22,8 +22,8 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 	/** Height and Weight of the BallTable in pixels */
 	private int height;
 	/** The height of a ball stack. The upper two lines are for the ball magazine. */
-	// TODO: make field size Variable, make values clear (height == 13 ??)
 	public static final int ROWS = 13;
+	// TODO: make field size Variable, make values clear (height == 13 ??)
 	/** The number of ball lines, which can be filled each with one stack. */
 	public static final int LINES = 8;
 	/**
@@ -32,7 +32,6 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 	 */
 	private Ball[][] balls = new Ball[LINES][ROWS];
 
-	private HashSet<Ball> ballSet = new HashSet<Ball>();
 	
 	public static int topBallYCorrection=0;
 
@@ -43,7 +42,7 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 	// TODO: add ballTablechangedEvent
 
 	public BallTable() {
-		height = Ball.A * 8;
+		height = Ball.A * LINES;
 //		gab_between_balls = LocationController.getGapBetweenBalls();
 	}
 
@@ -101,14 +100,14 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 	public void setBall(int x, int y, Ball ball) {
 		if (ball != null) {
 			ball.setPos(getFieldPosOnScreen(x, y));
-			ballSet.add(ball);
 			notifyListener(new BallEvent(this, ball, BallEventType.ADDED_TO_BALLTABLE, new Point(x, y)));
-			if (y <= 8) {
+			if (y <= LINES) {
 				notifyListener(new BallEvent(this, ball, BallEventType.ADDED_TO_PLAY_FIELD, new Point(x, y)));
 			}
 		}
 		balls[x][y] = ball;
 	}
+	
 
 	/**
 	 * @param x Position on screen in pixels
@@ -116,7 +115,7 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 	 * @return Whether the position is over the BallTable play BallTable area, or not
 	 */
 	public boolean isOverGrid(int x, int y) {
-		return (y >= this.y - 48);
+		return (y >= this.y - Ball.A);
 	}
 
 	/** Sets a ball to the TabllTable, accordingly to its position. */
@@ -342,11 +341,9 @@ public class BallTable extends SObject implements Resetable, Cloneable, TileBase
 
 	/** Removes the given balls from the BallTable */
 	public void remove(Ball ball) {
-		if (ballSet.contains(ball)) {
 			Point position = getField(ball);
 			balls[position.x][position.y] = null;
-			ballSet.remove(ball);
-		}
+//		}
 	}
 
 }
