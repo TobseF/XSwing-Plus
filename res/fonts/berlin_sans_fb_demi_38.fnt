@@ -1,0 +1,15 @@
+info face="null" size=38 bold=0 italic=0 charset="Nums" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1
+common lineHeight=44 base=26 scaleW=64 scaleH=128 pages=1 packed=0
+page id=0 file="berlin_sans_fb_demi_38.png"
+chars count=10
+char id=48   x=0     y=58     width=24     height=27     xoffset=0     yoffset=14    xadvance=23     page=0  chnl=0 
+char id=49   x=0     y=0     width=13     height=28     xoffset=0     yoffset=14    xadvance=12     page=0  chnl=0 
+char id=50   x=25     y=58     width=20     height=27     xoffset=0     yoffset=14    xadvance=19     page=0  chnl=0 
+char id=51   x=0     y=86     width=19     height=27     xoffset=0     yoffset=14    xadvance=18     page=0  chnl=0 
+char id=52   x=14     y=0     width=21     height=28     xoffset=0     yoffset=14    xadvance=20     page=0  chnl=0 
+char id=53   x=20     y=86     width=20     height=27     xoffset=0     yoffset=14    xadvance=19     page=0  chnl=0 
+char id=54   x=36     y=0     width=22     height=28     xoffset=0     yoffset=14    xadvance=21     page=0  chnl=0 
+char id=55   x=0     y=29     width=19     height=28     xoffset=0     yoffset=14    xadvance=18     page=0  chnl=0 
+char id=56   x=20     y=29     width=19     height=28     xoffset=0     yoffset=14    xadvance=18     page=0  chnl=0 
+char id=57   x=40     y=29     width=22     height=28     xoffset=0     yoffset=14    xadvance=21     page=0  chnl=0 
+kernings count=0

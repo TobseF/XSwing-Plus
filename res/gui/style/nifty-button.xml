@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty-styles>
+<!-- style for the button panel-->
+	<style id="my-button#panel">
+		<attributes backgroundImage="res/gui/style/main_menu_button.png" imageMode="resize:20,270,22,18,20,270,22,39,20,270,22,20"
+			width="362px" height="77px" childLayout="center" visibleToMouse="true" align="center"
+			focusable="true" />
+		<effect>
+			<onHover name="focus" />
+			<onFocus name="imageOverlay" filename="res/gui/style/button-main-menu_hoover.png"
+				imageMode="resize:20,270,22,18,20,270,22,39,20,270,22,20" post="true" inset="-2px" />
+			<onFocus name="playSound" sound="popup" />
+			<onClick name="playSound" sound="click" />
+			<onFocus name="imageSize" startSize="1.0" endSize="1.04" length="40" />
+			<onLostFocus name="imageSize" startSize="1.04" endSize="1" length="400" />
+		</effect>
+	</style>
+
+	<!-- style for the button text -->
+	<style id="my-button#text" base="menu-font">
+		<attributes  align="center" valign="center"
+			textHAlign="center" textVAlign="center" visibleToMouse="true" />
+		<effect>
+			<!--  <onFocus name="textSize" startSize="1.0" endSize="1.06" length="150" /> -->
+			<onFocus name="myChangeFont" font="res/fonts/berlin_sans_sb_49_bw_gradient.fnt"></onFocus>
+			<onHover name="myChangeFont" font="res/fonts/berlin_sans_sb_49_bw_gradient.fnt"></onHover>
+		</effect>
+	</style>
+	
+<!-- Small info Button-->
+	
+<!-- style for the button panel-->
+	<style id="my-info-button#panel">
+		<attributes backgroundImage="res/gui/style/main_menu_button.png" imageMode="resize:20,270,22,18,20,270,22,39,20,270,22,20"
+			width="210px" height="46px" childLayout="center" visibleToMouse="true" align="center"
+			focusable="true" />
+	</style>
+
+	<!-- style for the button text -->
+	<style id="my-info-button#text" base="base-font">
+		<attributes align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="true" />
+	</style>
+	
+	<style id="my-button-small#panel" base="my-button">
+		<attributes backgroundImage="res/gui/style/main_menu_button.png" imageMode="resize:20,270,22,18,20,270,22,39,20,270,22,20"
+			width="210px" height="46px" childLayout="center" visibleToMouse="true" align="center"
+			focusable="true" />
+			<effect>
+				<onHover name="focus" />
+				<onFocus name="imageOverlay" filename="res/gui/style/button-main-menu_hoover.png"
+					imageMode="resize:20,270,22,18,20,270,22,39,20,270,22,20" post="true" inset="-2px" />
+				<onFocus name="playSound" sound="popup" />
+				<onClick name="playSound" sound="click" />
+				<onFocus name="imageSize" startSize="1.0" endSize="1.014" length="40" />
+				<onLostFocus name="imageSize" startSize="1.014" endSize="1" length="200" />
+			</effect>
+	</style>
+
+	<!-- style for the button text -->
+	<style id="my-button-small#text" base="base-font">
+		<attributes align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="true" />
+		<effect>
+			<onFocus name="textSize" startSize="1.0" endSize="1.06" length="150" />
+			<onFocus name="myChangeFont" base="menu-font-hover"></onFocus>
+			<onHover name="myChangeFont" base="menu-font-hover"></onHover>
+		</effect>
+	</style>
+	
+</nifty-styles>
