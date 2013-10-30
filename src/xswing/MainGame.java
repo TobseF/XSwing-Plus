@@ -154,7 +154,6 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		SoundStore.get().setMusicVolume(config.getSoundConfig().getMusicVolume()/100f);
 		
 		
-		// music = new Music(MUSIC_DIR + "music.mod", true);
 		// Objects
 		addXSwingListener(this);
 		gameStatistics = new GameStatistics();
