@@ -5,7 +5,6 @@
 package xswing;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Mechanics {
@@ -46,13 +45,13 @@ public class Mechanics {
 	/** Kills the saved balls if the're more than two*/
 	private void checkRow(){
 		if(ballsTemp.size()>2){
-			if(score!=null)
-				score.score(calculateScore(ballsTemp));
-			checkBorderingBalls2(ballsTemp);
+
 			for(int i=0;i<ballsTemp.size();i++){
-				//checkBorderingBalls(ballsTemp);
+				getSurroundings(ballsTemp.get(i));
 				ballsTemp.get(i).kill(1);
 			}
+			if(score!=null)
+				score.score(calculateScore(ballsTemp));
 		}	
 	}
 	
@@ -65,24 +64,14 @@ public class Mechanics {
 		return score*ballsTemp.size();
 	}
 	
-	private void checkBorderingBalls2(List<Ball>ballsTemp){
-		
-		for(int i=0;i<ballsTemp.size();i++){
-			getSurroundings(ballsTemp.get(i));
-		}
-		
-	}
-	
 	/**Checks Surrounding four Balls of the given wether they're null, an other or the same balls as the given.
 	 * In last case, the ball will be added to ballsTemp -only if not happened*/	
 	private void getSurroundings(Ball ball){
 		int[] pos=ballTable.getField(ball);
-		System.out.println(Arrays.toString(pos));
 		Ball checkinBall;
 		int[][] positions={{0,1},{1,0},{0,-1},{-1,0}};
 		for(int i=0;i<positions.length;i++){
 			checkinBall=ballTable.getPlayFieldBall(pos[0]+positions[i][0],pos[1]+positions[i][1]);
-			System.out.println(i+": "+(int)(pos[0]+positions[i][0])+" "+(int)(pos[1]+positions[i][1]));
 			if(checkinBall!=null)
 				if(checkinBall.getNr()==ball.getNr())
 					if(!ballsTemp.contains(checkinBall))
@@ -127,3 +116,4 @@ public class Mechanics {
 	}
 	
 }
+

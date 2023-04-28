@@ -48,8 +48,7 @@ public class Ball extends SObject{
 	}
 
 	public void kill(int effectNr){
-		nr=999;
-		weight=0;
+		nr=999; //no sense
 		readyToKill=effectNr;
 	}
 	
@@ -135,7 +134,7 @@ public class Ball extends SObject{
 		else
 			if(movingType>0)
 				if(!checkCollison())
-					if(ballTable.isOverGrid(x,y))
+					//if(ballTable.isOverGrid(x,y))
 							toggleMoving();
 	}
 	
@@ -169,7 +168,6 @@ public class Ball extends SObject{
 		pos=ballTable.getField(x,y);
 //		ballTable.printBallTable();
 //		System.out.println("");
-		swing.mechanics.checkOfFive();
 	}
 
 }

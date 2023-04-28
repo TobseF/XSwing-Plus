@@ -109,7 +109,7 @@ public class BallTable extends SObject{
 	 * @return Wether the Posiotion is over the BallTable
 	 */
 	public boolean isOverGrid(int x, int y){
-		if(y>this.y)
+		if(y>=this.y-48)
 				return true;
 		else
 			return false;

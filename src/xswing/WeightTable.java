@@ -10,6 +10,7 @@ import org.newdawn.slick.Graphics;
 public class WeightTable extends SObject{
 	private final Font font;
 	BallTable ballTable;
+	int[] weights=new int[8];
 	public WeightTable(Font font,BallTable ballTable) {
 		this.font=font;
 		this.ballTable=ballTable;
@@ -20,8 +21,14 @@ public class WeightTable extends SObject{
 		int gap=16;
 		int ballA=48;
 		for(int i=0;i<8;i++){
-			int weight=ballTable.getColumnWeight(i);
-			font.drawString(x+(gap+ballA)*i-((weight+"").length()-1)*5, y,""+weight);
+			font.drawString(x+(gap+ballA)*i-((weights[i]+"").length()-1)*5, y,""+weights[i]);
+		}
+	}
+	
+	@Override
+	public void update() {
+		for(int i=0;i<8;i++){
+			weights[i]=ballTable.getColumnWeight(i);
 		}
 	}
 

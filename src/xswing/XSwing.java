@@ -10,6 +10,7 @@ import org.newdawn.slick.*;
 
 public class XSwing extends BasicGame{ 
 	static AppGameContainer game=null;
+	String res="res/";
 	Image background,ball,balls1,tuxcanon;
 	Cannon canon;
 	List<Ball> ballsToMove=new ArrayList<Ball>();
@@ -20,13 +21,14 @@ public class XSwing extends BasicGame{
 	WeightTable weightTable;
 	BallCounter ballCounter;
 	HighScoreCounter scoreCounter;
+	Multiplicator multiplicator;
 	Level levelBall;
 	
 	Effects effects;
 	Sound klack1,kran1,wup,music,shrinc;
 	
 	Image normImage;
-	SpriteSheet ballImages;
+	SpriteSheet ballImages,multipl;
 	
 	AngelCodeFont font,ballFont;
 	
@@ -56,20 +58,21 @@ public class XSwing extends BasicGame{
 	@Override
 	public void init(GameContainer container) throws SlickException {
 		//Images
-		background=new Image("res/swing_background_b.jpg");
-		tuxcanon=new Image("res/tuxcanon.png");
-		balls1=new Image("res/Balls1.png");
-		ball=new Image("res/ball.png");
-		font = new AngelCodeFont("res/font2.fnt","res/font2.png");
-		ballFont=new AngelCodeFont("res/BallFont3.fnt","res/BallFont3.png");	
+		background=new Image(res+"swing_background_b.jpg");
+		multipl=new SpriteSheet(new Image(res+"multiplicator_sp.jpg"),189,72);
+		tuxcanon=new Image(res+"tuxcanon.png");
+		balls1=new Image(res+"Balls1.png");
+		ball=new Image(res+"ball.png");
+		font = new AngelCodeFont(res+"font2.fnt","res/font2.png");
+		ballFont=new AngelCodeFont(res+"BallFont3.fnt","res/BallFont3.png");	
 		ballImages=new SpriteSheet(balls1,48,48);
 		//XML
 		effects=new Effects();
 		//Sound
-		klack1=new Sound("res/klack4.wav");
-		kran1=new Sound("res/kran1.wav");
-		wup=new Sound("res/wupp.wav");
-		shrinc=new Sound("res/spratz2.WAV");
+		klack1=new Sound(res+"klack4.wav");
+		kran1=new Sound(res+"kran1.wav");
+		wup=new Sound(res+"wupp.wav");
+		shrinc=new Sound(res+"spratz2.WAV");
 		Sound music=new Sound("res/music.ogg");
 		
 		//Objects
@@ -79,23 +82,26 @@ public class XSwing extends BasicGame{
 		timer.start(game);
 		canon=new Cannon(tuxcanon,canonX,canonY);
 		canon.setBallTable(ballTable);
-		scoreCounter=new HighScoreCounter(font,970,105);
+		multiplicator=new Multiplicator(59,92,multipl);
+		scoreCounter=new HighScoreCounter(font,970,105,multiplicator);
 		mechanics.setScore(scoreCounter);
 		weightTable=new WeightTable(font,ballTable);
 		weightTable.setPos(285, 722);
 		levelBall=new Level(3,25,15,this);
 		ballCounter=new BallCounter(font,160,22);
 		ballCounter.setLevel(levelBall);
-		//normImage=new StandartBallMaker().getImage();
+		
 		gui.add(canon);
 		gui.add(timer);
 		gui.add(weightTable);
 		gui.add(levelBall);
 		gui.add(ballCounter);
 		gui.add(scoreCounter);
+		gui.add(multiplicator);
 		
 		addTopBalls();
 		ballTable.printBallTable();
+		
 		music.loop();
 	}
 	
@@ -103,12 +109,14 @@ public class XSwing extends BasicGame{
 	public void update(GameContainer container, int delta)throws SlickException {
 		timer.tick(container);
 		Input in=container.getInput();
+		weightTable.update();
 		if(particles)
 			effects.update(delta);
-		//mechanics.checkOfFive();
+		mechanics.checkOfFive();
 		mechanics.checkOfThree();
-		updateBalls();	
+		updateBalls();
 		checkKeys(in,container);
+		multiplicator.update(delta);
 	}
 	
 	public void addNewBall() {
@@ -132,7 +140,6 @@ public class XSwing extends BasicGame{
 				ballsToMove.add(newBall);
 			}
 		}
-
 	}
 	
 	@Override
@@ -192,7 +199,6 @@ public class XSwing extends BasicGame{
 					wup.play();
 				if(b.getReadyToKill()==2)
 					shrinc.play();
-					
 			}
 			else
 				b.update();
