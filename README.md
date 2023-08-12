@@ -1,6 +1,10 @@
-# 🎮 XSwing Plus
+# <img src=".idea/icon.png" width="38"/> XSwing Plus
 
 > Open Source remake of a classic match 3 arcade game.
+
+[youtube-gameplay]: https://youtu.be/BNxYl5GOIio
+[![gameplay](https://raw.githubusercontent.com/tobsef/XSwing/media/gameplay.gif)][youtube-gameplay]
+
 
 ### Trivia
 The original game was named [Swing](https://en.wikipedia.org/wiki/Swing_(video_game)) (Marble Master)
