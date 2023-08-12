@@ -146,7 +146,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 		// String[] musicFiles = properties.getPropertyString(Args.musicFiles).split(";");
 		intiMuiscJukeBox();
 
-		// music = new Music(MUSIC_DIR + "music.mod", true);
+		
 		// Objects
 		map(background);
 
