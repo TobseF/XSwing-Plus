@@ -5,10 +5,10 @@
       "name": "DesktopPC",
       "description": "High resolution desktop system (Win, Linux or Mac)",
       "debugMode": false,
-      "configSetIndex": 1,
+      "configSetIndex": 0,
       "displayConfig": {
         "fullscreen": false,
-        "resolutionIndex": 1,
+        "resolutionIndex": 0,
         "resolutions": [
           {
             "width": 1024,
@@ -113,13 +113,16 @@
               "x": 970,
               "y": 106,
               "properties": {
-                "bonusLineSpace": "42"
+                "bonusLineSpace": "55"
               }
             },
             {
               "objectName": "Level",
               "x": 25,
-              "y": 15
+              "y": 15,
+              "properties": {
+                "fontCorrection": "15"
+              }
             },
             {
               "objectName": "BallCounter",

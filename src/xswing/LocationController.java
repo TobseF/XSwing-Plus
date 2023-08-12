@@ -28,9 +28,9 @@ public class LocationController {
 		switch (location) {
 		case ANDROID:
 			Ball.A = 38;
-			Ball.fontCorrection = 16;
+			//Ball.fontCorrection = 16;
 			BallTable.topBallYCorrection = 25;
-			HighScoreCounter.bonusLineSpace = 42;
+			//HighScoreCounter.bonusLineSpace = 42;
 			gapBetweenBalls = 11; 
 			BallTable.gapBetweenBalls =gapBetweenBalls;
 			positions.put(BallTable.class, new Point(199, 166));

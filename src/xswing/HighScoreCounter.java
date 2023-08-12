@@ -21,7 +21,7 @@ public class HighScoreCounter extends SObject implements Resetable {
 	private HighScoreMultiplicator multiplicator;
 	private int letterLenght;
 	private EffectBlinking blinking;
-	public static int bonusLineSpace = 55;
+	public int bonusLineSpace = 55;
 
 	public HighScoreCounter(Font font, HighScoreMultiplicator multiplicator) {
 		this.font = font;

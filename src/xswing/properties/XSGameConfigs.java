@@ -36,17 +36,11 @@ public class XSGameConfigs {
 		try {
 			configs = gson.fromJson(new FileReader(configFile), GameConfigs.class);
 			Log.info("Loaded configFile: "+configFile);
-		} catch (JsonSyntaxException e) {
-			e.printStackTrace();
-			return new DefaultGameConfigs();
-		} catch (JsonIOException e) {
-			e.printStackTrace();
-			return new DefaultGameConfigs();
-		} catch (FileNotFoundException e) {			
+		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 			e.printStackTrace();
 			return new DefaultGameConfigs();
 		}
-		return configs;
+        return configs;
 	}	
 
 }

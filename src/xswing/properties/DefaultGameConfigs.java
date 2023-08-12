@@ -210,6 +210,7 @@ public class DefaultGameConfigs extends GameConfigs {
 		highScoreCounter.setPosition(970, 106);
 
 		singlePlayer.addObjectConfig(level);
+		level.setProperyInt("fontCorrection", 16);
 		level.setPosition(25, 15);
 
 		singlePlayer.addObjectConfig(ballCounter);

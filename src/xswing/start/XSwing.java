@@ -74,10 +74,8 @@ public class XSwing extends StateBasedGame {
 			// GamePanel gamePanel = new GamePanel(GAME_PANEL);
 			MainGame mainGame = new MainGame();
 			container.setClearEachFrame(true);
-			ScalableGameState scaledGame = new ScalableGameState(mainGame, 1920, 1080, true);
+			ScalableGameState scaledGame = new ScalableGameState(mainGame, container.getWidth(),container.getHeight(), true);
 			scaledGame.setId(GAME_PANEL);
-			// ResizeableGameState scaledGamePanel = new ResizeableGameState(gamePanel,
-			// container.getWidth(),container.getHeight());
 			addState(scaledGame);
 		} catch (Throwable e) {
 			e.printStackTrace();

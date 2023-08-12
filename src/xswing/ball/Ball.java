@@ -31,7 +31,7 @@ public class Ball extends SObject implements Cloneable, Mover {
 	/** If the balls has to to be moved in update */
 	private boolean moving = false;
 	
-	public static int fontCorrection = 21;
+	public int fontCorrection = 21;
 	
 	private int id;
 	private static int id_counter =0;
