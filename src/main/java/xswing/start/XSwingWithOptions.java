@@ -23,6 +23,8 @@ import org.newdawn.slick.util.Log;
 public class XSwingWithOptions {
 
     private final OptionStarter starter;
+    private final String versionFileUrl = "https://raw.githubusercontent.com/tobsef/XSwing/main/src/main/resources/versionfile";
+    private final String websiteToOpen = "https://xswing.net";
 
     public XSwingWithOptions(String[] args) {
         MyPropertys.setCheckForDefaults(true);
@@ -35,9 +37,7 @@ public class XSwingWithOptions {
         }
         MyOptions.setBoolean(Args.firstStart, false);
 
-
-        new UpdateMessage(starter, "http://xswing.net/version.php", "http://xswing.net");
-
+        new UpdateMessage(starter, versionFileUrl, websiteToOpen);
     }
 
     /**

@@ -54,10 +54,11 @@ public class UpdateChecker {
         String version = Version.getVersion();
         if (version != null) {
             onlineVersion = getOnlineVersion();
-            if (onlineVersion != null) {
-                return !version.equals(onlineVersion);
-            } else {
+            if (onlineVersion == null) {
+                // Do not bother user for internet problems
                 return false;
+            } else {
+                return !version.equals(onlineVersion);
             }
         } else {
             return false;
@@ -72,6 +73,9 @@ public class UpdateChecker {
     private String getOnlineVersion() {
         if (onlineVersion == null) {
             onlineVersion = EasyServerRequest.request(updateSite);
+            if (onlineVersion != null) {
+                onlineVersion = onlineVersion.trim();
+            }
         }
         return onlineVersion;
     }
