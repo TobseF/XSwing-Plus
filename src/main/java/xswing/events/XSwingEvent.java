@@ -50,7 +50,7 @@ public class XSwingEvent extends EventObject implements Comparable<XSwingEvent> 
         /**
          * Game was started (is now running)
          */
-        GAME_SARTED,
+        GAME_STARTED,
         /**
          * Game was paused (is now in pause)
          */

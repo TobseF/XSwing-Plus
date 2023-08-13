@@ -44,6 +44,7 @@ import java.util.Map;
 import static lib.mylib.options.Paths.*;
 import static xswing.EffectCatalog.EffectType.*;
 import static xswing.properties.XSGameConfigs.getConfig;
+import static xswing.start.XSwing.GAME_OVER;
 
 /**
  * The main container class, which combines all container elements
@@ -110,6 +111,68 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
     private final int startLevel = 4;
     private GameConfig config;
     private Map<String, ObjectConfig> objectStore;
+
+    private boolean reloadHighScoreUI = true;
+
+    private List<SpriteSheet> loadBallSets() throws SlickException {
+        List<SpriteSheet> ballSets = new ArrayList<>(5);
+        ObjectConfig ballFactoryConf = getConf(BallFactory.class);
+        for (String image : ballFactoryConf.getImages().values()) {
+            ballSets.add(new SpriteSheet(new Image(RES_DIR + image), Ball.A, Ball.A));
+        }
+        return ballSets;
+    }
+
+    private void intiMusicJukebox() throws SlickException {
+        music = new MusicJukebox();
+        List<String> playList = config.isSetMusicPlayList() ? config.getMusicPlayList() : InitMusicPlayList.getAllMusicFiles();
+        Collections.shuffle(playList);
+        for (String musicFile : playList) {
+            music.addMusic(new Music(MUSIC_DIR + musicFile.trim(), true));
+        }
+        SoundStore.get().setSoundVolume(config.getSoundConfig().getFxVoulme() / 100f);
+        SoundStore.get().setMusicVolume(config.getSoundConfig().getMusicVolume() / 100f);
+    }
+
+    public <T extends SObject> T map(T object) throws SlickException {
+        ObjectConfig config = objectStore.get(object.getClass().getSimpleName());
+        if (config == null) {
+            throw new IllegalArgumentException("Couldn't fin a config for " + object.getClass().getName() + ":" + object);
+        }
+        ConfigToObjectMapper.map(object, config);
+        return object;
+    }
+
+    private void setSounds(EffectCatalog catalog, EffectType... effects) throws SlickException {
+        for (EffectType effect : effects) {
+            setSound(catalog, effect);
+        }
+    }
+
+    private void setSound(EffectCatalog catalog, EffectType effect) throws SlickException {
+        ObjectConfig config = objectStore.get(EffectCatalog.class.getSimpleName());
+        catalog.setSound(new Sound(SOUND_DIR + config.getSound(effect.toString().toLowerCase())), effect);
+    }
+
+    public ObjectConfig getConf(Class<?> sObject) {
+        return objectStore.get(sObject.getSimpleName());
+    }
+
+    public void setKeys(int keyCodeLeft, int keyCodeRight, int keyCodeDown) {
+        keyLeft = keyCodeLeft;
+        keyRight = keyCodeRight;
+        keyDown = keyCodeDown;
+    }
+
+    @Override
+    public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+        super.enter(container, game);
+        newGame();
+        this.game = game;
+        this.container = container;
+        music.shuffle();
+        music.play();
+    }
 
     /* (non-Javadoc)
      * @see org.newdawn.slick.state.GameState#init(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame)
@@ -192,84 +255,11 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
             ai = new AIInterface(this, ballTable, canon);
         }
         Log.warn("MainGame..............");
-        highScoreState = new NiftyGameState(XSwing.GAME_OVER);
+        highScoreState = new NiftyGameState(GAME_OVER);
         highScoreState.init(container, game);
         highScoreState.enableMouseImage(new Image("res/cursor.png"), 2, 2);
         container.getInput().removeListener(highScoreState);
         container.getInput().addListener(highScoreState);
-    }
-
-    private List<SpriteSheet> loadBallSets() throws SlickException {
-        List<SpriteSheet> ballSets = new ArrayList<>(5);
-        ObjectConfig ballFactoryConf = getConf(BallFactory.class);
-        for (String image : ballFactoryConf.getImages().values()) {
-            ballSets.add(new SpriteSheet(new Image(RES_DIR + image), Ball.A, Ball.A));
-        }
-        return ballSets;
-    }
-
-    private void intiMusicJukebox() throws SlickException {
-        music = new MusicJukebox();
-        List<String> playList = config.isSetMusicPlayList() ? config.getMusicPlayList() : InitMusicPlayList.getAllMusicFiles();
-        Collections.shuffle(playList);
-        for (String musicFile : playList) {
-            music.addMusic(new Music(MUSIC_DIR + musicFile.trim(), true));
-        }
-        SoundStore.get().setSoundVolume(config.getSoundConfig().getFxVoulme() / 100f);
-        SoundStore.get().setMusicVolume(config.getSoundConfig().getMusicVolume() / 100f);
-    }
-
-    public <T extends SObject> T map(T object) throws SlickException {
-        ObjectConfig config = objectStore.get(object.getClass().getSimpleName());
-        if (config == null) {
-            throw new IllegalArgumentException("Couldn't fin a config for " + object.getClass().getName() + ":" + object);
-        }
-        ConfigToObjectMapper.map(object, config);
-        return object;
-    }
-
-    private void setSounds(EffectCatalog catalog, EffectType... effects) throws SlickException {
-        for (EffectType effect : effects) {
-            setSound(catalog, effect);
-        }
-    }
-
-    private void setSound(EffectCatalog catalog, EffectType effect) throws SlickException {
-        ObjectConfig config = objectStore.get(EffectCatalog.class.getSimpleName());
-        catalog.setSound(new Sound(SOUND_DIR + config.getSound(effect.toString().toLowerCase())), effect);
-    }
-
-    public ObjectConfig getConf(Class<?> sObject) {
-        return objectStore.get(sObject.getSimpleName());
-    }
-
-    public void setKeys(int keyCodeLeft, int keyCodeRight, int keyCodeDown) {
-        keyLeft = keyCodeLeft;
-        keyRight = keyCodeRight;
-        keyDown = keyCodeDown;
-    }
-
-    @Override
-    public void enter(GameContainer container, StateBasedGame game) throws SlickException {
-        super.enter(container, game);
-        newGame();
-        this.game = game;
-        this.container = container;
-        music.shuffle();
-        music.play();
-    }
-
-    /**
-     * Resets all values and starts a new game
-     */
-    public void newGame() {
-        Log.info("New Game");
-        resetInput();
-        reset.reset();
-        ballsToMove.clear();
-        ballFactory.addTopBalls();
-        container.setPaused(false);
-        fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_SARTED));
     }
 
     @Override
@@ -441,24 +431,33 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 
     }
 
-    private boolean firstStart = true;
+    /**
+     * Resets all values and starts a new game
+     */
+    public void newGame() {
+        Log.info("New Game");
+        resetInput();
+        reset.reset();
+        ballsToMove.clear();
+        ballFactory.addTopBalls();
+        container.setPaused(false);
+        isGameOver = false;
+        fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_STARTED));
+    }
 
     /**
      * Finishes the current game and switches to the highScoreTable
      *
-     * @param container
-     * @param game
-     * @throws SlickException
      */
     private void gameOver(StateBasedGame game) throws SlickException {
         isGameOver = true;
         Log.info("Game Over");
         scoreScreenController.setHighScore(highScoreCounter.getScore());
-        fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_OVER));
-        if (firstStart) {
+        if (reloadHighScoreUI) {
             highScoreState.fromXml("xswing/gui/high_score.xml", scoreScreenController);
-            firstStart = false;
+            reloadHighScoreUI = false;
         }
+        fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_OVER));
         // highScoreState.init(container, game);
         highScoreState.enter(container, game);
         // highScoreState.gotoScreenXSwing.GAME_OVER(; //VOID: ScreenID of NiftyGameState?)

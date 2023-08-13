@@ -236,7 +236,7 @@ public class MainGameAndroidX extends BasicGame implements Resetable, BallEventL
         ballsToMove.clear();
         ballFactory.addTopBalls();
         container.setPaused(false);
-        fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_SARTED));
+        fireXSwingEvent(new XSwingEvent(this, GameEventType.GAME_STARTED));
     }
 
     @Override

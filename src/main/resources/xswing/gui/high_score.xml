@@ -13,7 +13,7 @@
     <useControls filename="nifty-default-controls.xml"/>
 
     <!-- +++++++++++++++++++++++++++++++++++++++ -->
-    <!-- start screen -->
+    <!-- High Score Popup -->
     <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <screen id="start" controller="xswing.gui.ScreenControllerScore">
         <layer id="layer" childLayout="center">
@@ -44,12 +44,6 @@
                     </panel>
 
                     <panel childLayout="horizontal" height="8px"/>
-
-                    <panel childLayout="horizontal" align="left" width="100%">
-                        <label id="labelUploadScore" text="Upload Score: " align="left" textVAlign="center"
-                               textHAlign="left"/>
-                        <control id="upload-score" name="checkbox" align="center"/>
-                    </panel>
                     <panel childLayout="horizontal" height="8px"/>
                     <panel childLayout="vertical" width="100%">
                         <control id="buttonNext" style="my-button-small" name="button" label="Next"

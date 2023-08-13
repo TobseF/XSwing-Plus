@@ -50,7 +50,7 @@ public class LocalXSwingStatistics implements XSwingListener, Resetable {
 
     @Override
     public void gameEvent(XSwingEvent e) {
-        if (e.getGameEventType() == GameEventType.GAME_SARTED) {
+        if (e.getGameEventType() == GameEventType.GAME_STARTED) {
             timeStampGameStarted = System.currentTimeMillis();
 
         } else if (e.getGameEventType() == GameEventType.GAME_PAUSED) {

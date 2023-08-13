@@ -11,7 +11,7 @@ import xswing.start.XSwing;
 
 
 public class ThreadedHighScoreSubmitter {
-    private static class ScoreSubmitThread extends Thread {
+    public static class ScoreSubmitThread extends Thread {
 
         private final HighScoreLine score;
         private final String url;

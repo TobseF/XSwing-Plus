@@ -31,7 +31,7 @@ public class TransparancySlider implements Updateable, Resetable {
 
             @Override
             protected void timerAction() {
-                nextAplphaValue();
+                nextAlphaValue();
             }
         };
         switch (fadingType) {
@@ -73,7 +73,7 @@ public class TransparancySlider implements Updateable, Resetable {
         timer.update(delta);
     }
 
-    private void nextAplphaValue() {
+    private void nextAlphaValue() {
         if (!invert && currentAlphaStep < tranparency.length - 1) {
             currentAlphaStep++;
         } else if (invert && currentAlphaStep > 0) {

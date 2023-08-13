@@ -2,7 +2,6 @@ package xswing.gui;
 
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.button.controller.ButtonControl;
-import de.lessvoid.nifty.controls.checkbox.CheckboxControl;
 import de.lessvoid.nifty.controls.textfield.controller.TextFieldControl;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
@@ -18,12 +17,15 @@ import lib.mylib.util.SlickUtils;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.util.Log;
-import xswing.GamePanel;
 import xswing.GameStatistics;
 import xswing.net.ThreadedHighScoreSubmitter;
+import xswing.net.ThreadedHighScoreSubmitter.ScoreSubmitThread;
 import xswing.start.XSwing;
 
 import java.text.NumberFormat;
+
+import static xswing.start.XSwing.SCORE_LINE_SUBMIT_FILE;
+import static xswing.start.XSwing.SCORE_SERVER_PATH;
 
 public class ScreenControllerScore implements ScreenController {
 
@@ -89,8 +91,6 @@ public class ScreenControllerScore implements ScreenController {
                 LanguageSelector.getString("your_name") + ": ");
         screen.findElementByName("yourScore").getRenderer(TextRenderer.class).setText(
                 LanguageSelector.getString("your_score") + ": ");
-        screen.findElementByName("labelUploadScore").getRenderer(TextRenderer.class).setText(
-                LanguageSelector.getString("upload_score") + ": ");
         screen.findControl("buttonNext", ButtonControl.class).setText(LanguageSelector.getString("next"));
     }
 
@@ -121,23 +121,21 @@ public class ScreenControllerScore implements ScreenController {
 //			MyOptions.save();
         }
         Log.info("Score entered: " + highScore + " " + name);
-        Log.info("Released Balls: " + gameStatistics.getReleasedBalls() + " Dertroyed Balls: " + gameStatistics.getDestroyedBalls());
+        Log.info("Released Balls: " + gameStatistics.getReleasedBalls() + " Destroyed Balls: " + gameStatistics.getDestroyedBalls());
         HighScoreLine newScore = new HighScoreLine(highScore, name, clock.getTimeSinceStart(), gameStatistics.getReleasedBalls(),
                 gameStatistics.getDestroyedBalls());
         highScoreList.addScore(newScore);
         highScoreList.save();
-        boolean submitHighscoreOnline = screen.findControl("upload-score", CheckboxControl.class).isChecked();
+        boolean submitHighscoreOnline = false;
         if (submitHighscoreOnline) {
             Log.info("Submit score online");
             ThreadedHighScoreSubmitter.submitScore(name, highScore, clock.getTimeSinceStart(), gameStatistics.getReleasedBalls(),
                     gameStatistics.getDestroyedBalls());
-//			new ScoreSubmitThread(newScore, XSwing.XSWING_HOST_URL + SCORE_SERVER_PATH + SCORE_LINE_SUBMIT_FILE);
+            new ScoreSubmitThread(newScore, XSwing.XSWING_HOST_URL + SCORE_SERVER_PATH + SCORE_LINE_SUBMIT_FILE);
         }
-
-        ((GamePanel) game.getState(XSwing.GAME_PANEL)).reset();
         nifty.getMouseInputEventQueue().reset();
         SlickUtils.hideMouse(game.getContainer(), true);
-        game.enterState(XSwing.GAME_PANEL, new EmptyTransition(), new EmptyTransition());
+        game.enterState(XSwing.START_SCREEN, new EmptyTransition(), new EmptyTransition());
         // FIXME: score isn't submit offline
     }
 
