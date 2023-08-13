@@ -39,7 +39,7 @@ public class HighScorePanel extends SObject implements Resetable {
         this.scoreTable = scoreTable;
         fadeIn = new TransparancySlider(20, 1000, TransparancySlider.LINEAR_FADE_IN);
         fadeOut = new TransparancySlider(20, 1000, TransparancySlider.LINEAR_FADE_OUT);
-        timer = new MyTimer(5000, true) {
+        timer = new MyTimer(22000, true) {
             @Override
             protected void timerAction() {
                 switchIndex();

@@ -27,7 +27,6 @@ public class HighScoreTable implements Iterable<HighScoreLine> {
     public Cryptable cryptor;
 
     public HighScoreTable() {
-
     }
 
     public void addScore(HighScoreLine highScore) {
@@ -92,7 +91,7 @@ public class HighScoreTable implements Iterable<HighScoreLine> {
     @Override
     public boolean equals(Object obj) {
         if (obj != null && obj instanceof HighScoreTable) {
-            return highScores.equals(highScores);
+            return ((HighScoreTable) obj).highScores.equals(highScores);
         } else {
             return false;
         }
@@ -113,9 +112,7 @@ public class HighScoreTable implements Iterable<HighScoreLine> {
             } else {
                 clear();
             }
-        } catch (IndexOutOfBoundsException e) {
-            clear();
-        } catch (IllegalArgumentException e) {
+        } catch (IndexOutOfBoundsException | IllegalArgumentException e) {
             clear();
         }
     }

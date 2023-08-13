@@ -13,25 +13,28 @@ import org.newdawn.slick.util.Log;
 import xswing.start.XSwing;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 public class HighScoreReader extends JFrame implements ActionListener {
 
     private HighScoreTable highScoreTable;
     private JButton save, load, clear, add;
     private JTable table;
+    private HighScoreTableModel tableModel;
     private JScrollPane panel;
     private JCheckBox crypted;
+    private boolean editMode = false;
 
     public HighScoreReader() {
         super("HighScoreReader");
         MyPropertys.setFile(XSwing.class);
-        setSize(300, 400);
+        setSize(400, 400);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(300, 300));
@@ -72,7 +75,7 @@ public class HighScoreReader extends JFrame implements ActionListener {
             remove(table);
             table = null;
         }
-        HighScoreTableModel tableModel = new HighScoreTableModel(highScoreTable);
+        tableModel = new HighScoreTableModel(highScoreTable, editMode);
         table = new JTable(tableModel);
         table.setRowSorter(new TableRowSorter<TableModel>(tableModel));
         this.add(panel = new JScrollPane(table));
@@ -96,13 +99,15 @@ public class HighScoreReader extends JFrame implements ActionListener {
             initTable();
         }
         if (e.getSource().equals(clear)) {
-            System.out.println("clar");
+            System.out.println("clear");
             highScoreTable.clear();
             initTable();
         }
         if (e.getSource().equals(add)) {
             System.out.println("add");
-            highScoreTable.addScore(new HighScoreLine(99999, "", 0, 0, 0));
+            HighScoreLine highScore = new HighScoreLine(99999, "", 0, 0, 0);
+            highScore.setDate(new Date());
+            highScoreTable.addScore(highScore);
             initTable();
         }
     }
@@ -112,18 +117,24 @@ public class HighScoreReader extends JFrame implements ActionListener {
         if (crypted.isSelected()) {
             highScoreTable.setCryptor(new EasyCrypter());
         }
+
         for (int i = 0; i < table.getRowCount(); i++) {
             HighScoreLine scoreLine = new HighScoreLine(0, "");
-            String score = (String) table.getValueAt(i, 0);
-            String name = (String) table.getValueAt(i, 1);
-            String time = (String) table.getValueAt(i, 2);
-            if (score != null && !score.isEmpty() && name != null && !name.isEmpty() && time != null && !time.isEmpty()) {
-                scoreLine.setScore(Integer.parseInt(score));
+
+            String name = tableModel.getName(i);
+            int score = tableModel.getScore(i);
+            int dispandedBalls = tableModel.getDispandedBalls(i);
+            long time = tableModel.getTime(i);
+            Date date = tableModel.getDate(i);
+            if (score > 0 && name != null && !name.isEmpty() && time > 0 && date != null && dispandedBalls > 0) {
+                scoreLine.setScore(score);
                 scoreLine.setName(name);
-                scoreLine.setTime(Long.parseLong(time));
+                scoreLine.setTime(time);
+                scoreLine.setDate(date);
+                scoreLine.setDispandedBalls(dispandedBalls);
                 highScoreTable.addScore(scoreLine);
             } else {
-                if (table.getRowCount() == 1 && score == null && name == null && time == null) {
+                if (table.getRowCount() == 1 && score == 0 && name == null && time == 0) {
                     highScoreTable.clear();
                     Log.info("Cleared and saved HighScore Table");
                 } else {
@@ -135,11 +146,13 @@ public class HighScoreReader extends JFrame implements ActionListener {
     }
 
 
-    public static class HighScoreTableModel extends AbstractTableModel {
+    public static class HighScoreTableModel extends DefaultTableModel {
         private final HighScoreTable highScoreTable;
+        private final boolean editMode;
 
-        public HighScoreTableModel(HighScoreTable highScoreTable) {
+        public HighScoreTableModel(HighScoreTable highScoreTable, boolean editMode) {
             this.highScoreTable = highScoreTable;
+            this.editMode = editMode;
         }
 
         @Override
@@ -148,7 +161,15 @@ public class HighScoreReader extends JFrame implements ActionListener {
         }
 
         @Override
+        public boolean isCellEditable(int row, int column) {
+            return editMode;
+        }
+
+        @Override
         public int getRowCount() {
+            if (highScoreTable == null) {
+                return 0;
+            }
             return highScoreTable.size();
         }
 
@@ -172,6 +193,51 @@ public class HighScoreReader extends JFrame implements ActionListener {
             }
         }
 
+        public String getName(int rowIndex) {
+            return highScoreTable.get(rowIndex).getName();
+        }
+
+        public int getScore(int rowIndex) {
+            return highScoreTable.get(rowIndex).getScore();
+        }
+
+        public int getDispandedBalls(int rowIndex) {
+            return highScoreTable.get(rowIndex).getDispandedBalls();
+        }
+
+        public long getTime(int rowIndex) {
+            return (int) highScoreTable.get(rowIndex).getTime();
+        }
+
+        public Date getDate(int rowIndex) {
+            return highScoreTable.get(rowIndex).getDate();
+        }
+
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            HighScoreLine line = highScoreTable.get(rowIndex);
+            switch (columnIndex) {
+                case 0:
+                    line.setName((String) aValue);
+                    break;
+                case 1:
+                    line.setScore(Integer.parseInt((String) aValue));
+                    break;
+                case 2:
+                    line.setDispandedBalls(Integer.parseInt((String) aValue));
+                    break;
+                case 3:
+                    line.setReleasedBalls(Integer.parseInt((String) aValue));
+                    break;
+                case 4:
+                    line.setTime(Integer.parseInt((String) aValue));
+                    break;
+                case 5:
+                    line.setDate(new Date(Date.parse((String) aValue)));
+                    break;
+            }
+        }
+
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
             HighScoreLine line = highScoreTable.get(rowIndex);
@@ -183,8 +249,10 @@ public class HighScoreReader extends JFrame implements ActionListener {
                 case 2:
                     return line.getDispandedBalls();
                 case 3:
-                    return line.getTime();
+                    return line.getReleasedBalls();
                 case 4:
+                    return line.getTime();
+                case 5:
                     return line.getDate();
                 default:
                     return null;
