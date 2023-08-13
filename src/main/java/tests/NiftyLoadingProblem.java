@@ -3,19 +3,22 @@
  */
 package tests;
 
-import java.io.IOException;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.screen.ScreenController;
+import de.lessvoid.nifty.slick.NiftyGameState;
 import lib.mylib.object.BasicGameState;
 import org.newdawn.slick.*;
-import org.newdawn.slick.loading.*;
+import org.newdawn.slick.loading.DeferredResource;
+import org.newdawn.slick.loading.LoadingList;
 import org.newdawn.slick.state.StateBasedGame;
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.screen.*;
-import de.lessvoid.nifty.slick.NiftyGameState;
+
+import java.io.IOException;
 
 /**
  * Swicht DEFERREDLOADING to <code>true</code> to see the wollwing error: <br>
  * Press space to switch to the Nifty Gamte State<br>
- * 
+ *
  * <pre>
  * Exception in thread &quot;main&quot; java.lang.IllegalArgumentException: Number of remaining buffer elements is 0, must be at least 3
  * 	at org.lwjgl.BufferChecks.throwBufferSizeException(BufferChecks.java:130)
@@ -38,118 +41,122 @@ import de.lessvoid.nifty.slick.NiftyGameState;
  */
 public class NiftyLoadingProblem extends StateBasedGame {
 
-	private static boolean DEFERREDLOADING = false;
+    private static final boolean DEFERREDLOADING = false;
 
-	public NiftyLoadingProblem() {
-		super("Game");
-	}
+    public NiftyLoadingProblem() {
+        super("Game");
+    }
 
-	@Override
-	public void initStatesList(GameContainer container) throws SlickException {
-		addState(new LoadingScreen());
-		addState(new SlickTestState());
-		NiftyGameState state = new NiftyGameState(2);
-		state.fromXml("niftytest/xmlTest.xml", new ScreenController() {
+    @Override
+    public void initStatesList(GameContainer container) throws SlickException {
+        addState(new LoadingScreen());
+        addState(new SlickTestState());
+        NiftyGameState state = new NiftyGameState(2);
+        state.fromXml("niftytest/xmlTest.xml", new ScreenController() {
 
-			@Override
-			public void bind(Nifty nifty, Screen screen) {}
+            @Override
+            public void bind(Nifty nifty, Screen screen) {
+            }
 
-			@Override
-			public void onEndScreen() {};
+            @Override
+            public void onEndScreen() {
+            }
 
-			@Override
-			public void onStartScreen() {}
-		});
-		addState(state);
-	}
+            @Override
+            public void onStartScreen() {
+            }
+        });
+        addState(state);
+    }
 
-	public static void main(String[] args) {
-		try {
-			LoadingList.setDeferredLoading(DEFERREDLOADING);
-			AppGameContainer game = new AppGameContainer(new NiftyLoadingProblem());
-			game.setShowFPS(true);
-			game.setMinimumLogicUpdateInterval(25);
-			game.setDisplayMode(800, 600, false);
-			game.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
-	}
+    public static void main(String[] args) {
+        try {
+            LoadingList.setDeferredLoading(DEFERREDLOADING);
+            AppGameContainer game = new AppGameContainer(new NiftyLoadingProblem());
+            game.setShowFPS(true);
+            game.setMinimumLogicUpdateInterval(25);
+            game.setDisplayMode(800, 600, false);
+            game.start();
+        } catch (SlickException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public class SlickTestState extends BasicGameState {
+    public class SlickTestState extends BasicGameState {
 
-		private Image image1, image2;
-		private float angle = 0.0f;
+        private Image image1, image2;
+        private float angle = 0.0f;
 
-		@Override
-		public void init(GameContainer container, StateBasedGame game) throws SlickException {
-			image1 = new Image("niftytest/peng.png");
-			image2 = new Image("niftytest/xswing.png");
-		}
+        @Override
+        public void init(GameContainer container, StateBasedGame game) throws SlickException {
+            image1 = new Image("niftytest/peng.png");
+            image2 = new Image("niftytest/xswing.png");
+        }
 
-		@Override
-		public void render(GameContainer container, StateBasedGame game, Graphics g)
-				throws SlickException {
-			g.drawString("Press space for Nifty State", 100, 250);
-			image2.draw();
-			g.rotate(150, 150, angle);
-			g.setColor(Color.gray);
-			g.fillRect(100, 100, 100, 100);
-			g.setColor(Color.red);
-			g.setLineWidth(2f);
-			g.drawRect(100, 100, 100, 100);
-			g.drawImage(image1, 110, 110);
-			g.drawImage(image1, 140, 140);
-			angle += 0.01f;
-		}
+        @Override
+        public void render(GameContainer container, StateBasedGame game, Graphics g)
+                throws SlickException {
+            g.drawString("Press space for Nifty State", 100, 250);
+            image2.draw();
+            g.rotate(150, 150, angle);
+            g.setColor(Color.gray);
+            g.fillRect(100, 100, 100, 100);
+            g.setColor(Color.red);
+            g.setLineWidth(2f);
+            g.drawRect(100, 100, 100, 100);
+            g.drawImage(image1, 110, 110);
+            g.drawImage(image1, 140, 140);
+            angle += 0.01f;
+        }
 
-		@Override
-		public void update(GameContainer container, StateBasedGame game, int delta)
-				throws SlickException {
-			if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
-				System.out.println("asd");
-				enterState(2);
-			}
-		}
-	}
+        @Override
+        public void update(GameContainer container, StateBasedGame game, int delta)
+                throws SlickException {
+            if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
+                System.out.println("asd");
+                enterState(2);
+            }
+        }
+    }
 
-	public class LoadingScreen extends BasicGameState {
+    public class LoadingScreen extends BasicGameState {
 
-		public LoadingScreen() {}
+        public LoadingScreen() {
+        }
 
-		private DeferredResource nextResource;
+        private DeferredResource nextResource;
 
-		@Override
-		public void update(GameContainer container, StateBasedGame game, int delta)
-				throws SlickException {
-			if (nextResource != null) {
-				try {
-					nextResource.load();
-				} catch (IOException e) {
-					throw new SlickException("Failed to load: "
-							+ nextResource.getDescription(), e);
-				}
-				nextResource = null;
-			}
+        @Override
+        public void update(GameContainer container, StateBasedGame game, int delta)
+                throws SlickException {
+            if (nextResource != null) {
+                try {
+                    nextResource.load();
+                } catch (IOException e) {
+                    throw new SlickException("Failed to load: "
+                            + nextResource.getDescription(), e);
+                }
+                nextResource = null;
+            }
 
-			if (LoadingList.get().getRemainingResources() > 0) {
-				nextResource = LoadingList.get().getNext();
-			} else {
-				enterState(0);
-			}
-		}
+            if (LoadingList.get().getRemainingResources() > 0) {
+                nextResource = LoadingList.get().getNext();
+            } else {
+                enterState(0);
+            }
+        }
 
-		@Override
-		public void init(GameContainer container, StateBasedGame game) throws SlickException {
-			// TODO Auto-generated method stub
-			
-		}
+        @Override
+        public void init(GameContainer container, StateBasedGame game) throws SlickException {
+            // TODO Auto-generated method stub
 
-		@Override
-		public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-			// TODO Auto-generated method stub
-			
-		}
-	}
+        }
+
+        @Override
+        public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+            // TODO Auto-generated method stub
+
+        }
+    }
 
 }

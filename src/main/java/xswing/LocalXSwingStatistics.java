@@ -4,126 +4,137 @@
  */
 package xswing;
 
-import lib.mylib.ident.*;
+import lib.mylib.ident.Identable;
+import lib.mylib.ident.TimeIdent;
 import lib.mylib.object.Resetable;
 import lib.mylib.options.DefaultArgs.Args;
 import lib.mylib.util.MyOptions;
 import org.newdawn.slick.util.Log;
-import xswing.events.*;
+import xswing.events.XSwingEvent;
 import xswing.events.XSwingEvent.GameEventType;
+import xswing.events.XSwingListener;
 
 /**
  * Counts the number of all played and canceled games and sums the time in ms for these games.
+ *
  * @author Tobse
  */
 public class LocalXSwingStatistics implements XSwingListener, Resetable {
 
-	private long timeStampGameStarted;
-	private long timePlayingCurrentGame;
+    private long timeStampGameStarted;
+    private long timePlayingCurrentGame;
 
-	/** Number of played games */
-	private int playedGames;
-	/** Number canceled/ aborted games */
-	private int canceledGames;
-	/** Time of all played games together in ms */
-	private double timePlayedAllGames;
+    /**
+     * Number of played games
+     */
+    private int playedGames;
+    /**
+     * Number canceled/ aborted games
+     */
+    private int canceledGames;
+    /**
+     * Time of all played games together in ms
+     */
+    private double timePlayedAllGames;
 
-	/** Separates values in the {@link #getScoreInOneHTTPLine()} Server Request */
-	private static final String SEPERATOR = ";";
-	
-	private Identable identable = new TimeIdent();
+    /**
+     * Separates values in the {@link #getScoreInOneHTTPLine()} Server Request
+     */
+    private static final String SEPERATOR = ";";
 
-	public LocalXSwingStatistics() {
-		load();
-	}
+    private final Identable identable = new TimeIdent();
 
-	@Override
-	public void gameEvent(XSwingEvent e) {
-		if (e.getGameEventType() == GameEventType.GAME_SARTED) {
-			timeStampGameStarted = System.currentTimeMillis();
+    public LocalXSwingStatistics() {
+        load();
+    }
 
-		} else if (e.getGameEventType() == GameEventType.GAME_PAUSED) {
+    @Override
+    public void gameEvent(XSwingEvent e) {
+        if (e.getGameEventType() == GameEventType.GAME_SARTED) {
+            timeStampGameStarted = System.currentTimeMillis();
 
-			timePlayingCurrentGame += (System.currentTimeMillis() - timeStampGameStarted);
+        } else if (e.getGameEventType() == GameEventType.GAME_PAUSED) {
 
-		} else if (e.getGameEventType() == GameEventType.GAME_RESUMED) {
+            timePlayingCurrentGame += (System.currentTimeMillis() - timeStampGameStarted);
 
-			timeStampGameStarted = System.currentTimeMillis();
+        } else if (e.getGameEventType() == GameEventType.GAME_RESUMED) {
 
-		} else if (e.getGameEventType() == GameEventType.GAME_OVER
-				|| e.getGameEventType() == GameEventType.GAME_STOPPED) {
+            timeStampGameStarted = System.currentTimeMillis();
 
-			timePlayingCurrentGame += (System.currentTimeMillis() - timeStampGameStarted);
-			timePlayedAllGames += (timePlayingCurrentGame);
+        } else if (e.getGameEventType() == GameEventType.GAME_OVER
+                || e.getGameEventType() == GameEventType.GAME_STOPPED) {
 
-			if (e.getGameEventType() == GameEventType.GAME_OVER) {
-				playedGames++;
-				Log.debug("Played Games: " + playedGames);
-			} else if (e.getGameEventType() == GameEventType.GAME_STOPPED) {
-				canceledGames++;
-				Log.debug("Clanceled Games: " + canceledGames);
-			}
-			timeStampGameStarted = 0;
-			timePlayingCurrentGame = 0;
-			save();
-		}
-	}
+            timePlayingCurrentGame += (System.currentTimeMillis() - timeStampGameStarted);
+            timePlayedAllGames += (timePlayingCurrentGame);
 
-	@Override
-	public String toString() {
-		double min = (timePlayedAllGames / 60 / 1000);
-		int sec = (int) ((min % 1) * 60);
-		return "playedGames: " + playedGames + " TimeOfAllGames: " + min + ":"
-				+ sec;
-	}
+            if (e.getGameEventType() == GameEventType.GAME_OVER) {
+                playedGames++;
+                Log.debug("Played Games: " + playedGames);
+            } else if (e.getGameEventType() == GameEventType.GAME_STOPPED) {
+                canceledGames++;
+                Log.debug("Clanceled Games: " + canceledGames);
+            }
+            timeStampGameStarted = 0;
+            timePlayingCurrentGame = 0;
+            save();
+        }
+    }
 
-	public String getScoreInOneHTTPLine(){
-		return playedGames + SEPERATOR + canceledGames + SEPERATOR
-				+ (int) timePlayedAllGames
-				+ SEPERATOR + identable.getIdentity();
-	}
+    @Override
+    public String toString() {
+        double min = (timePlayedAllGames / 60 / 1000);
+        int sec = (int) ((min % 1) * 60);
+        return "playedGames: " + playedGames + " TimeOfAllGames: " + min + ":"
+                + sec;
+    }
 
-	/**
-	 * @return {@link #timePlayedAllGames}
-	 */
-	public double getTimePlayedAllGames() {
-		return timePlayedAllGames;
-	}
+    public String getScoreInOneHTTPLine() {
+        return playedGames + SEPERATOR + canceledGames + SEPERATOR
+                + (int) timePlayedAllGames
+                + SEPERATOR + identable.getIdentity();
+    }
 
-	/**
-	 * @return {@link #playedGames}
-	 */
-	public double getPlayedGames() {
-		return playedGames;
-	}
+    /**
+     * @return {@link #timePlayedAllGames}
+     */
+    public double getTimePlayedAllGames() {
+        return timePlayedAllGames;
+    }
 
-	/**
-	 * @return {@link #canceledGames}
-	 */
-	public double getCanceledGames() {
-		return canceledGames;
-	}
+    /**
+     * @return {@link #playedGames}
+     */
+    public double getPlayedGames() {
+        return playedGames;
+    }
 
-	@Override
-	public void reset() {
-		timePlayedAllGames = 0;
-		playedGames = 0;
-		canceledGames = 0;
-		save();
-	}
+    /**
+     * @return {@link #canceledGames}
+     */
+    public double getCanceledGames() {
+        return canceledGames;
+    }
 
-	private void load() {
-		Log.debug("Loaded Statistic");
-		playedGames = (int) MyOptions.getNumber(Args.playedGames);
-		canceledGames = (int) MyOptions.getNumber(Args.canceledGames);
-		timePlayedAllGames = MyOptions.getNumber(Args.totalTime);
-	}
+    @Override
+    public void reset() {
+        timePlayedAllGames = 0;
+        playedGames = 0;
+        canceledGames = 0;
+        save();
+    }
 
-	private void save() {
-		Log.debug("Saved Statistic");
-		MyOptions.setNumber(Args.playedGames, playedGames);
-		MyOptions.setNumber(Args.canceledGames, canceledGames);
-		MyOptions.setNumber(Args.totalTime, timePlayedAllGames);
-	}
+    private void load() {
+        Log.debug("Loaded Statistic");
+        playedGames = (int) MyOptions.getNumber(Args.playedGames);
+        canceledGames = (int) MyOptions.getNumber(Args.canceledGames);
+        timePlayedAllGames = MyOptions.getNumber(Args.totalTime);
+    }
+
+    private void save() {
+        Log.debug("Saved Statistic");
+        MyOptions.setNumber(Args.playedGames, playedGames);
+        MyOptions.setNumber(Args.canceledGames, canceledGames);
+        MyOptions.setNumber(Args.totalTime, timePlayedAllGames);
+    }
 
 }

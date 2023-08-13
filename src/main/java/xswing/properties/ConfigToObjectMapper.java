@@ -1,20 +1,16 @@
 package xswing.properties;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import lib.mylib.object.SObject;
 import lib.mylib.options.Paths;
 import lib.mylib.properties.ObjectConfig;
-
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -89,7 +85,7 @@ public class ConfigToObjectMapper {
     private static List<Field> getDeclaredFields(Object object) {
         Class<?> objectClass = object.getClass();
         Class<?> superclass = objectClass.getSuperclass();
-   
+
         if (SObject.class.isAssignableFrom(superclass) && superclass != SObject.class) {
             List<Field> fields = Arrays.asList(superclass.getDeclaredFields());
             List<Field> superClassFields = Arrays.asList(objectClass.getDeclaredFields());

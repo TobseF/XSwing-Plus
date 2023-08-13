@@ -11,11 +11,11 @@ import de.lessvoid.nifty.render.NiftyRenderEngine;
 
 public class MyChangeFont extends ChangeFont {
 
-	@Override
-	public void execute(Element element, float normalizedTime, Falloff falloff,
-			NiftyRenderEngine r) {
-		super.execute(element, normalizedTime, falloff, r);
-		element.layoutElements();
-	}
+    @Override
+    public void execute(Element element, float normalizedTime, Falloff falloff,
+                        NiftyRenderEngine r) {
+        super.execute(element, normalizedTime, falloff, r);
+        element.layoutElements();
+    }
 
 }

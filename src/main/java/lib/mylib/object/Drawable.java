@@ -8,15 +8,15 @@ import org.newdawn.slick.Graphics;
 
 /**
  * For things that can be drawn on the screen.
- * 
+ *
  * @author Tobse
  */
 public interface Drawable {
 
-	/**
-	 * All draw actions shoulb be executed here
-	 * 
-	 * @param g The Grahics to draw on
-	 */
-	public void render(Graphics g);
+    /**
+     * All draw actions shoulb be executed here
+     *
+     * @param g The Grahics to draw on
+     */
+    void render(Graphics g);
 }

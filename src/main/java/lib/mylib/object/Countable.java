@@ -6,5 +6,5 @@ package lib.mylib.object;
 
 public interface Countable {
 
-	public void count();
+    void count();
 }

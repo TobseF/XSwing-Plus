@@ -8,15 +8,15 @@ import java.util.EventObject;
 
 public class SObjectRemovedEvent extends EventObject {
 
-	private final SObject removedObject;
+    private final SObject removedObject;
 
-	public SObject getRemovedObject() {
-		return removedObject;
-	}
+    public SObject getRemovedObject() {
+        return removedObject;
+    }
 
-	public SObjectRemovedEvent(Object source, SObject removedObject) {
-		super(source);
-		this.removedObject = removedObject;
-	}
+    public SObjectRemovedEvent(Object source, SObject removedObject) {
+        super(source);
+        this.removedObject = removedObject;
+    }
 
 }

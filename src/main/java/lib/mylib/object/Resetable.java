@@ -6,11 +6,13 @@ package lib.mylib.object;
 
 /**
  * To reset objects to their init BallState. Good for game restart.
- * 
+ *
  * @author Tobse
  */
 public interface Resetable {
 
-	/** Resets the Object to the default values */
-	public void reset();
+    /**
+     * Resets the Object to the default values
+     */
+    void reset();
 }

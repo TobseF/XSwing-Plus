@@ -4,25 +4,28 @@
  */
 package lib.mylib.object;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Holds resetable objects.
- * 
+ *
  * @author Tobse
  */
 public class Reset implements Resetable {
 
-	List<Resetable> list = new ArrayList<Resetable>();
+    List<Resetable> list = new ArrayList<Resetable>();
 
-	public void add(Resetable resetableObject) {
-		list.add(resetableObject);
-	}
+    public void add(Resetable resetableObject) {
+        list.add(resetableObject);
+    }
 
-	/** Resets all Elements */
-	public void reset() {
-		for (Resetable resetable : list) {
-			resetable.reset();
-		}
-	}
+    /**
+     * Resets all Elements
+     */
+    public void reset() {
+        for (Resetable resetable : list) {
+            resetable.reset();
+        }
+    }
 }

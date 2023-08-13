@@ -8,5 +8,5 @@ import java.util.EventListener;
 
 public interface ValueChangedListener extends EventListener {
 
-	void valueEvent(ValueEvent event);
+    void valueEvent(ValueEvent event);
 }

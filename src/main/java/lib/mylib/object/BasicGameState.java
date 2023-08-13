@@ -4,31 +4,28 @@
  */
 package lib.mylib.object;
 
-import org.newdawn.slick.*;
-import org.newdawn.slick.state.StateBasedGame;
-
 public abstract class BasicGameState extends org.newdawn.slick.state.BasicGameState implements NumberedWithID {
 
 
-	public BasicGameState(int id) {
-		this.id = id;
-	}
+    public BasicGameState(int id) {
+        this.id = id;
+    }
 
-	public BasicGameState() {
+    public BasicGameState() {
 
-	}
-	private int id = 0;
+    }
 
-	@Override
-	public int getID() {
-		return id;
-	}
+    private int id = 0;
 
-	@Override
-	public void setId(int id) {
-		this.id = id;
-	}
+    @Override
+    public int getID() {
+        return id;
+    }
 
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
 
 
 }

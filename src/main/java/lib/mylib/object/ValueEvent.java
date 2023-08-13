@@ -8,15 +8,15 @@ import java.util.EventObject;
 
 public class ValueEvent extends EventObject {
 
-	private double value;
+    private final double value;
 
-	public ValueEvent(Object source, double value) {
-		super(source);
-		this.value = value;
-	}
+    public ValueEvent(Object source, double value) {
+        super(source);
+        this.value = value;
+    }
 
-	public double getValue() {
-		return value;
-	}
+    public double getValue() {
+        return value;
+    }
 
 }

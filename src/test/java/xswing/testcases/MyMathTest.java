@@ -4,10 +4,10 @@
  */
 package xswing.testcases;
 
-import static org.junit.Assert.*;
-
 import lib.mylib.math.MyMath;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class MyMathTest {
 

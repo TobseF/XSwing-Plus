@@ -8,5 +8,5 @@ import java.util.EventListener;
 
 public interface XSwingListener extends EventListener {
 
-	public void gameEvent(XSwingEvent e);
+    void gameEvent(XSwingEvent e);
 }

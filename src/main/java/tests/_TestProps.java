@@ -6,5 +6,5 @@ package tests;
 
 public interface _TestProps {
 
-	public static final String RES = "restest/";
+    String RES = "restest/";
 }

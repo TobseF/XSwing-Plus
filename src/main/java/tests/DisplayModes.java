@@ -5,25 +5,26 @@
 package tests;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 
 
 public class DisplayModes {
 
-	
-	public DisplayModes() {
-		try {
-			DisplayMode [] displayModes = Display.getAvailableDisplayModes();
-			for(DisplayMode displayMode : displayModes){
-				System.out.println(displayMode);
-			}
-			
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void main(String[] args) {
-		new DisplayModes();
-	}
+
+    public DisplayModes() {
+        try {
+            DisplayMode[] displayModes = Display.getAvailableDisplayModes();
+            for (DisplayMode displayMode : displayModes) {
+                System.out.println(displayMode);
+            }
+
+        } catch (LWJGLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        new DisplayModes();
+    }
 }

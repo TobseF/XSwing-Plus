@@ -10,12 +10,12 @@ import lib.mylib.util.MyPropertysArgs;
 
 public class MyPropertys2Test {
 
-	public static void main(String[] args) {
-		new MyPropertys2Test();
-	}
+    public static void main(String[] args) {
+        new MyPropertys2Test();
+    }
 
-	public MyPropertys2Test() {
-		MyPropertysArgs<DefaultArgs.Args> props = new MyPropertysArgs<Args>();
-		props.setNumber(Args.canceledGames, 42);
-	}
+    public MyPropertys2Test() {
+        MyPropertysArgs<DefaultArgs.Args> props = new MyPropertysArgs<Args>();
+        props.setNumber(Args.canceledGames, 42);
+    }
 }

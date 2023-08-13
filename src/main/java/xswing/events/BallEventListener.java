@@ -8,5 +8,5 @@ import java.util.EventListener;
 
 public interface BallEventListener extends EventListener {
 
-	void ballEvent(BallEvent e);
+    void ballEvent(BallEvent e);
 }

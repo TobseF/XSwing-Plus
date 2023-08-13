@@ -6,5 +6,5 @@ package lib.mylib.highscore;
 
 public interface ScoreStoreable {
 
-	public void addScore(int score, String name);
+    void addScore(int score, String name);
 }

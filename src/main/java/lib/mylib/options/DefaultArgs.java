@@ -9,8 +9,8 @@ package lib.mylib.options;
  */
 public interface DefaultArgs {
 
-	public enum Args {
-		firstStart, debug, configFile, resolution,showOptionPanelOnStart, checkForUpdatesOnStart, uploadHighScore, fullscreen, checkForUpdates, isGermanSetAsDefaultLanguage, isEnglishSetAsDefaultLanguage, gameToStart, highScore, statistic, playedGames, canceledGames, totalTime, playerName, useNativeMouseCursor, musicFiles, musicVolume,fxVolume
-	};
+    enum Args {
+        firstStart, debug, configFile, resolution, showOptionPanelOnStart, checkForUpdatesOnStart, uploadHighScore, fullscreen, checkForUpdates, isGermanSetAsDefaultLanguage, isEnglishSetAsDefaultLanguage, gameToStart, highScore, statistic, playedGames, canceledGames, totalTime, playerName, useNativeMouseCursor, musicFiles, musicVolume, fxVolume
+    }
 
 }

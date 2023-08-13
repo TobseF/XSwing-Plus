@@ -2,8 +2,8 @@ package lib.mylib.object;
 
 public interface NumberedWithID {
 
-	public abstract int getID();
+    int getID();
 
-	public abstract void setId(int id);
+    void setId(int id);
 
 }

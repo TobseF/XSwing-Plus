@@ -1,63 +1,64 @@
 package tests;
 
-import org.newdawn.slick.*;
-import org.newdawn.slick.state.*;
-import de.lessvoid.nifty.*;
-import de.lessvoid.nifty.effects.EffectEventId;
-import de.lessvoid.nifty.elements.Element;
-import de.lessvoid.nifty.screen.*;
-import de.lessvoid.nifty.slick.NiftyGameState;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.screen.ScreenController;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
 
 /**
  * This is the original TestState1 from slick tests extended to a nifty gui overlay. This only
  * implements from ScreenController because we have a quit() onClick action definied in the
  * nifty xml file that is handled in here to quit the demo.
- * 
+ *
  * @author void
  */
 public class TestState2 extends BasicGameState implements ScreenController {
 
-	@Override
-	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void init(GameContainer container, StateBasedGame game) throws SlickException {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void bind(Nifty arg0, Screen arg1) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public void onEndScreen() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void onStartScreen() {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public int getID() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public void bind(Nifty arg0, Screen arg1) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onEndScreen() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onStartScreen() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public int getID() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
 	
 /*

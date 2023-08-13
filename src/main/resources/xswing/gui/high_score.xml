@@ -1,64 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nifty>
 
-	<!-- +++++++++++++++++++++++++++++++++++++++ -->
-	<!-- load default styles and controls -->
-	<!-- +++++++++++++++++++++++++++++++++++++++ -->
-	<!-- <useStyles filename="nifty-default-styles.xml" />-->
-	<!--
-		<useStyles
-		filename="libext/nifty/nifty-style-black-1.0-sources/nifty-default-styles.xml" />
-	-->
-	<useStyles filename="res/gui/xswing-default-styles.xml" />
-	<useControls filename="nifty-default-controls.xml" />
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- load default styles and controls -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- <useStyles filename="nifty-default-styles.xml" />-->
+    <!--
+        <useStyles
+        filename="libext/nifty/nifty-style-black-1.0-sources/nifty-default-styles.xml" />
+    -->
+    <useStyles filename="res/gui/xswing-default-styles.xml"/>
+    <useControls filename="nifty-default-controls.xml"/>
 
-	<!-- +++++++++++++++++++++++++++++++++++++++ -->
-	<!-- start screen -->
-	<!-- +++++++++++++++++++++++++++++++++++++++ -->
-	<screen id="start" controller="xswing.gui.ScreenControllerScore">
-		<layer id="layer" childLayout="center">
-			<panel id="dialog" style="xswing-panel" padding="18px,28px,28px,16px"
-				childLayout="center" width="400px" height="210px" align="center" valign="center">
-				<effect>
-					<onStartScreen name="move" timeType="exp" factor="3.5" direction="top"
-						mode="in" length="500" inherit="true" />
-					<onEndScreen name="move" timeType="exp" factor="3.5" direction="bottom"
-						mode="out" length="500" inherit="true" />
-				</effect>
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- start screen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <screen id="start" controller="xswing.gui.ScreenControllerScore">
+        <layer id="layer" childLayout="center">
+            <panel id="dialog" style="xswing-panel" padding="18px,28px,28px,16px"
+                   childLayout="center" width="400px" height="210px" align="center" valign="center">
+                <effect>
+                    <onStartScreen name="move" timeType="exp" factor="3.5" direction="top"
+                                   mode="in" length="500" inherit="true"/>
+                    <onEndScreen name="move" timeType="exp" factor="3.5" direction="bottom"
+                                 mode="out" length="500" inherit="true"/>
+                </effect>
 
-				<panel childLayout="vertical" align="center" valign="center">
+                <panel childLayout="vertical" align="center" valign="center">
 
-					<panel childLayout="horizontal">
-						<label id="yourScore" text="Your Score: " width="180px" align="left" textVAlign="center"
-							textHAlign="left" />
-						<label id="labelScore" text="1300" width="50px" align="left" textVAlign="center"
-							textHAlign="left" />
-					</panel>
+                    <panel childLayout="horizontal">
+                        <label id="yourScore" text="Your Score: " width="180px" align="left" textVAlign="center"
+                               textHAlign="left"/>
+                        <label id="labelScore" text="1300" width="50px" align="left" textVAlign="center"
+                               textHAlign="left"/>
+                    </panel>
 
-					<panel childLayout="horizontal" height="8px" />
+                    <panel childLayout="horizontal" height="8px"/>
 
-					<panel id="namePanel" childLayout="horizontal">
-						<label id="labelName" text="Your Name: " width="180px" align="left"
-							textVAlign="center" textHAlign="left" />
-						<control id="name" name="textfield" text="" />
-					</panel>
+                    <panel id="namePanel" childLayout="horizontal">
+                        <label id="labelName" text="Your Name: " width="180px" align="left"
+                               textVAlign="center" textHAlign="left"/>
+                        <control id="name" name="textfield" text=""/>
+                    </panel>
 
-					<panel childLayout="horizontal" height="8px" />
+                    <panel childLayout="horizontal" height="8px"/>
 
-					<panel childLayout="horizontal" align="left" width="100%">
-						<label id="labelUploadScore" text="Upload Score: " align="left"  textVAlign="center"
-							textHAlign="left" />
-						<control id="upload-score" name="checkbox" align="center" />
-					</panel>
-					<panel childLayout="horizontal" height="8px" />
-					<panel childLayout="vertical" width="100%">
-						<control id="buttonNext" style="my-button-small" name="button" label="Next"
-							align="center">
-							<interact onClick="enterHighScore()" />
-						</control>
-					</panel>
-				</panel>
-			</panel>
-		</layer>
-	</screen>
+                    <panel childLayout="horizontal" align="left" width="100%">
+                        <label id="labelUploadScore" text="Upload Score: " align="left" textVAlign="center"
+                               textHAlign="left"/>
+                        <control id="upload-score" name="checkbox" align="center"/>
+                    </panel>
+                    <panel childLayout="horizontal" height="8px"/>
+                    <panel childLayout="vertical" width="100%">
+                        <control id="buttonNext" style="my-button-small" name="button" label="Next"
+                                 align="center">
+                            <interact onClick="enterHighScore()"/>
+                        </control>
+                    </panel>
+                </panel>
+            </panel>
+        </layer>
+    </screen>
 </nifty>

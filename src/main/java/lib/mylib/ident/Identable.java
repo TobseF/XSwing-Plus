@@ -6,25 +6,25 @@ package lib.mylib.ident;
 
 /**
  * Makes it possible to return an identity for a PC or an user, for the acknowledgment.
- * 
+ *
  * @author Tobse
  */
 public interface Identable {
 
-	static final String IDENT_NAME = "indent";
-	static final String IDENT_EXTENSION = ".bin";
+    String IDENT_NAME = "indent";
+    String IDENT_EXTENSION = ".bin";
 
-	/**
-	 * Calculates an id to identify this computer
-	 * 
-	 * @return id to identify this computer
-	 */
-	public String getIdentity();
+    /**
+     * Calculates an id to identify this computer
+     *
+     * @return id to identify this computer
+     */
+    String getIdentity();
 
-	/**
-	 * calculates a new id
-	 * 
-	 * @see #getIdentity()
-	 */
-	public void newIdentity();
+    /**
+     * calculates a new id
+     *
+     * @see #getIdentity()
+     */
+    void newIdentity();
 }
