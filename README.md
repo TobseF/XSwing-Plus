@@ -2,7 +2,8 @@
 
 > Open Source remake of a classic match 3 arcade game.
 
-[![gameplay](https://raw.githubusercontent.com/tobsef/XSwing/media/gameplay.gif)](https://youtu.be/BNxYl5GOIio)
+[![gameplay](https://raw.githubusercontent.com/tobsef/XSwing/media/gameplay.gif)](https://youtu.be/cLm7sDkO8Z8)  
+[![Youtube](https://img.shields.io/badge/Play-white.svg?style=flat&logo=youtube&logoColor=FF0000)](https://youtu.be/cLm7sDkO8Z8)
 
 ## 💡 Trivia
 The original game was named [Swing Plus -Total Mind Control](https://en.wikipedia.org/wiki/Swing_(video_game)) (Marble Master)
