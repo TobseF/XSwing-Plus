@@ -39,10 +39,49 @@ Pay attention: One stack can only take up to eight balls.
  <kbd>F2</kbd>: Toggle Fullscreen  
  <kbd>S</kbd>: Change game size (experimental)
 
+To use the app, you need at least a Java 1.8 JRE.
+You can get it for any platform [here](https://adoptium.net/temurin/releases/).
+
+## 🎮 Start
+The game needs an installed Java runtime environment (JRE) with at least 8.
+You can get it for any platform [here](https://adoptium.net/temurin/releases/?version=8).
+For example on Windows choose:
+ * Operating System: `Windows`
+ * Architecture: `x64`
+ * Package Type: `JRE`
+ * Version: `8 - LTS`
+And download the `.msi` installer.
+
+If the `.jar` wile type is linked with the `java`, you can simply start the game by opening the `XSwingPlus.jar`.
+Otherwise, start the game with console:
+```shell
+java -jar XSwingPlus.jar
+```
+
 ## 🚀 Setup
-All dependencies are included. Add the `lib` folder to _Libraries_.  
-In addition to the `.jar` archives, you also have to set the native library location:  
-_Configure project library_ > _Native Library Locations_ > `$PROJECT_DIR$`
+To start developing, import the workspace als [Gradle](https://gradle.org) project in your IDE.
+All dependencies are included in the `lib` folder. They should be automatically referenced by Gradle.  
+To start the game simply run the Gradle task:
+```shell
+gradle run
+```
+This will compile the game and start the game with splash Screen (class `xswing.start.XSwingWithOptions`).
+If you use [IntelliJ IDEA](https://www.jetbrains.com/idea/) you can also use the predefined run configurations:
+ * ▶ `XSwing` 
+ * ▶ `XSwingNoSplash` 
+
+## 📦 Package
+You can build the game for distribution wich wil generate a runnable jar which includes all dependencies,
+resources and natives. 
+```shell
+gradle shadowJar
+```
+This will packe the game to the output folder: `build\libs\`.
+
+> 💡 Keep in mind, that the game not only needs the resources in the `res` folder, but also the
+> native [LWJGL](https://www.lwjgl.org) bindings for your platform 
+> (`.ddl` for Windows, `.so` Linux and `.jnilib` for Mac).
+> The `shadowJar` will copy all natives for all platforms to the build dir for you!
 
 ## 📜 Licence
 This remake is a free fan project. _Software 2000_ is not involved in any way.

@@ -32,7 +32,7 @@ public class LocationController {
 			BallTable.topBallYCorrection = 25;
 			//HighScoreCounter.bonusLineSpace = 42;
 			gapBetweenBalls = 11; 
-			BallTable.gapBetweenBalls =gapBetweenBalls;
+			//BallTable.gapBetweenBalls =gapBetweenBalls;
 			positions.put(BallTable.class, new Point(199, 166));
 			positions.put(Level.class, new Point(20, 10));
 			positions.put(Cannon.class, new Point(199, 86));

@@ -7,6 +7,8 @@ package lib.mylib.version;
 import java.util.*;
 import org.newdawn.slick.util.ResourceLoader;
 
+import javax.xml.bind.SchemaOutputResolver;
+
 /**
  * Returns Date and version as string of a "version" file which have to be locatet in src main
  * dir or in jar.</br> version file syntax:
@@ -75,10 +77,13 @@ public final class Version {
 		try {
 			scanner = new Scanner(ResourceLoader.getResourceAsStream(VERSION_FILE));
 		} catch (RuntimeException e) {
+			e.printStackTrace();
 			try {
 				scanner = new Scanner(ResourceLoader
 						.getResourceAsStream("src/" + VERSION_FILE));
-			} catch (RuntimeException e2) {}
+			} catch (RuntimeException e2) {
+				e.printStackTrace();
+			}
 		}
 		return scanner;
 	}

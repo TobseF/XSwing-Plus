@@ -18,7 +18,7 @@ import xswing.events.BallEvent.BallEventType;
 public class BallTable extends SObject implements Resetable, Cloneable, TileBasedMap {
 
 	/** Gap between the balls */
-	public static int gapBetweenBalls;
+	public int gapBetweenBalls  = 16;
 	/** Height and Weight of the BallTable in pixels */
 	private int height;
 	/** The height of a ball stack. The upper two lines are for the ball magazine. */

@@ -44,7 +44,7 @@ public class XSwingFastStart extends StateBasedGame {
 			game.setDisplayMode(1024, 768, fullsceen);
 			// game.setDisplayMode(460,390,fullsceen);
 			game.setClearEachFrame(true);
-			game.setIcons(new String[] { RES_DIR + "16.png", RES_DIR + "32.png" });
+			//game.setIcons(new String[] { RES_DIR + "16.png", RES_DIR + "32.png" });
 			game.setForceExit(false);
 			game.setMouseGrabbed(!debug);
 			game.start();

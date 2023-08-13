@@ -10,6 +10,8 @@ import org.junit.*;
 import xswing.*;
 import xswing.ball.*;
 
+import static org.junit.Assert.assertEquals;
+
 public class BallTableTest {
 
 	private BallTable ballTable = new BallTable();
@@ -36,8 +38,9 @@ public class BallTableTest {
 	public void setFieldPos(){
 		Ball ball1 = new Ball(0);
 		Point pos = ballTable.getFieldPosOnScreen(0, 0);
+		assertEquals(new Point(0, 0), pos);
 		ball1.setPos(pos);
-		Assert.assertEquals(new Point(0, 0), ballTable.getField(ball1));
+		assertEquals(new Point(0, 0), ballTable.getField(ball1));
 	}
 	
 	@Test
@@ -46,16 +49,16 @@ public class BallTableTest {
 		Assert.assertNotNull(ballTable.getBall(0, 0));
 		Assert.assertNotNull(ballTable.getBall(0, 1));
 		
-		Assert.assertEquals(ball1,ballTable.getBall(0, 0));
-		Assert.assertEquals(ball2,ballTable.getBall(0, 1));
+		assertEquals(ball1,ballTable.getBall(0, 0));
+		assertEquals(ball2,ballTable.getBall(0, 1));
 		
-		Assert.assertEquals(new Point(0, 0),ballTable.getField(ball1));
-		Assert.assertEquals(new Point(0, 1),ballTable.getField(ball2));
+		assertEquals(new Point(0, 0),ballTable.getField(ball1));
+		assertEquals(new Point(0, 1),ballTable.getField(ball2));
 	}
 	
 	@Test
 	public void testGetBall(){
-		Assert.assertEquals(balls, ballTable.getBalls(0));
-		Assert.assertEquals(balls.subList(1, 4), ballTable.getBalls(0,1,3));
+		assertEquals(balls, ballTable.getBalls(0));
+		assertEquals(balls.subList(1, 4), ballTable.getBalls(0,1,3));
 	}
 }

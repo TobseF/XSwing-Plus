@@ -7,6 +7,7 @@ package xswing.start;
 import static lib.mylib.options.Paths.RES_DIR;
 import static xswing.properties.XSGameConfigs.getConfig;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -99,6 +100,7 @@ public class XSwing extends StateBasedGame {
 	public static void main(String[] args) {
 		MyOptions.setFile(XSwing.class);
 		MyOptions.setStrings(args);
+		Log.info("Current dir"+new File(".").getAbsolutePath());
 
 		Log.info("Args: " + Arrays.toString(args));
 		GameConfig config = XSGameConfigs.getConfig(MyOptions.getString(Args.configFile, XSGameConfigs.OPTION_FILE_NAME));

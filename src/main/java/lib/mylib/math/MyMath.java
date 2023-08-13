@@ -59,7 +59,7 @@ public class MyMath {
 	 * @return random number between min (exclusive) and max (also exclusive)
 	 */
 	public static float getFloat(float min, float max) {
-		return min + (random.nextFloat() * (max - min +1));
+		return min + (random.nextFloat() * (max - min));
 	}
 
 	/**

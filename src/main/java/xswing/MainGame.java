@@ -34,8 +34,6 @@ import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
-import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.ParseException;
-
 import tools.BallDropSimulator;
 import tools.InitMusicPlayList;
 import static xswing.EffectCatalog.EffectType.*;
