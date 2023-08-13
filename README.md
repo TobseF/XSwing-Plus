@@ -1,9 +1,8 @@
-# <img src=".idea/icon.png" width="38"/> XSwing Plus
+# <img src="https://raw.githubusercontent.com/tobsef/XSwing/main/.idea/icon.png" width="38"/> XSwing Plus
 
 > Open Source remake of a classic match 3 arcade game.
 
-[youtube-gameplay]: https://youtu.be/BNxYl5GOIio
-[![gameplay](https://raw.githubusercontent.com/tobsef/XSwing/media/gameplay.gif)][youtube-gameplay]
+[![gameplay](https://raw.githubusercontent.com/tobsef/XSwing/media/gameplay.gif)](https://youtu.be/BNxYl5GOIio)
 
 ## 💡 Trivia
 The original game was named [Swing](https://en.wikipedia.org/wiki/Swing_(video_game)) (Marble Master)
@@ -21,6 +20,10 @@ on Windows, Linux, Mac and Android.
 ⭐ Offline and online highscore  
 ⭐ Particle and sound effects  
 ⭐ Multilingual (German and English)  
+
+## 💿 Download
+### 👉 [XSwingPlus.zip](tobse.eu/games/xswing/release/XSwingPlus.zip) 32MB
+Platform Independent for Windows, Linux and Mac
 
 ## 📖 Manual
 The objective is to simultaneously disband as many heavy balls as possible. To do this, simply place 

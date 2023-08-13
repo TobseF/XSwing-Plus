@@ -58,8 +58,6 @@ public class XSwing extends StateBasedGame {
 
 	public XSwing() {
 		super("XSwing Plus " + VERSION);
-		// TODO: Put all res in a dir on export
-
 	}
 
 	@Override
