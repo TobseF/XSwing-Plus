@@ -97,6 +97,9 @@ The code is licenced under [MIT License](https://choosealicense.com/licenses/mit
 I started the development in 2007 - A time when _git_ took its first steps and version control wasn't 
 the first thing to do. This repository was restored from zipped code backups between 2007 and 2013.
 
+### 🎵 Music
+Thank you, [Michael Motschmann](https://soundcloud.com/mimo57m) (_MiMo57m_), for the great background music tracks.
+
 ## 🧱 Dependencies
  * [Slick2D](https://github.com/joshmarcus/slick2d) -
    2D Java game library based on LWJGL.
