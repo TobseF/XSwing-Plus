@@ -115,3 +115,36 @@ Thank you, [Michael Motschmann](https://soundcloud.com/mimo57m) (_MiMo57m_), for
 [![Nifty GUI](https://raw.githubusercontent.com/tobsef/XSwing/media/banner_nifty.png)](https://github.com/nifty-gui/nifty-gui)
 [![Java 8](https://raw.githubusercontent.com/tobsef/XSwing/media/banner_java.png)](https://www.oracle.com/java/technologies/downloads/#java8)
 
+## 📋 Command Line Arguments
+The game has several command line arguments wich can be overwritten.
+This may be helpful for development or troubleshooting.
+
+```properties
+# Game
+resolution = 1024 x 768
+fullscreen = false
+musicVolume = 20
+fxVolume = 100
+
+# Startup
+showOptionPanelOnStart = true
+checkForUpdates = false
+uploadHighScore = false
+
+# Debugging
+debug = true
+configFile = somePath/config.json
+
+# Advanced
+useNativeMouseCursor = false
+```
+
+## 👓 Modding
+Is easy to change graphics ot sounds. Just replace them in the `res` folder.
+For the balls, there is second theme `/res/balls2.png` which can be activated by the key <kbd>B</kbd>.
+
+For theming there is a JSON configuration which stores all UI based settings: `config.json`.
+Here you can change sounds and images and change settings like their position.
+This configuration can even store multiple configurations at one.
+Just change the `"configSetIndex": 1` (starting with `0`) to switch to a HD version with 16:9 aspect ratio 
+with a higher resolution.
