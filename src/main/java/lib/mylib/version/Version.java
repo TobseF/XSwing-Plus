@@ -4,6 +4,7 @@
  */
 package lib.mylib.version;
 
+import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
 import java.util.NoSuchElementException;
@@ -38,12 +39,12 @@ public final class Version {
      */
     public static String getVersion() {
         if (version == null) {
-            Scanner scanner = getScanner().useDelimiter("=");
+            Scanner scanner = getScanner();
             if (scanner != null) {
                 try {
-                    scanner.next();
                     version = scanner.next().trim();
                 } catch (NoSuchElementException e) {
+                    Log.warn("Failed loading version file");
                 }
             }
         }
