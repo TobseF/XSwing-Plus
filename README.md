@@ -5,7 +5,7 @@
 [![gameplay](https://raw.githubusercontent.com/tobsef/XSwing/media/gameplay.gif)](https://youtu.be/BNxYl5GOIio)
 
 ## 💡 Trivia
-The original game was named [Swing](https://en.wikipedia.org/wiki/Swing_(video_game)) (Marble Master)
+The original game was named [Swing Plus -Total Mind Control](https://en.wikipedia.org/wiki/Swing_(video_game)) (Marble Master)
 and was developed by [Software 2000](https://en.wikipedia.org/wiki/Software_2000)
 a German game developer and publisher. It was released in 1997 for PC, PlayStation and Game Boy Color.
 
@@ -104,5 +104,11 @@ the first thing to do. This repository was restored from zipped code backups bet
    Lightweight Java Game Library.
  * [Nifty GUI](https://github.com/nifty-gui/nifty-gui) - 
    Open Source Java OpenGL GUI.
- * [Java 1.8](https://www.oracle.com/java/technologies/downloads/#java8) - 
+ * [Java 8](https://www.oracle.com/java/technologies/downloads/#java8) - 
    Programming Language and SDK.
+
+[![Slick2D](https://raw.githubusercontent.com/tobsef/XSwing/media/banner_slick.png)](https://github.com/joshmarcus/slick2d)
+[![LWJGL](https://raw.githubusercontent.com/tobsef/XSwing/media/banner_lwjgl.png)](https://www.lwjgl.org)  
+[![Nifty GUI](https://raw.githubusercontent.com/tobsef/XSwing/media/banner_nifty.png)](https://github.com/nifty-gui/nifty-gui)
+[![Java 8](https://raw.githubusercontent.com/tobsef/XSwing/media/banner_java.png)](https://www.oracle.com/java/technologies/downloads/#java8)
+
