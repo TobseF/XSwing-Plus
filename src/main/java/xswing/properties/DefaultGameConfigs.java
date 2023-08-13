@@ -38,7 +38,7 @@ public class DefaultGameConfigs extends GameConfigs {
 
         SoundConfig soundConfig = new SoundConfig();
         gameConfig.setSoundConfig(soundConfig);
-        soundConfig.setFxVoulme(100);
+        soundConfig.setfxVolume(100);
         soundConfig.setMusicVolume(20);
 
         // GameObjects

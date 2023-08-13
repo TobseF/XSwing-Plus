@@ -8,14 +8,14 @@ public class SoundConfig {
     /**
      * Sound Effects Volume (0-100).
      */
-    private int fxVoulme;
+    private int fxVolume;
 
     public SoundConfig() {
     }
 
-    public SoundConfig(int musicVolume, int fxVoulme) {
+    public SoundConfig(int musicVolume, int fxVolume) {
         this.musicVolume = musicVolume;
-        this.fxVoulme = fxVoulme;
+        this.fxVolume = fxVolume;
     }
 
     public int getMusicVolume() {
@@ -26,17 +26,17 @@ public class SoundConfig {
         this.musicVolume = musicVolume;
     }
 
-    public int getFxVoulme() {
-        return fxVoulme;
+    public int getfxVolume() {
+        return fxVolume;
     }
 
-    public void setFxVoulme(int fxVoulme) {
-        this.fxVoulme = fxVoulme;
+    public void setfxVolume(int fxVolume) {
+        this.fxVolume = fxVolume;
     }
 
     @Override
     public String toString() {
-        return "SoundConfig [musicVolume=" + musicVolume + ", fxVoulme=" + fxVoulme + "]";
+        return "SoundConfig [musicVolume=" + musicVolume + ", fxVolume=" + fxVolume + "]";
     }
 
 

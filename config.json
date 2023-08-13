@@ -23,8 +23,8 @@
         ]
       },
       "soundConfig": {
-        "musicVolume": 20,
-        "fxVoulme": 100
+        "musicVolume": 80,
+        "fxVolume": 40
       },
       "minimumLogicUpdateInterval": 26,
       "configSets": [

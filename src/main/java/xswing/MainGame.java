@@ -130,7 +130,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
         for (String musicFile : playList) {
             music.addMusic(new Music(MUSIC_DIR + musicFile.trim(), true));
         }
-        SoundStore.get().setSoundVolume(config.getSoundConfig().getFxVoulme() / 100f);
+        SoundStore.get().setSoundVolume(config.getSoundConfig().getfxVolume() / 100f);
         SoundStore.get().setMusicVolume(config.getSoundConfig().getMusicVolume() / 100f);
     }
 
