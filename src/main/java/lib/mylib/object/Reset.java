@@ -5,6 +5,7 @@
 package lib.mylib.object;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -16,8 +17,8 @@ public class Reset implements Resetable {
 
     List<Resetable> list = new ArrayList<Resetable>();
 
-    public void add(Resetable resetableObject) {
-        list.add(resetableObject);
+    public void add(Resetable... resetableObjects) {
+        Collections.addAll(list, resetableObjects);
     }
 
     /**

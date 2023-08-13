@@ -119,10 +119,7 @@
             {
               "objectName": "Level",
               "x": 25,
-              "y": 15,
-              "properties": {
-                "fontCorrection": "15"
-              }
+              "y": 15
             },
             {
               "objectName": "BallCounter",

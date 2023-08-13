@@ -46,6 +46,7 @@ public class BallFactory extends SObject {
         this.effectCatalog = effectCatalog;
         this.canon = canon;
         this.levelBall = levelBall;
+        levelBall.setBallsSpriteSheet(getBallSet());
     }
 
     public void addBallEventListener(BallEventListener eventListener) {
@@ -114,6 +115,10 @@ public class BallFactory extends SObject {
         }
 
         levelBall.setSpiteSheet(getSpriteSheet());
+    }
+
+    public SpriteSheet getBallSet() {
+        return ballSets.get(currentSpriteSheetNr);
     }
 
     public void updateBalls(int delta) {

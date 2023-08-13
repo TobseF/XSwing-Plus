@@ -7,6 +7,7 @@ package lib.mylib.object;
 import org.newdawn.slick.Graphics;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -56,9 +57,10 @@ public class SObjectList extends SObject implements Resetable {
         return objectList.get(index);
     }
 
-    public void add(SObject object) { // TODO: add layers
-        objectList.add(object);
+    public void add(SObject... objects) { // TODO: add layers
+        Collections.addAll(objectList, objects);
     }
+
 
     public void remove(int index) {
         objectList.remove(index);

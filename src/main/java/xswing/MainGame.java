@@ -84,7 +84,7 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
     private LocalXSwingStatistics statistics;
     private final GameOver gameOver = new GameOver();
 
-    private SpriteSheet balls1, multipl;
+    private SpriteSheet multipl;
     private SpriteSheetFont numberFont, ballFont;
     private AngelCodeFont fontText, fontScore, pauseFont;
     private MusicJukebox music;
@@ -132,20 +132,9 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
         fontScore = newFont("berlin_sans_fb_demi_38");
         numberFont = newNumberFont("numberFont_s19", 15, 19, ',');
         ballFont = newNumberFont("spriteFontBalls2", 11, 16, '.');
-        // Sounds
-        // klack1 = new Sound(SOUND_DIR + "KLACK4.WAV");
-        // kran1 = new Sound(SOUND_DIR + "KRAN1.WAV");
-        // wup = new Sound(SOUND_DIR + "DREIER.WAV");
-        // shrinc = new Sound(SOUND_DIR + "SPRATZ2.WAV");
-        // warning = new Sound(SOUND_DIR + "ALARM1.WAV");
-        // klack1.setMaxPlyingTime(5);
-        // wup.setMaxPlyingTime(1000);
-        // shrinc.setMaxPlyingTime(5);
-        // PropertiesEnum<Args> properties = new PropertiesEnum<Args>(new File("options.ini"));
-        // properties.loadINI();
-        // String[] musicFiles = properties.getPropertyString(Args.musicFiles).split(";");
-        intiMuiscJukeBox();
 
+        // Music
+        intiMusicJukebox();
 
         // Objects
         map(background);
@@ -153,43 +142,32 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
         addXSwingListener(this);
         gameStatistics = new GameStatistics();
         addXSwingListener(gameStatistics);
-        // locationController = new LocationController(gameLocation);
 
         ballsToMove = new SObjectList();
         gui = new SObjectList();
         effectCatalog = new EffectCatalog();
         reset = new Reset();
-        ballTable = new BallTable();
+        ballTable = map(new BallTable());
         ballTable.addBallEventListerner(this);
-        map(ballTable);
-        // locationController.setLocationToObject(ballTable);
         mechanics = new Mechanics(ballTable);
         mechanics.addBallEventListener(this);
-        clock = new Clock(numberFont);
-        map(clock);
-        ballCounter = new BallCounter(ballFont);
-        map(ballCounter);
-        levelBall = new Level(startLevel, balls1, ballFont);
-        map(levelBall);
+        clock = map(new Clock(numberFont));
+        ballCounter = map(new BallCounter(ballFont));
+        levelBall = map(new Level(startLevel, null, ballFont));
         ballCounter.setLevel(levelBall);
-        canon = new Cannon(ballTable, ballCounter, effectCatalog);
-        map(canon);
+        canon = map(new Cannon(ballTable, ballCounter, effectCatalog));
         canon.setSpites();
 
-        multiplicator = new HighScoreMultiplicator(multipl);
-        map(multiplicator);
-        highScoreCounter = new HighScoreCounter(numberFont, multiplicator);
-        map(highScoreCounter);
+        multiplicator = map(new HighScoreMultiplicator(multipl));
+        highScoreCounter = map(new HighScoreCounter(numberFont, multiplicator));
 
         scoreTable = new HighScoreTable();
         scoreTable.load();
-        highScore = new HighScorePanel(fontText, scoreTable);
-        map(highScore);
+        highScore = map(new HighScorePanel(fontText, scoreTable));
 
         statistics = new LocalXSwingStatistics();
         addXSwingListener(statistics);
-        seesawTable = new SeesawTable(numberFont, ballTable);
-        map(seesawTable);
+        seesawTable = map(new SeesawTable(numberFont, ballTable));
 
         map(gameOver);
 
@@ -197,36 +175,17 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
 
         ballKiller = new BallKiller(mechanics, highScoreCounter, ballTable);
         ballTable.addBallEventListerner(ballKiller);
-        List<SpriteSheet> ballSets = new ArrayList<SpriteSheet>(5);
-        ballFactory = new BallFactory(ballTable, ballsToMove, ballFont, ballSets, effectCatalog, canon, levelBall);
+        ballFactory = new BallFactory(ballTable, ballsToMove, ballFont, loadBallSets(), effectCatalog, canon, levelBall);
         ballFactory.addBallEventListener(this);
         ballFactory.addBallEventListener(gameStatistics);
-        ObjectConfig ballFactoryConf = getConf(ballFactory);
-        for (String image : ballFactoryConf.getImages().values()) {
-            ballSets.add(new SpriteSheet(new Image(RES_DIR + image), Ball.A, Ball.A));
-        }
 
         scoreScreenController = new ScreenControllerScore(game, scoreTable, clock, gameStatistics);
         scorePopups = new SObjectList();
 
         pause = new Pause(pauseFont, container.getWidth(), container.getHeight());
         pause.setVisible(false);
-        reset.add(gameStatistics);
-        reset.add(ballTable);
-        reset.add(gui);
-        reset.add(ballsToMove);
-        reset.add(scorePopups);
-        reset.add(effectCatalog);
-
-        gui.add(background);
-        gui.add(canon);
-        gui.add(clock);
-        gui.add(seesawTable);
-        gui.add(levelBall);
-        gui.add(ballCounter);
-        gui.add(multiplicator);
-        gui.add(highScoreCounter);
-        gui.add(highScore);
+        reset.add(gameStatistics, ballTable, gui, ballsToMove, scorePopups, effectCatalog);
+        gui.add(background, canon, clock, seesawTable, levelBall, ballCounter, multiplicator, highScoreCounter, highScore);
 
         boolean activateAI = false;
         if (activateAI && gameLocation == GameComponentLocation.CENTER) {
@@ -236,12 +195,20 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
         highScoreState = new NiftyGameState(XSwing.GAME_OVER);
         highScoreState.init(container, game);
         highScoreState.enableMouseImage(new Image("res/cursor.png"), 2, 2);
-        // highScoreState.setInput(game.getContainer().getInput());
         container.getInput().removeListener(highScoreState);
         container.getInput().addListener(highScoreState);
     }
 
-    private void intiMuiscJukeBox() throws SlickException {
+    private List<SpriteSheet> loadBallSets() throws SlickException {
+        List<SpriteSheet> ballSets = new ArrayList<>(5);
+        ObjectConfig ballFactoryConf = getConf(BallFactory.class);
+        for (String image : ballFactoryConf.getImages().values()) {
+            ballSets.add(new SpriteSheet(new Image(RES_DIR + image), Ball.A, Ball.A));
+        }
+        return ballSets;
+    }
+
+    private void intiMusicJukebox() throws SlickException {
         music = new MusicJukebox();
         List<String> playList = config.isSetMusicPlayList() ? config.getMusicPlayList() : InitMusicPlayList.getAllMusicFiles();
         Collections.shuffle(playList);
@@ -252,12 +219,13 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
         SoundStore.get().setMusicVolume(config.getSoundConfig().getMusicVolume() / 100f);
     }
 
-    public void map(SObject object) throws SlickException {
+    public <T extends SObject> T map(T object) throws SlickException {
         ObjectConfig config = objectStore.get(object.getClass().getSimpleName());
         if (config == null) {
-            throw new IllegalArgumentException("Coul't fin a config for " + object.getClass().getName() + ":" + object);
+            throw new IllegalArgumentException("Couldn't fin a config for " + object.getClass().getName() + ":" + object);
         }
         ConfigToObjectMapper.map(object, config);
+        return object;
     }
 
     private void setSounds(EffectCatalog catalog, EffectType... effects) throws SlickException {
@@ -271,8 +239,8 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
         catalog.setSound(new Sound(SOUND_DIR + config.getSound(effect.toString().toLowerCase())), effect);
     }
 
-    public ObjectConfig getConf(SObject sObject) {
-        return objectStore.get(sObject.getClass().getSimpleName());
+    public ObjectConfig getConf(Class<?> sObject) {
+        return objectStore.get(sObject.getSimpleName());
     }
 
     public void setKeys(int keyCodeLeft, int keyCodeRight, int keyCodeDown) {
@@ -287,10 +255,8 @@ public class MainGame extends BasicGameState implements Resetable, BallEventList
         newGame();
         this.game = game;
         this.container = container;
-        // music.loop();
         music.shuffle();
         music.play();
-        // container.setMouseGrabbed(false);
     }
 
     /**
