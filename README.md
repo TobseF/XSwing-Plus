@@ -22,9 +22,17 @@ on Windows, Linux, Mac and Android.
 ⭐ Particle and sound effects  
 ⭐ Multilingual (German and English)  
 
-## 💿 Download
-### 👉 [XSwingPlus.zip](tobse.eu/games/xswing/release/XSwingPlus.zip) 32MB
-Platform Independent for Windows, Linux and Mac
+## 💿 Downloads
+
+[<img alt="Download Windows" height="45px" src="https://raw.githubusercontent.com/tobsef/XSwing/media/download-win.svg"/>](https://dl.xswing.net/XSwing_Plus_windows-x64.exe)  
+Windows Setup `XSwing_Plus_windows-x64.exe` `82MB`
+
+[<img alt="Download Mac" height="45px" src="https://raw.githubusercontent.com/tobsef/XSwing/media/download-mac.svg"/>](https://dl.xswing.net/XSwing_Plus_unix.sh)  
+Linux Setup `XSwing_Plus_unix.sh` `88MB`
+
+[<img alt="Download Linux" height="45px" src="https://raw.githubusercontent.com/tobsef/XSwing/media/download-linux.svg"/>](https://dl.xswing.net/XSwing_Plus_macos.dmg)  
+Mac Setup `XSwing_Plus_macos.dmg` `83MB`
+
 
 ## 📖 Manual
 The objective is to simultaneously disband as many heavy balls as possible. To do this, simply place 
@@ -32,6 +40,7 @@ three balls with the same color in a horizontal row. Now these and all adjoining
 will disappear. Five balls of the same color in a column will shrink to one heavy ball. 
 Every 50 balls  you reach the next level and a new color will be added. 
 Pay attention: One stack can only take up to eight balls.
+
 
 ## ⌨ Controls
  <kbd>←</kbd>/<kbd>→</kbd>: Move the crane  
@@ -43,12 +52,17 @@ Pay attention: One stack can only take up to eight balls.
  <kbd>F2</kbd>: Toggle Fullscreen  
  <kbd>S</kbd>: Change game size (experimental)
 
-To use the app, you need at least a Java 1.8 JRE.
-You can get it for any platform [here](https://adoptium.net/temurin/releases/).
 
-## 🎮 Start
-The game needs an installed Java runtime environment (JRE) with at least 8.
-You can get it for any platform [here](https://adoptium.net/temurin/releases/?version=8).
+## 🚀 Manual Setup
+If you do not like the setup, you can use the portable zipped version.  
+Then you have to install Java by your own, which is bundles with the setup.  
+[<img alt="Download Zip" height="45px" src="https://raw.githubusercontent.com/tobsef/XSwing/media/download-zip.svg"/>](https://dl.xswing.net/XSwingPlus.zip)  
+⚠ Cross Platform Zip - Java JRE not included! `XSwingPlus.zip` `32MB`
+> 💡 Choose the **setup** for your platform, which is the **preferred installation option**.  
+> Only advanced users should choose the _Download Zip_, wich needs ab installed Java JRE.
+
+The game needs an installed Java runtime environment (JRE) with at least 8.  
+You can get it for any platform [here](https://adoptium.net/temurin/releases/?version=8).  
 For example on Windows choose:
  * Operating System: `Windows`
  * Architecture: `x64`
@@ -56,13 +70,13 @@ For example on Windows choose:
  * Version: `8 - LTS`
 And download the `.msi` installer.
 
-If the `.jar` wile type is linked with the `java`, you can simply start the game by opening the `XSwingPlus.jar`.
+If the `.jar` wile type is linked with the `java`, you can simply start the game by opening the `XSwingPlus.jar`.  
 Otherwise, start the game with console:
 ```shell
 java -jar XSwingPlus.jar
 ```
 
-## 🚀 Setup
+## ⚙ Configure IDE
 To start developing, import the workspace als [Gradle](https://gradle.org) project in your IDE.
 All dependencies are included in the `lib` folder. They should be automatically referenced by Gradle.  
 To start the game simply run the Gradle task:
@@ -73,6 +87,7 @@ This will compile the game and start the game with splash Screen (class `xswing.
 If you use [IntelliJ IDEA](https://www.jetbrains.com/idea/) you can also use the predefined run configurations:
  * ▶ `XSwing` 
  * ▶ `XSwingNoSplash` 
+
 
 ## 📦 Package
 You can build the game for distribution wich wil generate a runnable jar which includes all dependencies,
@@ -87,6 +102,7 @@ This will packe the game to the output folder: `build\libs\`.
 > (`.ddl` for Windows, `.so` Linux and `.jnilib` for Mac).
 > The `shadowJar` will copy all natives for all platforms to the build dir for you!
 
+
 ## 📜 Licence
 This remake is a free fan project. _Software 2000_ is not involved in any way.
 The company _Software 2000_ filed for bankruptcy in 2002. But the _Swing_ brand, graphics and sounds
@@ -98,8 +114,10 @@ The code is licenced under [MIT License](https://choosealicense.com/licenses/mit
 I started the development in 2007 - A time when _git_ took its first steps and version control wasn't 
 the first thing to do. This repository was restored from zipped code backups between 2007 and 2013.
 
+
 ### 🎵 Music
 Thank you, [Michael Motschmann](https://soundcloud.com/mimo57m) (_MiMo57m_), for the great background music tracks.
+
 
 ## 🧱 Dependencies
  * [Slick2D](https://github.com/joshmarcus/slick2d) -
@@ -115,6 +133,7 @@ Thank you, [Michael Motschmann](https://soundcloud.com/mimo57m) (_MiMo57m_), for
 [![LWJGL](https://raw.githubusercontent.com/tobsef/XSwing/media/banner_lwjgl.png)](https://www.lwjgl.org)  
 [![Nifty GUI](https://raw.githubusercontent.com/tobsef/XSwing/media/banner_nifty.png)](https://github.com/nifty-gui/nifty-gui)
 [![Java 8](https://raw.githubusercontent.com/tobsef/XSwing/media/banner_java.png)](https://www.oracle.com/java/technologies/downloads/#java8)
+
 
 ## 📋 Command Line Arguments
 The game has several command line arguments wich can be overwritten.
@@ -139,6 +158,7 @@ configFile = somePath/config.json
 # Advanced
 useNativeMouseCursor = false
 ```
+
 
 ## 👓 Modding
 Is easy to change graphics ot sounds. Just replace them in the `res` folder.
