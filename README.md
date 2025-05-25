@@ -27,18 +27,17 @@ on Windows, Linux, Mac and Android.
 [<img alt="Download Windows" height="45px" src="https://raw.githubusercontent.com/tobsef/XSwing/media/download-win.svg"/>](https://dl.xswing.net/XSwing_Plus_windows-x64.exe)  
 Windows Setup `XSwing_Plus_windows-x64.exe` `82MB`
 
-[<img alt="Download Mac" height="45px" src="https://raw.githubusercontent.com/tobsef/XSwing/media/download-mac.svg"/>](https://dl.xswing.net/XSwing_Plus_unix.sh)  
+[<img alt="Download Linux" height="45px" src="https://raw.githubusercontent.com/tobsef/XSwing/media/download-linux.svg"/>](https://dl.xswing.net/XSwing_Plus_unix.sh)  
 Linux Setup `XSwing_Plus_unix.sh` `88MB`
 
-[<img alt="Download Linux" height="45px" src="https://raw.githubusercontent.com/tobsef/XSwing/media/download-linux.svg"/>](https://dl.xswing.net/XSwing_Plus_macos.dmg)  
+[<img alt="Download Mac" height="45px" src="https://raw.githubusercontent.com/tobsef/XSwing/media/download-mac.svg"/>](https://dl.xswing.net/XSwing_Plus_macos.dmg)  
 Mac Setup `XSwing_Plus_macos.dmg` `83MB`
 
 
 ## 📖 Manual
-The objective is to simultaneously disband as many heavy balls as possible. To do this, simply place 
-three balls with the same color in a horizontal row. Now these and all adjoining balls of this color 
-will disappear. Five balls of the same color in a column will shrink to one heavy ball. 
-Every 50 balls  you reach the next level and a new color will be added. 
+The goal is to simultaneously disband as many heavy balls as possible. To do this, place three balls with the same color 
+in a horizontal row. Now these and all adjoining balls of this color will disappear. Five balls of the same color in a 
+column will shrink to one heavy ball. Every 50 balls you reach the next level and a new color will be added. 
 Pay attention: One stack can only take up to eight balls.
 
 
@@ -55,15 +54,15 @@ Pay attention: One stack can only take up to eight balls.
 
 ## 🚀 Manual Setup
 If you do not like the setup, you can use the portable zipped version.  
-Then you have to install Java by your own, which is bundles with the setup.  
+Then you have to install Java by your own, which is bundled with the setup.  
 [<img alt="Download Zip" height="45px" src="https://raw.githubusercontent.com/tobsef/XSwing/media/download-zip.svg"/>](https://dl.xswing.net/XSwingPlus.zip)  
 ⚠ Cross Platform Zip - Java JRE not included! `XSwingPlus.zip` `32MB`
 > 💡 Choose the **setup** for your platform, which is the **preferred installation option**.  
-> Only advanced users should choose the _Download Zip_, wich needs ab installed Java JRE.
+> Only advanced users should choose the _Download Zip_, which needs ab installed Java JRE.
 
 The game needs an installed Java runtime environment (JRE) with at least 8.  
 You can get it for any platform [here](https://adoptium.net/temurin/releases/?version=8).  
-For example on Windows choose:
+For example, on Windows choose:
  * Operating System: `Windows`
  * Architecture: `x64`
  * Package Type: `JRE`
@@ -71,7 +70,7 @@ For example on Windows choose:
 And download the `.msi` installer.
 
 If the `.jar` wile type is linked with the `java`, you can simply start the game by opening the `XSwingPlus.jar`.  
-Otherwise, start the game with console:
+Otherwise, start the game with the console:
 ```shell
 java -jar XSwingPlus.jar
 ```
@@ -79,7 +78,7 @@ java -jar XSwingPlus.jar
 ## ⚙ Configure IDE
 To start developing, import the workspace als [Gradle](https://gradle.org) project in your IDE.
 All dependencies are included in the `lib` folder. They should be automatically referenced by Gradle.  
-To start the game simply run the Gradle task:
+To start the game, simply run the Gradle task:
 ```shell
 gradle run
 ```
@@ -90,14 +89,14 @@ If you use [IntelliJ IDEA](https://www.jetbrains.com/idea/) you can also use the
 
 
 ## 📦 Package
-You can build the game for distribution wich wil generate a runnable jar which includes all dependencies,
+You can build the game for distribution which will generate a runnable jar which includes all dependencies,
 resources and natives. 
 ```shell
 gradle shadowJar
 ```
 This will packe the game to the output folder: `build\libs\`.
 
-> 💡 Keep in mind, that the game not only needs the resources in the `res` folder, but also the
+> 💡 Keep in mind that the game not only needs the resources in the `res` folder, but also the
 > native [LWJGL](https://www.lwjgl.org) bindings for your platform 
 > (`.ddl` for Windows, `.so` Linux and `.jnilib` for Mac).
 > The `shadowJar` will copy all natives for all platforms to the build dir for you!
@@ -161,11 +160,11 @@ useNativeMouseCursor = false
 
 
 ## 👓 Modding
-Is easy to change graphics ot sounds. Just replace them in the `res` folder.
+It is easy to change graphics ot sounds. Just replace them in the `res` folder.
 For the balls, there is second theme `/res/balls2.png` which can be activated by the key <kbd>B</kbd>.
 
-For theming there is a JSON configuration which stores all UI based settings: `config.json`.
+For theming there is a JSON configuration that stores all UI-based settings: `config.json`.
 Here you can change sounds and images and change settings like their position.
 This configuration can even store multiple configurations at one.
-Just change the `"configSetIndex": 1` (starting with `0`) to switch to a HD version with 16:9 aspect ratio 
+Change the `"configSetIndex": 1` (starting with `0`) to switch to an HD version with 16:9 aspect ratio 
 with a higher resolution.
